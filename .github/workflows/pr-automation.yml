@@ -1,0 +1,26 @@
+name: PR Automation
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, converted_to_draft]
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  automation:
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
+    uses: KubrickCode/workflow-toolkit/.github/workflows/pr-automation.yml@main
+    with:
+      project-number: "1"
+      owner-type: "organization"
+      event-action: ${{ github.event.action }}
+      pr-number: ${{ github.event.pull_request.number }}
+      pr-user-login: ${{ github.event.pull_request.user.login }}
+      pr-is-draft: ${{ github.event.pull_request.draft }}
+    secrets:
+      GH_PAT: ${{ secrets.GH_PAT }}

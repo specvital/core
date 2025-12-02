@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  workspace:
+    image: mcr.microsoft.com/devcontainers/base:bookworm
+    privileged: true
+    volumes:
+      - ..:/workspaces/specvital-core:delegated
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOME}/.env.secrets:/root/.env.secrets:ro
+      - claude-sessions:/root/.claude
+    env_file:
+      - ${HOME}/.env.secrets
+    command: sleep infinity
+
+volumes:
+  claude-sessions:
