@@ -1,0 +1,28 @@
+{
+  "dependsOn": {
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "1.24"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "[go]": {
+          "editor.defaultFormatter": "golang.go",
+          "editor.insertSpaces": false,
+          "editor.tabSize": 4
+        },
+        "[go.mod]": {
+          "editor.defaultFormatter": "golang.go",
+          "editor.insertSpaces": false,
+          "editor.tabSize": 4
+        },
+        "[go.work]": {
+          "editor.defaultFormatter": "golang.go",
+          "editor.insertSpaces": false,
+          "editor.tabSize": 4
+        }
+      }
+    }
+  }
+}

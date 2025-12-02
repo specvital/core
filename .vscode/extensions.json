@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "bradgashler.htmltagwrap",
+    "chunsen.bracket-select",
+    "codezombiech.gitignore",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "gruntfuggly.todo-tree",
+    "mhutchie.git-graph",
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+    "skellock.just",
+    "streetsidesoftware.code-spell-checker",
+    "wayou.vscode-todo-highlight",
+    "usernamehw.errorlens",
+    "kubrickcode.tlog-vscode",
+    "kubrickcode.quick-command-buttons"
+  ]
+}

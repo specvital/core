@@ -1,0 +1,15 @@
+# Dependencies
+node_modules
+dist
+build
+pnpm-lock.yaml
+
+# Build outputs
+coverage
+.next
+out
+
+# Other
+.git
+.cache
+*.log

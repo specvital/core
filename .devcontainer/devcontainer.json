@@ -1,0 +1,23 @@
+{
+  "name": "specvital-core",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/specvital-core",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/guiyomh/features/just:0": {},
+    "./local-features/go": {},
+    "./local-features/node": {}
+  },
+  "postCreateCommand": "bash /workspaces/specvital-core/.devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode", "skellock.just"],
+      "settings": {
+        "prettier.resolveGlobalModules": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    }
+  },
+  "remoteUser": "root"
+}

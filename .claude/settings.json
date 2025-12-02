@@ -1,0 +1,19 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "bash /workspaces/specvital-core/.claude/statusline.sh"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/specvital-core/.claude/notify.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
