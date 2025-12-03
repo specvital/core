@@ -1,6 +1,7 @@
 package strategies
 
 import (
+	"context"
 	"testing"
 
 	"github.com/specvital/core/domain"
@@ -27,7 +28,7 @@ func (m *mockStrategy) CanHandle(string, []byte) bool {
 	return m.canHandleOk
 }
 
-func (m *mockStrategy) Parse([]byte, string) (*domain.TestFile, error) {
+func (m *mockStrategy) Parse(_ context.Context, _ []byte, _ string) (*domain.TestFile, error) {
 	return &domain.TestFile{Framework: m.name}, nil
 }
 

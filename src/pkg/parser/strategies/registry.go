@@ -1,6 +1,7 @@
 package strategies
 
 import (
+	"context"
 	"sort"
 	"sync"
 
@@ -16,7 +17,7 @@ type Strategy interface {
 	Priority() int
 	Languages() []domain.Language
 	CanHandle(filename string, content []byte) bool
-	Parse(source []byte, filename string) (*domain.TestFile, error)
+	Parse(ctx context.Context, source []byte, filename string) (*domain.TestFile, error)
 }
 
 type Registry struct {

@@ -1,9 +1,11 @@
 package jest
 
 import (
+	"context"
 	"testing"
 
 	"github.com/specvital/core/domain"
+	"github.com/specvital/core/parser/strategies/shared/jstest"
 )
 
 func TestDetectLanguage(t *testing.T) {
@@ -46,11 +48,11 @@ func TestDetectLanguage(t *testing.T) {
 			t.Parallel()
 
 			// When
-			got := detectLanguage(tt.filename)
+			got := jstest.DetectLanguage(tt.filename)
 
 			// Then
 			if got != tt.want {
-				t.Errorf("detectLanguage(%q) = %q, want %q", tt.filename, got, tt.want)
+				t.Errorf("jstest.DetectLanguage(%q) = %q, want %q", tt.filename, got, tt.want)
 			}
 		})
 	}
@@ -102,7 +104,7 @@ func TestParse(t *testing.T) {
 			t.Parallel()
 
 			// When
-			file, err := parse([]byte(tt.source), tt.filename)
+			file, err := parse(context.Background(), []byte(tt.source), tt.filename)
 
 			// Then
 			if tt.wantErr {
@@ -172,7 +174,7 @@ func TestParseJestNode(t *testing.T) {
 			t.Parallel()
 
 			// When
-			file, err := parse([]byte(tt.source), "test.ts")
+			file, err := parse(context.Background(), []byte(tt.source), "test.ts")
 
 			// Then
 			if err != nil {
