@@ -14,6 +14,7 @@ lint target="all":
       all)
         just lint justfile
         just lint config
+        just lint go
         ;;
       justfile)
         just --fmt --unstable
@@ -21,8 +22,14 @@ lint target="all":
       config)
         npx prettier --write "**/*.{json,yml,yaml,md}"
         ;;
+      go)
+        cd {{ root_dir }}/src && gofmt -w .
+        ;;
       *)
         echo "Unknown target: {{ target }}"
         exit 1
         ;;
     esac
+
+test:
+    cd {{ root_dir }}/src && go list -f '{{ "{{" }}.Dir{{ "}}" }}/...' -m | xargs go test
