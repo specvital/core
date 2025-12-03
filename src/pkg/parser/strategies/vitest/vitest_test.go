@@ -1,4 +1,4 @@
-package jest
+package vitest
 
 import (
 	"context"
@@ -30,8 +30,8 @@ func TestStrategy_Name(t *testing.T) {
 	name := s.Name()
 
 	// Then
-	if name != "jest" {
-		t.Errorf("Name() = %q, want %q", name, "jest")
+	if name != "vitest" {
+		t.Errorf("Name() = %q, want %q", name, "vitest")
 	}
 }
 
@@ -45,8 +45,9 @@ func TestStrategy_Priority(t *testing.T) {
 	priority := s.Priority()
 
 	// Then
-	if priority != strategies.DefaultPriority {
-		t.Errorf("Priority() = %d, want %d", priority, strategies.DefaultPriority)
+	expectedPriority := strategies.DefaultPriority + 10
+	if priority != expectedPriority {
+		t.Errorf("Priority() = %d, want %d", priority, expectedPriority)
 	}
 }
 
@@ -79,21 +80,45 @@ func TestStrategy_CanHandle(t *testing.T) {
 	tests := []struct {
 		name     string
 		filename string
+		content  string
 		want     bool
 	}{
-		{"should handle .test.ts", "user.test.ts", true},
-		{"should handle .spec.ts", "user.spec.ts", true},
-		{"should handle .test.tsx", "user.test.tsx", true},
-		{"should handle .spec.tsx", "user.spec.tsx", true},
-		{"should handle .test.js", "user.test.js", true},
-		{"should handle .spec.js", "user.spec.js", true},
-		{"should handle .test.jsx", "user.test.jsx", true},
-		{"should handle .spec.jsx", "user.spec.jsx", true},
-		{"should handle __tests__ directory", "__tests__/user.ts", true},
-		{"should handle nested __tests__", "src/__tests__/user.tsx", true},
-		{"should reject regular .ts file", "user.ts", false},
-		{"should reject .go file", "user.go", false},
-		{"should reject file starting with test", "testuser.ts", false},
+		{
+			name:     "should handle .test.ts with vitest import",
+			filename: "user.test.ts",
+			content:  `import { describe, it } from 'vitest';`,
+			want:     true,
+		},
+		{
+			name:     "should handle .spec.ts with vitest import",
+			filename: "user.spec.ts",
+			content:  `import { expect } from 'vitest';`,
+			want:     true,
+		},
+		{
+			name:     "should handle __tests__ directory with vitest import",
+			filename: "__tests__/user.ts",
+			content:  `import { vi } from 'vitest';`,
+			want:     true,
+		},
+		{
+			name:     "should reject test file without vitest import",
+			filename: "user.test.ts",
+			content:  `import { describe, it } from '@jest/globals';`,
+			want:     false,
+		},
+		{
+			name:     "should reject non-test file even with vitest import",
+			filename: "user.ts",
+			content:  `import { describe } from 'vitest';`,
+			want:     false,
+		},
+		{
+			name:     "should handle vitest in require statement",
+			filename: "user.test.js",
+			content:  `const { describe } = require('vitest');`,
+			want:     true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -101,7 +126,7 @@ func TestStrategy_CanHandle(t *testing.T) {
 			t.Parallel()
 
 			// When
-			got := s.CanHandle(tt.filename, nil)
+			got := s.CanHandle(tt.filename, []byte(tt.content))
 
 			// Then
 			if got != tt.want {
@@ -126,10 +151,11 @@ func TestStrategy_Parse(t *testing.T) {
 	}{
 		{
 			name: "should parse simple describe",
-			source: `describe('Suite', () => {
-				it('test1', () => {});
-				it('test2', () => {});
-			});`,
+			source: `import { describe, it } from 'vitest';
+describe('Suite', () => {
+	it('test1', () => {});
+	it('test2', () => {});
+});`,
 			filename:   "user.test.ts",
 			wantSuites: 1,
 			wantTests:  0,
@@ -137,11 +163,12 @@ func TestStrategy_Parse(t *testing.T) {
 		},
 		{
 			name: "should parse nested describe",
-			source: `describe('Outer', () => {
-				describe('Inner', () => {
-					it('test', () => {});
-				});
-			});`,
+			source: `import { describe, it } from 'vitest';
+describe('Outer', () => {
+	describe('Inner', () => {
+		it('test', () => {});
+	});
+});`,
 			filename:   "user.test.ts",
 			wantSuites: 1,
 			wantTests:  0,
@@ -149,7 +176,7 @@ func TestStrategy_Parse(t *testing.T) {
 		},
 		{
 			name:       "should parse top-level tests",
-			source:     `it('test1', () => {}); test('test2', () => {});`,
+			source:     `import { it, test } from 'vitest'; it('test1', () => {}); test('test2', () => {});`,
 			filename:   "user.test.ts",
 			wantSuites: 0,
 			wantTests:  2,
@@ -157,7 +184,7 @@ func TestStrategy_Parse(t *testing.T) {
 		},
 		{
 			name:       "should detect JavaScript",
-			source:     `describe('JS', () => { it('test', () => {}); });`,
+			source:     `import { describe, it } from 'vitest'; describe('JS', () => { it('test', () => {}); });`,
 			filename:   "user.test.js",
 			wantSuites: 1,
 			wantTests:  0,
@@ -176,8 +203,8 @@ func TestStrategy_Parse(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Parse() error = %v", err)
 			}
-			if file.Framework != "jest" {
-				t.Errorf("Framework = %q, want %q", file.Framework, "jest")
+			if file.Framework != "vitest" {
+				t.Errorf("Framework = %q, want %q", file.Framework, "vitest")
 			}
 			if len(file.Suites) != tt.wantSuites {
 				t.Errorf("len(Suites) = %d, want %d", len(file.Suites), tt.wantSuites)
@@ -219,20 +246,6 @@ func TestStrategy_Parse_Modifiers(t *testing.T) {
 			isTest:     true,
 		},
 		{
-			name:       "should parse xit",
-			source:     `describe('S', () => { xit('test', () => {}); });`,
-			wantName:   "test",
-			wantStatus: domain.TestStatusSkipped,
-			isTest:     true,
-		},
-		{
-			name:       "should parse fit",
-			source:     `describe('S', () => { fit('test', () => {}); });`,
-			wantName:   "test",
-			wantStatus: domain.TestStatusOnly,
-			isTest:     true,
-		},
-		{
 			name:       "should parse test.todo",
 			source:     `describe('S', () => { test.todo('test'); });`,
 			wantName:   "test",
@@ -249,20 +262,6 @@ func TestStrategy_Parse_Modifiers(t *testing.T) {
 		{
 			name:       "should parse describe.only",
 			source:     `describe.only('Suite', () => {});`,
-			wantName:   "Suite",
-			wantStatus: domain.TestStatusOnly,
-			isTest:     false,
-		},
-		{
-			name:       "should parse xdescribe",
-			source:     `xdescribe('Suite', () => {});`,
-			wantName:   "Suite",
-			wantStatus: domain.TestStatusSkipped,
-			isTest:     false,
-		},
-		{
-			name:       "should parse fdescribe",
-			source:     `fdescribe('Suite', () => {});`,
 			wantName:   "Suite",
 			wantStatus: domain.TestStatusOnly,
 			isTest:     false,
@@ -314,11 +313,11 @@ func TestStrategy_Parse_Each(t *testing.T) {
 	s := &Strategy{}
 
 	tests := []struct {
-		name       string
-		source     string
-		wantCount  int
-		wantFirst  string
-		isSuite    bool
+		name      string
+		source    string
+		wantCount int
+		wantFirst string
+		isSuite   bool
 	}{
 		{
 			name:      "should parse describe.each",
@@ -377,39 +376,7 @@ func TestStrategy_Parse_Each(t *testing.T) {
 	}
 }
 
-func TestStrategy_Parse_Location(t *testing.T) {
-	t.Parallel()
-
-	// Given
-	s := &Strategy{}
-	source := `describe('Suite', () => {
-  it('test', () => {});
-});`
-
-	// When
-	file, err := s.Parse(context.Background(), []byte(source), "user.test.ts")
-
-	// Then
-	if err != nil {
-		t.Fatalf("Parse() error = %v", err)
-	}
-
-	suite := file.Suites[0]
-	if suite.Location.File != "user.test.ts" {
-		t.Errorf("Suite.Location.File = %q, want %q", suite.Location.File, "user.test.ts")
-	}
-	if suite.Location.StartLine != 1 {
-		t.Errorf("Suite.Location.StartLine = %d, want 1", suite.Location.StartLine)
-	}
-
-	test := suite.Tests[0]
-	if test.Location.StartLine != 2 {
-		t.Errorf("Test.Location.StartLine = %d, want 2", test.Location.StartLine)
-	}
-}
-
 func TestRegisterDefault(t *testing.T) {
-	// NOTE: This test modifies global state, so it cannot run in parallel.
 	strategies.DefaultRegistry().Clear()
 	defer strategies.DefaultRegistry().Clear()
 
@@ -421,7 +388,23 @@ func TestRegisterDefault(t *testing.T) {
 	if len(all) != 1 {
 		t.Fatalf("len(strategies) = %d, want 1", len(all))
 	}
-	if all[0].Name() != "jest" {
-		t.Errorf("Name = %q, want %q", all[0].Name(), "jest")
+	if all[0].Name() != "vitest" {
+		t.Errorf("Name = %q, want %q", all[0].Name(), "vitest")
+	}
+}
+
+func TestVitestHigherPriorityThanJest(t *testing.T) {
+	t.Parallel()
+
+	// Given
+	vitestStrategy := NewStrategy()
+	jestPriority := strategies.DefaultPriority
+
+	// When
+	vitestPriority := vitestStrategy.Priority()
+
+	// Then
+	if vitestPriority <= jestPriority {
+		t.Errorf("Vitest priority (%d) should be higher than Jest priority (%d)", vitestPriority, jestPriority)
 	}
 }

@@ -1,25 +1,12 @@
 package jest
 
 import (
-	"path/filepath"
-	"regexp"
-	"slices"
-	"strings"
+	"context"
 
 	"github.com/specvital/core/domain"
 	"github.com/specvital/core/parser/strategies"
+	"github.com/specvital/core/parser/strategies/shared/jstest"
 )
-
-var supportedExtensions = map[string]bool{
-	".ts":  true,
-	".tsx": true,
-	".js":  true,
-	".jsx": true,
-}
-
-const testsDir = "__tests__"
-
-var jestFilePattern = regexp.MustCompile(`\.(test|spec)\.(ts|tsx|js|jsx)$`)
 
 type Strategy struct{}
 
@@ -44,28 +31,9 @@ func (s *Strategy) Languages() []domain.Language {
 }
 
 func (s *Strategy) CanHandle(filename string, _ []byte) bool {
-	if jestFilePattern.MatchString(filename) {
-		return true
-	}
-
-	if isInTestsDirectory(filename) {
-		return hasSupportedExtension(filename)
-	}
-
-	return false
+	return jstest.IsTestFile(filename)
 }
 
-func isInTestsDirectory(filename string) bool {
-	normalizedPath := filepath.ToSlash(filename)
-	parts := strings.Split(normalizedPath, "/")
-	return slices.Contains(parts, testsDir)
-}
-
-func hasSupportedExtension(filename string) bool {
-	ext := filepath.Ext(filename)
-	return supportedExtensions[ext]
-}
-
-func (s *Strategy) Parse(source []byte, filename string) (*domain.TestFile, error) {
-	return parse(source, filename)
+func (s *Strategy) Parse(ctx context.Context, source []byte, filename string) (*domain.TestFile, error) {
+	return parse(ctx, source, filename)
 }
