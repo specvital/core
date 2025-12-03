@@ -2,3 +2,15 @@
 .pnpm-store
 node_modules
 docs/work
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+bin/
+dist/
