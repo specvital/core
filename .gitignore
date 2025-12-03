@@ -3,3 +3,15 @@
 node_modules
 docs/work
 .claude/settings.local.json
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+bin/
+dist/
