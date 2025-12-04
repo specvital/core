@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	sitter "github.com/smacker/go-tree-sitter"
+	"github.com/smacker/go-tree-sitter/golang"
 	"github.com/smacker/go-tree-sitter/javascript"
 	"github.com/smacker/go-tree-sitter/typescript/typescript"
 
@@ -20,8 +21,9 @@ type TSParser struct {
 }
 
 var (
-	tsLang *sitter.Language
+	goLang *sitter.Language
 	jsLang *sitter.Language
+	tsLang *sitter.Language
 
 	langOnce sync.Once
 )
@@ -33,13 +35,16 @@ type QueryResult struct {
 
 func initLanguages() {
 	langOnce.Do(func() {
-		tsLang = typescript.GetLanguage()
+		goLang = golang.GetLanguage()
 		jsLang = javascript.GetLanguage()
+		tsLang = typescript.GetLanguage()
 	})
 }
 
 func getSitterLanguage(lang domain.Language) *sitter.Language {
 	switch lang {
+	case domain.LanguageGo:
+		return goLang
 	case domain.LanguageJavaScript:
 		return jsLang
 	default:
@@ -51,15 +56,7 @@ func NewTSParser(lang domain.Language) *TSParser {
 	initLanguages()
 
 	parser := sitter.NewParser()
-
-	switch lang {
-	case domain.LanguageTypeScript:
-		parser.SetLanguage(tsLang)
-	case domain.LanguageJavaScript:
-		parser.SetLanguage(jsLang)
-	default:
-		parser.SetLanguage(tsLang)
-	}
+	parser.SetLanguage(getSitterLanguage(lang))
 
 	return &TSParser{
 		parser: parser,

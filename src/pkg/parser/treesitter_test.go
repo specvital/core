@@ -18,7 +18,7 @@ func TestNewTSParser(t *testing.T) {
 	}{
 		{"should create parser for TypeScript", domain.LanguageTypeScript},
 		{"should create parser for JavaScript", domain.LanguageJavaScript},
-		{"should default to TypeScript for unknown language", domain.LanguageGo},
+		{"should create parser for Go", domain.LanguageGo},
 	}
 
 	for _, tt := range tests {
