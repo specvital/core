@@ -1,6 +1,11 @@
 ## 🔧 Maintenance
 ### 🔧 Internal Fixes
 
+* fix Go module zip creation failure ([3ceb7d626ead57835083b0c45d2c7091cb62757f](/commit/3ceb7d626ead57835083b0c45d2c7091cb62757f))
+
+## 🔧 Maintenance
+### 🔧 Internal Fixes
+
 * exclude unnecessary files from Go module zip ([0e3f8fa9598ce226632139c2b18dd4d710ad79af](/commit/0e3f8fa9598ce226632139c2b18dd4d710ad79af))
 
 ## 🎯 Highlights
