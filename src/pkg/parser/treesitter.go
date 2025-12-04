@@ -10,7 +10,7 @@ import (
 	"github.com/smacker/go-tree-sitter/javascript"
 	"github.com/smacker/go-tree-sitter/typescript/typescript"
 
-	"github.com/specvital/core/domain"
+	"github.com/specvital/core/src/pkg/domain"
 )
 
 // MaxTreeDepth is the maximum recursion depth when walking AST trees.

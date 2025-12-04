@@ -3,7 +3,7 @@ package jstest
 import (
 	"testing"
 
-	"github.com/specvital/core/domain"
+	"github.com/specvital/core/src/pkg/domain"
 )
 
 func TestUnquoteString(t *testing.T) {

@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/specvital/core/parser"
+	"github.com/specvital/core/src/pkg/parser"
 
 	// Import strategies to register them with the default registry.
-	_ "github.com/specvital/core/parser/strategies/gotesting"
-	_ "github.com/specvital/core/parser/strategies/jest"
-	_ "github.com/specvital/core/parser/strategies/playwright"
-	_ "github.com/specvital/core/parser/strategies/vitest"
+	_ "github.com/specvital/core/src/pkg/parser/strategies/gotesting"
+	_ "github.com/specvital/core/src/pkg/parser/strategies/jest"
+	_ "github.com/specvital/core/src/pkg/parser/strategies/playwright"
+	_ "github.com/specvital/core/src/pkg/parser/strategies/vitest"
 )
 
 func Example() {
@@ -41,9 +41,9 @@ func Example_withOptions() {
 
 	// Scan with custom options
 	result, err := parser.Scan(ctx, "/path/to/project",
-		parser.WithWorkers(4),                       // Use 4 parallel workers
-		parser.WithTimeout(2*time.Minute),           // Set 2 minute timeout
-		parser.WithExclude([]string{"fixtures"}),    // Skip fixtures directory
+		parser.WithWorkers(4),                             // Use 4 parallel workers
+		parser.WithTimeout(2*time.Minute),                 // Set 2 minute timeout
+		parser.WithExclude([]string{"fixtures"}),          // Skip fixtures directory
 		parser.WithScanPatterns([]string{"**/*.test.ts"}), // Only *.test.ts files
 	)
 	if err != nil {

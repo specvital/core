@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/specvital/core/domain"
+	"github.com/specvital/core/src/pkg/domain"
 )
 
 func TestParserPool_RaceFree(t *testing.T) {

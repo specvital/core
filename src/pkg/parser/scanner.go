@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/specvital/core/domain"
-	"github.com/specvital/core/parser/strategies"
+	"github.com/specvital/core/src/pkg/domain"
+	"github.com/specvital/core/src/pkg/parser/strategies"
 	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/semaphore"
 )

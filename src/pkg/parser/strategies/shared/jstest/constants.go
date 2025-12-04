@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/specvital/core/domain"
+	"github.com/specvital/core/src/pkg/domain"
 )
 
 const (

@@ -232,4 +232,3 @@ func matchesAnyPattern(path, rootPath string, patterns []string) bool {
 	}
 	return false
 }
-

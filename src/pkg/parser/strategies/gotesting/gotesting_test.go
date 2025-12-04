@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/specvital/core/domain"
+	"github.com/specvital/core/src/pkg/domain"
 )
 
 func TestStrategy_Name(t *testing.T) {

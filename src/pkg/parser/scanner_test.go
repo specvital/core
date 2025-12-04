@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/specvital/core/parser"
-	"github.com/specvital/core/parser/strategies"
-	"github.com/specvital/core/parser/strategies/jest"
+	"github.com/specvital/core/src/pkg/parser"
+	"github.com/specvital/core/src/pkg/parser/strategies"
+	"github.com/specvital/core/src/pkg/parser/strategies/jest"
 )
 
 func TestMain(m *testing.M) {

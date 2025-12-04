@@ -23,7 +23,7 @@ lint target="all":
         npx prettier --write "**/*.{json,yml,yaml,md}"
         ;;
       go)
-        cd {{ root_dir }}/src && gofmt -w .
+        cd {{ root_dir }} && gofmt -w ./src
         ;;
       *)
         echo "Unknown target: {{ target }}"
@@ -32,4 +32,4 @@ lint target="all":
     esac
 
 test:
-    cd {{ root_dir }}/src && go list -f '{{ "{{" }}.Dir{{ "}}" }}/...' -m | xargs go test
+    cd {{ root_dir }} && go test ./...

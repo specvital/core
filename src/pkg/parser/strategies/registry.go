@@ -7,7 +7,7 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/specvital/core/domain"
+	"github.com/specvital/core/src/pkg/domain"
 )
 
 // DefaultPriority is the default priority for strategies.

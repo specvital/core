@@ -6,7 +6,7 @@ import (
 
 	sitter "github.com/smacker/go-tree-sitter"
 
-	"github.com/specvital/core/domain"
+	"github.com/specvital/core/src/pkg/domain"
 )
 
 func TestNewTSParser(t *testing.T) {

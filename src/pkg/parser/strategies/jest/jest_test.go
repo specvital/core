@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/specvital/core/domain"
-	"github.com/specvital/core/parser/strategies"
+	"github.com/specvital/core/src/pkg/domain"
+	"github.com/specvital/core/src/pkg/parser/strategies"
 )
 
 func TestNewStrategy(t *testing.T) {

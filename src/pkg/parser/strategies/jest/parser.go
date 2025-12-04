@@ -3,8 +3,8 @@ package jest
 import (
 	"context"
 
-	"github.com/specvital/core/domain"
-	"github.com/specvital/core/parser/strategies/shared/jstest"
+	"github.com/specvital/core/src/pkg/domain"
+	"github.com/specvital/core/src/pkg/parser/strategies/shared/jstest"
 )
 
 const frameworkName = "jest"

@@ -7,7 +7,7 @@ import (
 
 	sitter "github.com/smacker/go-tree-sitter"
 
-	"github.com/specvital/core/domain"
+	"github.com/specvital/core/src/pkg/domain"
 )
 
 // Parser pools for reusing tree-sitter parsers across goroutines.
