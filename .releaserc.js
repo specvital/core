@@ -120,6 +120,7 @@ export default {
         npmPublish: false,
       },
     ],
+    ["@semantic-release/exec", { prepareCmd: "just lint config" }],
     [
       "@semantic-release/git",
       {
