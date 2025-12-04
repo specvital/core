@@ -114,7 +114,7 @@ func extractSubtests(body *sitter.Node, source []byte, filename string) []domain
 
 		subtests = append(subtests, domain.Test{
 			Name:     name,
-			Status:   domain.TestStatusPending,
+			Status:   "", // Go tests have no skip/only modifiers
 			Location: parser.GetLocation(node, filename),
 		})
 
@@ -183,7 +183,7 @@ func parseTestFunctions(root *sitter.Node, source []byte, filename string) ([]do
 		if len(subtests) > 0 {
 			suite := domain.TestSuite{
 				Name:     name,
-				Status:   domain.TestStatusPending,
+				Status:   "", // Go tests have no skip/only modifiers
 				Location: parser.GetLocation(child, filename),
 				Tests:    subtests,
 			}
@@ -191,7 +191,7 @@ func parseTestFunctions(root *sitter.Node, source []byte, filename string) ([]do
 		} else {
 			test := domain.Test{
 				Name:     name,
-				Status:   domain.TestStatusPending,
+				Status:   "", // Go tests have no skip/only modifiers
 				Location: parser.GetLocation(child, filename),
 			}
 			tests = append(tests, test)

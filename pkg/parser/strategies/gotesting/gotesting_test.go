@@ -87,6 +87,10 @@ func TestCreate(t *testing.T) {
 	if result.Tests[0].Name != "TestCreate" {
 		t.Errorf("Tests[0].Name = %v, want TestCreate", result.Tests[0].Name)
 	}
+
+	if result.Tests[0].Status != "" {
+		t.Errorf("Tests[0].Status = %v, want empty (Go has no skip/only modifiers)", result.Tests[0].Status)
+	}
 }
 
 func TestStrategy_Parse_MultipleTestFunctions(t *testing.T) {
@@ -156,6 +160,13 @@ func TestUser(t *testing.T) {
 		if suite.Tests[i].Name != name {
 			t.Errorf("Suites[0].Tests[%d].Name = %v, want %v", i, suite.Tests[i].Name, name)
 		}
+		if suite.Tests[i].Status != "" {
+			t.Errorf("Suites[0].Tests[%d].Status = %v, want empty", i, suite.Tests[i].Status)
+		}
+	}
+
+	if suite.Status != "" {
+		t.Errorf("Suites[0].Status = %v, want empty (Go has no skip/only modifiers)", suite.Status)
 	}
 }
 
