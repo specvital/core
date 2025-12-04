@@ -1,6 +1,6 @@
 {
   "name": "specvital-core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Test inventory parser for multiple languages and frameworks",
   "repository": {
     "type": "git",

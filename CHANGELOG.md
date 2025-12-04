@@ -1,3 +1,19 @@
+## 🎯 Highlights
+
+### 🐛 Bug Fixes
+
+- **gotesting:** fix Go test parser incorrectly returning pending status ([14f133635410d9ced0d747d7245238e84f6014c9](/commit/14f133635410d9ced0d747d7245238e84f6014c9))
+
+## 🔧 Maintenance
+
+### 📚 Documentation
+
+- sync CLAUDE.md ([167df5b587fbbaa8b6ade0dbb4c0ecc0ea41fb98](/commit/167df5b587fbbaa8b6ade0dbb4c0ecc0ea41fb98))
+
+### 🔨 Chore
+
+- add auto-formatting to semantic-release pipeline ([f185576d2247234c46ec1c0027c8898a775ef5cd](/commit/f185576d2247234c46ec1c0027c8898a775ef5cd))
+
 ## 🔧 Maintenance
 
 ### 🔧 Internal Fixes
