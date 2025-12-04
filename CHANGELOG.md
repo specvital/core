@@ -1,3 +1,8 @@
+## 🔧 Maintenance
+### 🔧 Internal Fixes
+
+* exclude unnecessary files from Go module zip ([0e3f8fa9598ce226632139c2b18dd4d710ad79af](/commit/0e3f8fa9598ce226632139c2b18dd4d710ad79af))
+
 ## 🎯 Highlights
 ### ✨ Features
 
