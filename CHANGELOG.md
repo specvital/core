@@ -2,6 +2,12 @@
 
 ### 🐛 Bug Fixes
 
+- **detection:** fix glob patterns being incorrectly treated as comments ([85fd875d706cd1330fd0b8a27f3d1514f36e4013](/commit/85fd875d706cd1330fd0b8a27f3d1514f36e4013))
+
+## 🎯 Highlights
+
+### 🐛 Bug Fixes
+
 - **detection:** add ProjectContext for source-agnostic framework detection ([708f70aac041918ea7ff41d698fca45e43d6809d](/commit/708f70aac041918ea7ff41d698fca45e43d6809d))
 
 ## 🎯 Highlights
