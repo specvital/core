@@ -35,7 +35,7 @@ func (m *Matcher) ExtractImports(ctx context.Context, content []byte) []string {
 	return extraction.ExtractJSImports(ctx, content)
 }
 
-func (m *Matcher) ParseConfig(content []byte) *matchers.ConfigInfo {
+func (m *Matcher) ParseConfig(_ context.Context, _ []byte) *matchers.ConfigInfo {
 	// Playwright always requires explicit imports, no globals mode
 	return &matchers.ConfigInfo{
 		Framework:   frameworkName,

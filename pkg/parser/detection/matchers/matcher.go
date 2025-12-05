@@ -27,6 +27,6 @@ type Matcher interface {
 	MatchImport(importPath string) bool
 	ConfigPatterns() []string
 	ExtractImports(ctx context.Context, content []byte) []string
-	ParseConfig(content []byte) *ConfigInfo
+	ParseConfig(ctx context.Context, content []byte) *ConfigInfo
 	Priority() int
 }

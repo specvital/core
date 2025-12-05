@@ -35,7 +35,7 @@ func (m *mockMatcher) ExtractImports(ctx context.Context, content []byte) []stri
 	}
 	return nil
 }
-func (m *mockMatcher) ParseConfig(_ []byte) *matchers.ConfigInfo {
+func (m *mockMatcher) ParseConfig(_ context.Context, _ []byte) *matchers.ConfigInfo {
 	return &matchers.ConfigInfo{
 		Framework:   m.name,
 		GlobalsMode: m.globalsMode,

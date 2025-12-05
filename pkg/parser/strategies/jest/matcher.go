@@ -38,8 +38,8 @@ func (m *Matcher) ExtractImports(ctx context.Context, content []byte) []string {
 	return extraction.ExtractJSImports(ctx, content)
 }
 
-func (m *Matcher) ParseConfig(content []byte) *matchers.ConfigInfo {
-	globalsDisabled := extraction.MatchPatternExcludingComments(content, injectGlobalsFalsePattern)
+func (m *Matcher) ParseConfig(ctx context.Context, content []byte) *matchers.ConfigInfo {
+	globalsDisabled := extraction.MatchPatternExcludingComments(ctx, content, injectGlobalsFalsePattern)
 	return &matchers.ConfigInfo{
 		Framework:   frameworkName,
 		GlobalsMode: !globalsDisabled,

@@ -1,6 +1,7 @@
 package detection
 
 import (
+	"context"
 	"path/filepath"
 	"slices"
 
@@ -37,7 +38,7 @@ func (b *ProjectContextBuilder) AddConfigFiles(filePaths []string) *ProjectConte
 // ParseConfigContent parses config content using the appropriate matcher.
 // Matchers are sorted by priority (highest first) to ensure consistent behavior
 // when multiple matchers could handle the same config pattern.
-func (b *ProjectContextBuilder) ParseConfigContent(configPath string, content []byte) *ProjectContextBuilder {
+func (b *ProjectContextBuilder) ParseConfigContent(ctx context.Context, configPath string, content []byte) *ProjectContextBuilder {
 	baseName := filepath.Base(configPath)
 
 	matcherList := sortedByPriority(b.registry.All())
@@ -48,7 +49,7 @@ func (b *ProjectContextBuilder) ParseConfigContent(configPath string, content []
 			continue
 		}
 		if slices.Contains(patterns, baseName) {
-			if info := matcher.ParseConfig(content); info != nil {
+			if info := matcher.ParseConfig(ctx, content); info != nil {
 				b.ctx.SetConfigContent(configPath, info)
 			}
 			return b

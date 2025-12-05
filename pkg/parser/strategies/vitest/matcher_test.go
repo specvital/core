@@ -1,6 +1,9 @@
 package vitest
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestMatcher_ParseConfig(t *testing.T) {
 	t.Parallel()
@@ -73,13 +76,38 @@ func TestMatcher_ParseConfig(t *testing.T) {
 			})`,
 			wantGlobalsMode: true,
 		},
+		{
+			name: "globals true with glob patterns containing /* and */",
+			content: `export default defineConfig({
+				test: {
+					include: ["extension/**/*.ts", "src/**/*.ts"],
+					exclude: [
+						"**/node_modules/**",
+						"**/dist/**",
+						"view/**/*",
+					],
+					globals: true,
+				}
+			})`,
+			wantGlobalsMode: true,
+		},
+		{
+			name: "globals false with glob patterns",
+			content: `export default defineConfig({
+				test: {
+					include: ["**/*.test.ts"],
+					globals: false,
+				}
+			})`,
+			wantGlobalsMode: false,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			info := m.ParseConfig([]byte(tt.content))
+			info := m.ParseConfig(context.Background(), []byte(tt.content))
 			if info == nil {
 				t.Fatal("ParseConfig returned nil")
 			}

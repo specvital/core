@@ -3,32 +3,22 @@ package parser
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	sitter "github.com/smacker/go-tree-sitter"
-	"github.com/smacker/go-tree-sitter/golang"
-	"github.com/smacker/go-tree-sitter/javascript"
-	"github.com/smacker/go-tree-sitter/typescript/typescript"
 
 	"github.com/specvital/core/pkg/domain"
+	"github.com/specvital/core/pkg/parser/tspool"
 )
 
 // MaxTreeDepth is the maximum recursion depth when walking AST trees.
-const MaxTreeDepth = 1000
+// Deprecated: Use tspool.MaxTreeDepth instead.
+const MaxTreeDepth = tspool.MaxTreeDepth
 
 // TSParser wraps a tree-sitter parser for a specific language.
 type TSParser struct {
 	parser *sitter.Parser
 	lang   domain.Language
 }
-
-var (
-	goLang *sitter.Language
-	jsLang *sitter.Language
-	tsLang *sitter.Language
-
-	langOnce sync.Once
-)
 
 // QueryResult contains the result of a tree-sitter query match.
 type QueryResult struct {
@@ -38,31 +28,10 @@ type QueryResult struct {
 	Captures map[string]*sitter.Node
 }
 
-func initLanguages() {
-	langOnce.Do(func() {
-		goLang = golang.GetLanguage()
-		jsLang = javascript.GetLanguage()
-		tsLang = typescript.GetLanguage()
-	})
-}
-
-func getSitterLanguage(lang domain.Language) *sitter.Language {
-	switch lang {
-	case domain.LanguageGo:
-		return goLang
-	case domain.LanguageJavaScript:
-		return jsLang
-	default:
-		return tsLang
-	}
-}
-
 // NewTSParser creates a new tree-sitter parser for the given language.
 func NewTSParser(lang domain.Language) *TSParser {
-	initLanguages()
-
 	parser := sitter.NewParser()
-	parser.SetLanguage(getSitterLanguage(lang))
+	parser.SetLanguage(tspool.GetLanguage(lang))
 
 	return &TSParser{
 		parser: parser,
@@ -78,9 +47,7 @@ func (p *TSParser) Parse(ctx context.Context, source []byte) (*sitter.Tree, erro
 // Query executes a tree-sitter query and returns all matches.
 // The query is compiled fresh each time; for repeated queries, use [QueryWithCache].
 func Query(root *sitter.Node, source []byte, lang domain.Language, queryStr string) ([]QueryResult, error) {
-	initLanguages()
-
-	sitterLang := getSitterLanguage(lang)
+	sitterLang := tspool.GetLanguage(lang)
 
 	query, err := sitter.NewQuery([]byte(queryStr), sitterLang)
 	if err != nil {
@@ -162,7 +129,7 @@ func FindChildrenByType(node *sitter.Node, nodeType string) []*sitter.Node {
 }
 
 func walkTreeWithDepth(node *sitter.Node, visitor func(*sitter.Node) bool, depth int) {
-	if depth > MaxTreeDepth {
+	if depth > tspool.MaxTreeDepth {
 		return
 	}
 

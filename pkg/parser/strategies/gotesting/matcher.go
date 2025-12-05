@@ -25,7 +25,7 @@ func (m *Matcher) ExtractImports(ctx context.Context, content []byte) []string {
 	return extraction.ExtractGoImports(ctx, content)
 }
 
-func (m *Matcher) ParseConfig(_ []byte) *matchers.ConfigInfo {
+func (m *Matcher) ParseConfig(_ context.Context, _ []byte) *matchers.ConfigInfo {
 	// Go testing always requires explicit import, no config file
 	return nil
 }

@@ -1,6 +1,9 @@
 package jest
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestMatcher_ParseConfig(t *testing.T) {
 	t.Parallel()
@@ -74,7 +77,7 @@ func TestMatcher_ParseConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			info := m.ParseConfig([]byte(tt.content))
+			info := m.ParseConfig(context.Background(), []byte(tt.content))
 			if info == nil {
 				t.Fatal("ParseConfig returned nil")
 			}

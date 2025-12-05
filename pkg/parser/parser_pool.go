@@ -8,61 +8,14 @@ import (
 	sitter "github.com/smacker/go-tree-sitter"
 
 	"github.com/specvital/core/pkg/domain"
+	"github.com/specvital/core/pkg/parser/tspool"
 )
-
-// Parser pools for reusing tree-sitter parsers across goroutines.
-var (
-	goParserPool sync.Pool
-	jsParserPool sync.Pool
-	tsParserPool sync.Pool
-)
-
-func getParserPool(lang domain.Language) *sync.Pool {
-	switch lang {
-	case domain.LanguageGo:
-		return &goParserPool
-	case domain.LanguageJavaScript:
-		return &jsParserPool
-	default:
-		return &tsParserPool
-	}
-}
-
-func getPooledParser(lang domain.Language) *sitter.Parser {
-	pool := getParserPool(lang)
-
-	if p := pool.Get(); p != nil {
-		if parser, ok := p.(*sitter.Parser); ok {
-			return parser
-		}
-	}
-
-	initLanguages()
-	parser := sitter.NewParser()
-	parser.SetLanguage(getSitterLanguage(lang))
-	return parser
-}
-
-func putPooledParser(lang domain.Language, parser *sitter.Parser) {
-	if parser == nil {
-		return
-	}
-	pool := getParserPool(lang)
-	pool.Put(parser)
-}
 
 // ParseWithPool parses source using a pooled parser.
 // Caller must close the returned tree.
+// Deprecated: Use tspool.Parse instead.
 func ParseWithPool(ctx context.Context, lang domain.Language, source []byte) (*sitter.Tree, error) {
-	parser := getPooledParser(lang)
-	defer putPooledParser(lang, parser)
-
-	tree, err := parser.ParseCtx(ctx, nil, source)
-	if err != nil {
-		return nil, fmt.Errorf("parse failed: %w", err)
-	}
-
-	return tree, nil
+	return tspool.Parse(ctx, lang, source)
 }
 
 type queryCacheKey struct {
@@ -105,10 +58,8 @@ func getCachedQuery(lang domain.Language, queryStr string) (*sitter.Query, error
 		}
 	}
 
-	initLanguages()
-
 	cached.once.Do(func() {
-		sitterLang := getSitterLanguage(lang)
+		sitterLang := tspool.GetLanguage(lang)
 		cached.query, cached.err = sitter.NewQuery([]byte(queryStr), sitterLang)
 	})
 

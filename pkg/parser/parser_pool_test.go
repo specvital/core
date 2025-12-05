@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/specvital/core/pkg/domain"
+	"github.com/specvital/core/pkg/parser/tspool"
 )
 
 func TestParserPool_RaceFree(t *testing.T) {
@@ -34,7 +35,7 @@ func TestExample(t *testing.T) {
 			defer wg.Done()
 
 			for j := 0; j < iterations; j++ {
-				tree, err := ParseWithPool(ctx, domain.LanguageGo, source)
+				tree, err := tspool.Parse(ctx, domain.LanguageGo, source)
 				if err != nil {
 					t.Errorf("goroutine %d iteration %d: parse failed: %v", id, j, err)
 					return
@@ -83,7 +84,7 @@ describe('test', () => {
 			go func(l domain.Language, src []byte) {
 				defer wg.Done()
 
-				tree, err := ParseWithPool(ctx, l, src)
+				tree, err := tspool.Parse(ctx, l, src)
 				if err != nil {
 					t.Errorf("language %v: parse failed: %v", l, err)
 					return
@@ -134,7 +135,7 @@ func TestExample(t *testing.T) {
 		go func(id int) {
 			defer wg.Done()
 
-			tree, err := ParseWithPool(ctx, domain.LanguageGo, source)
+			tree, err := tspool.Parse(ctx, domain.LanguageGo, source)
 			if err != nil {
 				t.Errorf("goroutine %d: parse failed: %v", id, err)
 				return
@@ -166,7 +167,7 @@ func TestQueryCache_SameQueryReused(t *testing.T) {
 	lang := domain.LanguageGo
 
 	// First call - should compile query
-	tree1, err := ParseWithPool(ctx, lang, source)
+	tree1, err := tspool.Parse(ctx, lang, source)
 	if err != nil {
 		t.Fatalf("parse 1 failed: %v", err)
 	}
@@ -178,7 +179,7 @@ func TestQueryCache_SameQueryReused(t *testing.T) {
 	}
 
 	// Second call - should use cached query
-	tree2, err := ParseWithPool(ctx, lang, source)
+	tree2, err := tspool.Parse(ctx, lang, source)
 	if err != nil {
 		t.Fatalf("parse 2 failed: %v", err)
 	}
@@ -207,7 +208,7 @@ func TestGetPooledParser_ReturnsValidParser(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			parser := getPooledParser(tt.lang)
+			parser := tspool.Get(tt.lang)
 			if parser == nil {
 				t.Fatal("parser is nil")
 			}
@@ -226,14 +227,14 @@ func TestGetPooledParser_ReturnsValidParser(t *testing.T) {
 			defer tree.Close()
 
 			// Return to pool
-			putPooledParser(tt.lang, parser)
+			tspool.Put(tt.lang, parser)
 
 			// Get again - should get same or different parser (both valid)
-			parser2 := getPooledParser(tt.lang)
+			parser2 := tspool.Get(tt.lang)
 			if parser2 == nil {
 				t.Fatal("second parser is nil")
 			}
-			putPooledParser(tt.lang, parser2)
+			tspool.Put(tt.lang, parser2)
 		})
 	}
 }
@@ -300,7 +301,7 @@ func TestExample(t *testing.T) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		tree, err := ParseWithPool(ctx, domain.LanguageGo, source)
+		tree, err := tspool.Parse(ctx, domain.LanguageGo, source)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -324,7 +325,7 @@ func TestExample(t *testing.T) {
 
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			tree, err := ParseWithPool(ctx, domain.LanguageGo, source)
+			tree, err := tspool.Parse(ctx, domain.LanguageGo, source)
 			if err != nil {
 				b.Fatal(err)
 			}
@@ -351,7 +352,7 @@ func TestExample(t *testing.T) {
 	ctx := context.Background()
 	lang := domain.LanguageGo
 
-	tree, err := ParseWithPool(ctx, lang, source)
+	tree, err := tspool.Parse(ctx, lang, source)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -385,7 +386,7 @@ func TestExample(t *testing.T) {
 	ctx := context.Background()
 	lang := domain.LanguageGo
 
-	tree, err := ParseWithPool(ctx, lang, source)
+	tree, err := tspool.Parse(ctx, lang, source)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -419,7 +420,7 @@ func TestExample(t *testing.T) {
 	ctx := context.Background()
 	lang := domain.LanguageGo
 
-	tree, err := ParseWithPool(ctx, lang, source)
+	tree, err := tspool.Parse(ctx, lang, source)
 	if err != nil {
 		b.Fatal(err)
 	}
