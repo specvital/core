@@ -185,6 +185,74 @@ func TestDefaultRegistry(t *testing.T) {
 	}
 }
 
+func TestRegistry_FindByName(t *testing.T) {
+	t.Parallel()
+
+	t.Run("should return matching strategy by name", func(t *testing.T) {
+		t.Parallel()
+
+		r := NewRegistry()
+		r.Register(&mockStrategy{name: "jest"})
+		r.Register(&mockStrategy{name: "vitest"})
+
+		found := r.FindByName("vitest")
+		if found == nil {
+			t.Fatal("FindByName returned nil")
+		}
+		if found.Name() != "vitest" {
+			t.Errorf("found.Name() = %q, want %q", found.Name(), "vitest")
+		}
+	})
+
+	t.Run("should return nil when no strategy matches", func(t *testing.T) {
+		t.Parallel()
+
+		r := NewRegistry()
+		r.Register(&mockStrategy{name: "jest"})
+
+		found := r.FindByName("nonexistent")
+		if found != nil {
+			t.Errorf("FindByName returned %v, want nil", found)
+		}
+	})
+
+	t.Run("should return first match when duplicate names exist", func(t *testing.T) {
+		t.Parallel()
+
+		r := NewRegistry()
+		r.Register(&mockStrategy{name: "jest", priority: 100})
+		r.Register(&mockStrategy{name: "jest", priority: 50})
+
+		found := r.FindByName("jest")
+		if found == nil {
+			t.Fatal("FindByName returned nil")
+		}
+		if found.Priority() != 100 {
+			t.Errorf("expected first registered (priority 100), got priority %d", found.Priority())
+		}
+	})
+}
+
+func TestFindStrategyByName(t *testing.T) {
+	defaultRegistry.Clear()
+	defer defaultRegistry.Clear()
+
+	Register(&mockStrategy{name: "playwright"})
+
+	found := FindStrategyByName("playwright")
+	if found == nil {
+		t.Fatal("FindStrategyByName returned nil")
+	}
+	if found.Name() != "playwright" {
+		t.Errorf("found.Name() = %q, want %q", found.Name(), "playwright")
+	}
+
+	notFound := FindStrategyByName("nonexistent")
+	if notFound != nil {
+		t.Errorf("FindStrategyByName returned %v, want nil", notFound)
+	}
+}
+
 func TestGlobalFunctions(t *testing.T) {
 	// NOTE: This test modifies global state, so it cannot run in parallel.
 

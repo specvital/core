@@ -103,3 +103,21 @@ func (r *Registry) Clear() {
 	defer r.mu.Unlock()
 	r.strategies = nil
 }
+
+// FindByName returns the strategy with the given name.
+func (r *Registry) FindByName(name string) Strategy {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	for _, s := range r.strategies {
+		if s.Name() == name {
+			return s
+		}
+	}
+	return nil
+}
+
+// FindStrategyByName returns the strategy with the given name from the default registry.
+func FindStrategyByName(name string) Strategy {
+	return defaultRegistry.FindByName(name)
+}

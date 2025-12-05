@@ -13,6 +13,9 @@ import (
 	"time"
 
 	"github.com/specvital/core/pkg/domain"
+	"github.com/specvital/core/pkg/parser/detection"
+	"github.com/specvital/core/pkg/parser/detection/config"
+	"github.com/specvital/core/pkg/parser/detection/matchers"
 	"github.com/specvital/core/pkg/parser/strategies"
 	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/semaphore"
@@ -198,6 +201,22 @@ func parseFilesParallel(ctx context.Context, files []string, workers int) ([]dom
 	return results, scanErrors
 }
 
+var (
+	frameworkDetector *detection.Detector
+	detectorOnce      sync.Once
+)
+
+const resolverMaxDepth = 10
+
+func getFrameworkDetector() *detection.Detector {
+	detectorOnce.Do(func() {
+		cache := config.NewCache()
+		resolver := config.NewResolver(cache, resolverMaxDepth)
+		frameworkDetector = detection.NewDetector(matchers.DefaultRegistry(), resolver)
+	})
+	return frameworkDetector
+}
+
 func parseFile(ctx context.Context, path string) (*domain.TestFile, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
@@ -208,15 +227,18 @@ func parseFile(ctx context.Context, path string) (*domain.TestFile, error) {
 		return nil, fmt.Errorf("read file %s: %w", path, err)
 	}
 
-	strategy := strategies.FindStrategy(path, content)
+	result := getFrameworkDetector().Detect(ctx, path, content)
+	strategy := strategies.FindStrategyByName(result.Framework)
 	if strategy == nil {
-		return nil, nil // No matching strategy
+		strategy = strategies.FindStrategy(path, content)
+	}
+	if strategy == nil {
+		return nil, nil
 	}
 
 	testFile, err := strategy.Parse(ctx, content, path)
 	if err != nil {
 		return nil, fmt.Errorf("parse %s: %w", path, err)
 	}
-
 	return testFile, nil
 }
