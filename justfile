@@ -31,8 +31,27 @@ lint target="all":
         ;;
     esac
 
-test:
-    cd {{ root_dir }} && go test ./...
+test target="all":
+    #!/usr/bin/env bash
+    set -euox pipefail
+    cd {{ root_dir }}
+    case "{{ target }}" in
+      all)
+        just test unit
+        just test integration
+        ;;
+      unit)
+        go test ./...
+        ;;
+      integration)
+        go test -tags integration ./tests/integration/... -v -timeout 15m
+        ;;
+      *)
+        echo "Unknown target: {{ target }}"
+        echo "Available: unit, integration, all"
+        exit 1
+        ;;
+    esac
 
 release:
     #!/usr/bin/env bash

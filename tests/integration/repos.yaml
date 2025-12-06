@@ -1,0 +1,20 @@
+repositories:
+  - name: testing-library-react
+    url: https://github.com/testing-library/react-testing-library
+    ref: v16.1.0
+    framework: jest
+
+  - name: vite
+    url: https://github.com/vitejs/vite
+    ref: v6.0.0
+    framework: vitest
+
+  - name: playwright
+    url: https://github.com/microsoft/playwright
+    ref: v1.49.0
+    framework: playwright
+
+  - name: gin
+    url: https://github.com/gin-gonic/gin
+    ref: v1.10.0
+    framework: go-testing
