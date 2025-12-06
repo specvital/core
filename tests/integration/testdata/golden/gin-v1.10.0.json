@@ -1,0 +1,136 @@
+{
+  "repository": "gin",
+  "ref": "v1.10.0",
+  "expectedFramework": "go-testing",
+  "fileCount": 38,
+  "testCount": 457,
+  "frameworkCounts": {
+    "go-testing": 38
+  },
+  "sampleFiles": [
+    {
+      "path": "auth_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 9
+    },
+    {
+      "path": "benchmarks_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "binding/binding_msgpack_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "binding/binding_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 57
+    },
+    {
+      "path": "binding/default_validator_benchmark_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "binding/default_validator_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "binding/form_mapping_benchmark_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "binding/form_mapping_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 24
+    },
+    {
+      "path": "binding/json_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "binding/msgpack_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "binding/multipart_form_mapping_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "binding/toml_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "binding/validate_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 5
+    },
+    {
+      "path": "binding/xml_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "binding/yaml_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "context_1.18_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "context_1.19_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "context_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 132
+    },
+    {
+      "path": "debug_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 10
+    },
+    {
+      "path": "deprecated_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    }
+  ],
+  "stats": {
+    "filesMatched": 38,
+    "filesScanned": 38
+  }
+}

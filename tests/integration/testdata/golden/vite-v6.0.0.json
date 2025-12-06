@@ -1,0 +1,136 @@
+{
+  "repository": "vite",
+  "ref": "v6.0.0",
+  "expectedFramework": "vitest",
+  "fileCount": 232,
+  "testCount": 1062,
+  "frameworkCounts": {
+    "vitest": 232
+  },
+  "sampleFiles": [
+    {
+      "path": "packages/create-vite/__tests__/cli.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 14
+    },
+    {
+      "path": "packages/plugin-legacy/src/__tests__/readme.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/plugin-legacy/src/__tests__/snippets.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/assetSource.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 9
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/build.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 4,
+      "testCount": 35
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/config.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 4,
+      "testCount": 18
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/dev.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/env.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 7
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/environment.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/external.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/cjs-ssr-dep/index.js",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/dynamic-import/dep.mjs",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/dynamic-import/entry.mjs",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/emit-assets/entry.mjs",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/environment-alias/test.client.js",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/environment-alias/test.rsc.js",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/environment-alias/test.ssr.js",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/file-url/entry.js",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/test-dep-conditions-app/entry-with-module.js",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/fixtures/test-dep-conditions-app/entry.js",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    }
+  ],
+  "stats": {
+    "filesMatched": 232,
+    "filesScanned": 232
+  }
+}

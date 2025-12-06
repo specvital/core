@@ -4,6 +4,7 @@ package integration
 
 import (
 	"context"
+	"flag"
 	"testing"
 	"time"
 
@@ -17,6 +18,8 @@ import (
 
 const scanTimeout = 10 * time.Minute
 
+var updateSnapshots = flag.Bool("update", false, "update golden snapshots")
+
 func TestSingleFramework(t *testing.T) {
 	repos, err := LoadRepos()
 	if err != nil {
@@ -28,21 +31,21 @@ func TestSingleFramework(t *testing.T) {
 		t.Run(repo.Name, func(t *testing.T) {
 			t.Parallel()
 
-			result, err := CloneRepo(repo)
+			cloneResult, err := CloneRepo(repo)
 			if err != nil {
 				t.Fatalf("clone %s: %v", repo.Name, err)
 			}
 
-			if result.FromCache {
-				t.Logf("using cached repository: %s", result.Path)
+			if cloneResult.FromCache {
+				t.Logf("using cached repository: %s", cloneResult.Path)
 			} else {
-				t.Logf("cloned repository: %s", result.Path)
+				t.Logf("cloned repository: %s", cloneResult.Path)
 			}
 
 			ctx, cancel := context.WithTimeout(context.Background(), scanTimeout)
 			defer cancel()
 
-			scanResult, err := parser.Scan(ctx, result.Path)
+			scanResult, err := parser.Scan(ctx, cloneResult.Path)
 			if err != nil {
 				t.Fatalf("scan %s: %v", repo.Name, err)
 			}
@@ -54,6 +57,7 @@ func TestSingleFramework(t *testing.T) {
 				scanResult.Stats.Duration,
 			)
 
+			// Basic sanity checks
 			if scanResult.Stats.FilesMatched == 0 {
 				t.Errorf("expected at least 1 matched file, got 0")
 			}
@@ -68,6 +72,27 @@ func TestSingleFramework(t *testing.T) {
 			}
 
 			t.Logf("framework distribution: %v", frameworkCount)
+
+			// Snapshot comparison
+			actualSnapshot := SnapshotFromScanResult(repo, scanResult, cloneResult.Path)
+
+			if *updateSnapshots {
+				if err := SaveSnapshot(actualSnapshot); err != nil {
+					t.Fatalf("save snapshot: %v", err)
+				}
+				t.Logf("updated snapshot for %s", repo.Name)
+				return
+			}
+
+			expectedSnapshot, err := LoadSnapshot(repo.Name, repo.Ref)
+			if err != nil {
+				t.Fatalf("load snapshot: %v", err)
+			}
+
+			diff := CompareSnapshots(expectedSnapshot, actualSnapshot)
+			if !diff.IsEmpty() {
+				t.Errorf("snapshot mismatch for %s:\n%s", repo.Name, diff.String())
+			}
 		})
 	}
 }

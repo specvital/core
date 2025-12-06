@@ -1,0 +1,100 @@
+{
+  "repository": "testing-library-react",
+  "ref": "v16.1.0",
+  "expectedFramework": "jest",
+  "fileCount": 14,
+  "testCount": 76,
+  "frameworkCounts": {
+    "jest": 14
+  },
+  "sampleFiles": [
+    {
+      "path": "src/__tests__/act.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 6
+    },
+    {
+      "path": "src/__tests__/auto-cleanup-skip.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "src/__tests__/auto-cleanup.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "src/__tests__/cleanup.js",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "src/__tests__/config.js",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "src/__tests__/debug.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "src/__tests__/end-to-end.js",
+      "framework": "jest",
+      "suiteCount": 9,
+      "testCount": 27
+    },
+    {
+      "path": "src/__tests__/events.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "src/__tests__/multi-base.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "src/__tests__/new-act.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "src/__tests__/render.js",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 11
+    },
+    {
+      "path": "src/__tests__/renderHook.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "src/__tests__/rerender.js",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "src/__tests__/stopwatch.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    }
+  ],
+  "stats": {
+    "filesMatched": 14,
+    "filesScanned": 14
+  }
+}

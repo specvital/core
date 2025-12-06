@@ -1,0 +1,136 @@
+{
+  "repository": "playwright",
+  "ref": "v1.49.0",
+  "expectedFramework": "playwright",
+  "fileCount": 344,
+  "testCount": 2127,
+  "frameworkCounts": {
+    "playwright": 344
+  },
+  "sampleFiles": [
+    {
+      "path": "examples/github-api/tests/test-api.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "examples/mock-battery/tests/show-battery-status.spec.js",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/mock-battery/tests/update-battery-status.spec.js",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "examples/mock-battery/tests/verify-calls.spec.js",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/mock-filesystem/tests/directory-reader.spec.js",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/mock-filesystem/tests/file-reader.spec.js",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/svgomg/tests/example.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "examples/todomvc/tests/integration.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 8,
+      "testCount": 25
+    },
+    {
+      "path": "packages/html-reporter/src/chip.spec.tsx",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "packages/html-reporter/src/headerView.spec.tsx",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "packages/html-reporter/src/testCaseView.spec.tsx",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/web/src/components/codeMirrorWrapper.spec.tsx",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/web/src/components/expandable.spec.tsx",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "packages/web/src/components/splitView.spec.tsx",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/web/src/shared/imageDiffView.spec.tsx",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "tests/android/android.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "tests/android/browser.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 11
+    },
+    {
+      "path": "tests/android/device.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 5
+    },
+    {
+      "path": "tests/android/launch-server.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 9
+    },
+    {
+      "path": "tests/android/webview.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 5
+    }
+  ],
+  "stats": {
+    "filesMatched": 344,
+    "filesScanned": 472
+  }
+}
