@@ -214,9 +214,10 @@ describe('Suite', () => {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		// Allow some tolerance for concurrent test - may have minor variations
-		if len(result.Inventory.Files) < 18 {
-			t.Errorf("expected at least 18 files, got %d", len(result.Inventory.Files))
+		// Allow tolerance for concurrent test - language filtering now prevents
+		// cross-language false positives (e.g., Go files no longer detected as vitest)
+		if len(result.Inventory.Files) < 15 {
+			t.Errorf("expected at least 15 files, got %d", len(result.Inventory.Files))
 		}
 	})
 }

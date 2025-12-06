@@ -52,42 +52,81 @@ func (d *Detector) Detect(ctx context.Context, filePath string, content []byte) 
 
 	results := make(map[string]*Result)
 
-	d.detectFromScope(filePath, results)
-	d.detectFromImports(ctx, filePath, content, frameworks, results)
+	d.detectFromScope(filePath, lang, results)
+	d.detectFromImports(ctx, lang, content, frameworks, results)
 	d.detectFromContent(ctx, content, frameworks, results)
 	d.detectFromFilename(ctx, filePath, frameworks, results)
 
 	return d.selectBestMatch(results)
 }
 
-func (d *Detector) detectFromScope(filePath string, results map[string]*Result) {
+func (d *Detector) detectFromScope(filePath string, lang domain.Language, results map[string]*Result) {
 	if d.projectScope == nil {
 		return
 	}
 
-	for path, scope := range d.projectScope.Configs {
-		if scope.Contains(filePath) {
-			result := getOrCreate(results, scope.Framework)
-			result.Scope = scope
-			result.AddEvidence(Evidence{
-				Source:      "config-scope",
-				Description: "File matches config scope: " + path,
-				Confidence:  80,
-			})
+	type scopeMatch struct {
+		path  string
+		scope *framework.ConfigScope
+		depth int
+	}
 
-			if scope.GlobalsMode {
-				result.AddEvidence(Evidence{
-					Source:      "globals-mode",
-					Description: "Config has globals: true",
-					Confidence:  10,
-				})
+	var matches []scopeMatch
+	for path, scope := range d.projectScope.Configs {
+		def := d.registry.Find(scope.Framework)
+		if def == nil {
+			continue
+		}
+
+		langCompatible := false
+		for _, l := range def.Languages {
+			if l == lang {
+				langCompatible = true
+				break
 			}
 		}
+		if !langCompatible {
+			continue
+		}
+
+		if scope.Contains(filePath) {
+			matches = append(matches, scopeMatch{
+				path:  path,
+				scope: scope,
+				depth: scope.Depth(),
+			})
+		}
+	}
+
+	if len(matches) == 0 {
+		return
+	}
+
+	best := matches[0]
+	for _, m := range matches[1:] {
+		if m.depth > best.depth {
+			best = m
+		}
+	}
+
+	result := getOrCreate(results, best.scope.Framework)
+	result.Scope = best.scope
+	result.AddEvidence(Evidence{
+		Source:      "config-scope",
+		Description: "File matches config scope: " + best.path,
+		Confidence:  80,
+	})
+
+	if best.scope.GlobalsMode {
+		result.AddEvidence(Evidence{
+			Source:      "globals-mode",
+			Description: "Config has globals: true",
+			Confidence:  10,
+		})
 	}
 }
 
-func (d *Detector) detectFromImports(ctx context.Context, filePath string, content []byte, frameworks []*framework.Definition, results map[string]*Result) {
-	lang := detectLanguage(filePath)
+func (d *Detector) detectFromImports(ctx context.Context, lang domain.Language, content []byte, frameworks []*framework.Definition, results map[string]*Result) {
 	var imports []string
 
 	switch lang {
@@ -179,16 +218,22 @@ func (d *Detector) detectFromFilename(ctx context.Context, filePath string, fram
 
 func (d *Detector) selectBestMatch(results map[string]*Result) Result {
 	hasNegative := make(map[string]bool)
+	hasImport := make(map[string]bool)
+
 	for fw, result := range results {
 		for _, ev := range result.Evidence {
 			if ev.Negative {
 				hasNegative[fw] = true
-				break
+			}
+			if ev.Source == "import" && !ev.Negative {
+				hasImport[fw] = true
 			}
 		}
 	}
 
 	var best Result
+	bestHasImport := false
+
 	for fw, result := range results {
 		if hasNegative[fw] {
 			continue
@@ -208,8 +253,13 @@ func (d *Detector) selectBestMatch(results map[string]*Result) Result {
 		result.Framework = fw
 		result.Confidence = total
 
-		if total > best.Confidence {
+		currentHasImport := hasImport[fw]
+		if currentHasImport && !bestHasImport {
 			best = *result
+			bestHasImport = true
+		} else if currentHasImport == bestHasImport && total > best.Confidence {
+			best = *result
+			bestHasImport = currentHasImport
 		}
 	}
 

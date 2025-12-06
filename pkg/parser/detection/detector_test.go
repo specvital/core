@@ -433,3 +433,188 @@ func (m *negativeMatcher) Match(ctx context.Context, signal framework.Signal) fr
 	// Return negative match
 	return framework.NegativeMatch("conflicting import: " + signal.Value)
 }
+
+// TestDetector_Detect_GoFileNotMatchedByJSFramework tests that Go files are not detected by JS frameworks.
+// This is a regression test for Bug #1: Go files being detected as vitest/jest.
+func TestDetector_Detect_GoFileNotMatchedByJSFramework(t *testing.T) {
+	registry := framework.NewRegistry()
+
+	// Register Vitest (JS framework)
+	registry.Register(&framework.Definition{
+		Name:      "vitest",
+		Languages: []domain.Language{domain.LanguageTypeScript, domain.LanguageJavaScript},
+		Matchers: []framework.Matcher{
+			matchers.NewImportMatcher("vitest", "vitest/"),
+		},
+	})
+
+	// Register Go testing
+	registry.Register(&framework.Definition{
+		Name:      "go-testing",
+		Languages: []domain.Language{domain.LanguageGo},
+		Matchers:  []framework.Matcher{},
+	})
+
+	detector := NewDetector(registry)
+
+	// Setup vitest config scope that covers the entire project
+	projectScope := framework.NewProjectScope()
+	vitestScope := &framework.ConfigScope{
+		ConfigPath:  "/project/vitest.config.ts",
+		BaseDir:     "/project",
+		Framework:   "vitest",
+		GlobalsMode: false,
+	}
+	projectScope.AddConfig("/project/vitest.config.ts", vitestScope)
+	detector.SetProjectScope(projectScope)
+
+	// Go test file within the vitest scope
+	content := []byte(`
+package env
+
+import "testing"
+
+func TestEnv(t *testing.T) {
+	t.Run("should work", func(t *testing.T) {
+		// test code
+	})
+}
+`)
+
+	result := detector.Detect(context.Background(), "/project/src/go/libs/env/env_test.go", content)
+
+	// Go file should NOT be detected as vitest
+	if result.Framework == "vitest" {
+		t.Errorf("Go file should not be detected as vitest, got framework '%s'", result.Framework)
+	}
+}
+
+// TestDetector_Detect_ImportPriorityOverScope tests that import evidence takes priority over scope.
+// This is a regression test for Bug #2: Playwright files being detected as vitest.
+func TestDetector_Detect_ImportPriorityOverScope(t *testing.T) {
+	registry := framework.NewRegistry()
+
+	// Register Vitest
+	registry.Register(&framework.Definition{
+		Name:      "vitest",
+		Languages: []domain.Language{domain.LanguageTypeScript},
+		Matchers: []framework.Matcher{
+			matchers.NewImportMatcher("vitest", "vitest/"),
+		},
+	})
+
+	// Register Playwright
+	registry.Register(&framework.Definition{
+		Name:      "playwright",
+		Languages: []domain.Language{domain.LanguageTypeScript},
+		Matchers: []framework.Matcher{
+			matchers.NewImportMatcher("@playwright/test", "@playwright/test/"),
+		},
+	})
+
+	detector := NewDetector(registry)
+
+	// Setup overlapping scopes - vitest scope is broader
+	projectScope := framework.NewProjectScope()
+	vitestScope := &framework.ConfigScope{
+		ConfigPath:  "/project/src/extension/vitest.config.ts",
+		BaseDir:     "/project/src", // Covers all of src/
+		Framework:   "vitest",
+		GlobalsMode: false,
+	}
+	playwrightScope := &framework.ConfigScope{
+		ConfigPath:  "/project/src/view/playwright.config.ts",
+		BaseDir:     "/project/src/view", // More specific, covers src/view/
+		Framework:   "playwright",
+		GlobalsMode: false,
+	}
+	projectScope.AddConfig("/project/src/extension/vitest.config.ts", vitestScope)
+	projectScope.AddConfig("/project/src/view/playwright.config.ts", playwrightScope)
+	detector.SetProjectScope(projectScope)
+
+	// Playwright test file with @playwright/test import
+	content := []byte(`
+import { expect, test } from "@playwright/test";
+
+test("should work", async ({ page }) => {
+	await page.goto("/");
+	await expect(page).toHaveTitle("Test");
+});
+`)
+
+	result := detector.Detect(context.Background(), "/project/src/view/e2e/add-group-command.spec.ts", content)
+
+	// Should be detected as playwright due to import, not vitest
+	if result.Framework != "playwright" {
+		t.Errorf("expected framework 'playwright', got '%s'", result.Framework)
+	}
+
+	// Verify import evidence exists
+	hasImport := false
+	for _, ev := range result.Evidence {
+		if ev.Source == "import" && !ev.Negative {
+			hasImport = true
+			break
+		}
+	}
+	if !hasImport {
+		t.Error("expected import evidence for playwright")
+	}
+}
+
+// TestDetector_Detect_DeeperScopePriority tests that more specific (deeper) scope takes priority.
+func TestDetector_Detect_DeeperScopePriority(t *testing.T) {
+	registry := framework.NewRegistry()
+
+	// Register Vitest
+	registry.Register(&framework.Definition{
+		Name:      "vitest",
+		Languages: []domain.Language{domain.LanguageTypeScript},
+		Matchers: []framework.Matcher{
+			matchers.NewImportMatcher("vitest", "vitest/"),
+		},
+	})
+
+	// Register Playwright
+	registry.Register(&framework.Definition{
+		Name:      "playwright",
+		Languages: []domain.Language{domain.LanguageTypeScript},
+		Matchers: []framework.Matcher{
+			matchers.NewImportMatcher("@playwright/test", "@playwright/test/"),
+		},
+	})
+
+	detector := NewDetector(registry)
+
+	// Setup overlapping scopes
+	projectScope := framework.NewProjectScope()
+	vitestScope := &framework.ConfigScope{
+		ConfigPath:  "/project/vitest.config.ts",
+		BaseDir:     "/project", // Shallow - covers entire project
+		Framework:   "vitest",
+		GlobalsMode: true,
+	}
+	playwrightScope := &framework.ConfigScope{
+		ConfigPath:  "/project/e2e/playwright.config.ts",
+		BaseDir:     "/project/e2e", // Deeper - more specific
+		Framework:   "playwright",
+		GlobalsMode: false,
+	}
+	projectScope.AddConfig("/project/vitest.config.ts", vitestScope)
+	projectScope.AddConfig("/project/e2e/playwright.config.ts", playwrightScope)
+	detector.SetProjectScope(projectScope)
+
+	// Test file without imports - should use deeper scope
+	content := []byte(`
+test("should work", async ({ page }) => {
+	await page.goto("/");
+});
+`)
+
+	result := detector.Detect(context.Background(), "/project/e2e/login.spec.ts", content)
+
+	// Should be detected as playwright due to deeper scope
+	if result.Framework != "playwright" {
+		t.Errorf("expected framework 'playwright' (deeper scope), got '%s'", result.Framework)
+	}
+}
