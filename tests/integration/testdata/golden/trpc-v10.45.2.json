@@ -1,0 +1,137 @@
+{
+  "repository": "trpc",
+  "ref": "v10.45.2",
+  "expectedFramework": "vitest",
+  "fileCount": 172,
+  "testCount": 742,
+  "frameworkCounts": {
+    "playwright": 11,
+    "vitest": 161
+  },
+  "sampleFiles": [
+    {
+      "path": "examples/.experimental/next-app-dir/test/client.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/.experimental/next-app-dir/test/server-cache.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "examples/.experimental/next-app-dir/test/server-http.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "examples/.interop/next-prisma-starter/playwright/smoke.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 4
+    },
+    {
+      "path": "examples/.interop/next-prisma-starter/src/server/routers/post.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/.test/ssg/test/smoke.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "examples/minimal-react/test/smoke.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/next-prisma-starter/playwright/smoke.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 4
+    },
+    {
+      "path": "examples/next-prisma-starter/src/server/routers/post.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/next-prisma-todomvc/test/playwright.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/next-prisma-websockets-starter/test/playwright.test.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/client/src/internals/types.test.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 4
+    },
+    {
+      "path": "packages/client/src/links/internals/createChain.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "packages/client/src/links/internals/dedupeLink.test.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "packages/client/src/links/internals/parseJSONStream.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "packages/client/src/links/splitLink.test.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/next/src/app-dir/client.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 7
+    },
+    {
+      "path": "packages/next/src/app-dir/formDataToObject.test.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 5
+    },
+    {
+      "path": "packages/react-query/src/internals/getArrayQueryKey.test.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/server/src/adapters/node-http/content-type/json/getPostBody.test.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 2
+    }
+  ],
+  "stats": {
+    "filesMatched": 172,
+    "filesScanned": 172
+  }
+}

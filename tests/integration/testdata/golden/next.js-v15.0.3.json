@@ -1,0 +1,138 @@
+{
+  "repository": "next.js",
+  "ref": "v15.0.3",
+  "expectedFramework": "jest",
+  "fileCount": 1202,
+  "testCount": 6470,
+  "frameworkCounts": {
+    "jest": 1194,
+    "playwright": 3,
+    "vitest": 5
+  },
+  "sampleFiles": [
+    {
+      "path": "examples/with-jest-babel/__tests__/index.test.tsx",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-jest-babel/__tests__/snapshot.tsx",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-jest/__tests__/index.test.tsx",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-jest/__tests__/snapshot.tsx",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-jest/app/blog/[slug]/page.test.tsx",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-jest/app/counter.test.tsx",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-jest/app/page.test.tsx",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-jest/app/utils/add.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-playwright/e2e/app.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-playwright/e2e/pages.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-typescript-graphql/test/index.test.tsx",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-vitest/__tests__/Home.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-vitest/app/blog/[slug]/page.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-vitest/app/counter.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-vitest/app/page.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-vitest/app/utils/add.test.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-zones/home/test/next-config.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "packages/font/src/google/loader.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "packages/font/src/local/loader.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "packages/next/src/lib/batcher.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 5
+    }
+  ],
+  "stats": {
+    "filesMatched": 1202,
+    "filesScanned": 1290
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "repository": "prisma",
+  "ref": "6.9.0",
+  "expectedFramework": "vitest",
+  "fileCount": 449,
+  "testCount": 1640,
+  "frameworkCounts": {
+    "jest": 404,
+    "vitest": 45
+  },
+  "sampleFiles": [
+    {
+      "path": "packages/adapter-libsql/src/libsql.test.ts",
+      "framework": "jest",
+      "suiteCount": 2,
+      "testCount": 12
+    },
+    {
+      "path": "packages/cli/src/__tests__/artificial-panic.test.ts",
+      "framework": "jest",
+      "suiteCount": 5,
+      "testCount": 6
+    },
+    {
+      "path": "packages/cli/src/__tests__/checkpoint.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 12
+    },
+    {
+      "path": "packages/cli/src/__tests__/commandState.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "packages/cli/src/__tests__/commands/CLI.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 11
+    },
+    {
+      "path": "packages/cli/src/__tests__/commands/DebugInfo.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "packages/cli/src/__tests__/commands/Format.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 12
+    },
+    {
+      "path": "packages/cli/src/__tests__/commands/Generate.test.ts",
+      "framework": "jest",
+      "suiteCount": 5,
+      "testCount": 38
+    },
+    {
+      "path": "packages/cli/src/__tests__/commands/Studio.test.ts",
+      "framework": "jest",
+      "suiteCount": 2,
+      "testCount": 10
+    },
+    {
+      "path": "packages/cli/src/__tests__/commands/SubCommand.vitest.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "packages/cli/src/__tests__/commands/Validate.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 14
+    },
+    {
+      "path": "packages/cli/src/__tests__/commands/Version.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 0
+    },
+    {
+      "path": "packages/cli/src/__tests__/config.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/cli/src/__tests__/dependent-generator.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/cli/src/__tests__/dotenv-1-custom-schema-path.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/cli/src/__tests__/dotenv-2-prisma-folder.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/cli/src/__tests__/dotenv-3-conflict.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/cli/src/__tests__/dotenv-4-prisma-when-no-schema.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/cli/src/__tests__/dotenv-5-only-root.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "packages/cli/src/__tests__/dotenv-6-expand.test.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 1
+    }
+  ],
+  "stats": {
+    "filesMatched": 449,
+    "filesScanned": 449
+  }
+}

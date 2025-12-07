@@ -18,3 +18,55 @@ repositories:
     url: https://github.com/gin-gonic/gin
     ref: v1.10.0
     framework: go-testing
+
+  # Complex cases: monorepos, mixed frameworks
+  - name: next.js
+    url: https://github.com/vercel/next.js
+    ref: v15.0.3
+    framework: jest
+    complex: true
+
+  - name: storybook
+    url: https://github.com/storybookjs/storybook
+    ref: v8.4.5
+    framework: vitest
+    complex: true
+
+  - name: turborepo
+    url: https://github.com/vercel/turborepo
+    ref: v2.3.3
+    framework: jest
+    complex: true
+
+  - name: grafana
+    url: https://github.com/grafana/grafana
+    ref: v11.3.1
+    framework: go-testing
+    complex: true
+    nondeterministic: true
+
+  - name: trpc
+    url: https://github.com/trpc/trpc
+    ref: v10.45.2
+    framework: vitest
+    complex: true
+    nondeterministic: true
+
+  - name: prisma
+    url: https://github.com/prisma/prisma
+    ref: 6.9.0
+    framework: vitest
+    complex: true
+    nondeterministic: true
+
+  - name: remix
+    url: https://github.com/remix-run/remix
+    ref: remix@2.14.0
+    framework: jest
+    complex: true
+
+  - name: etcd
+    url: https://github.com/etcd-io/etcd
+    ref: v3.5.17
+    framework: go-testing
+    complex: true

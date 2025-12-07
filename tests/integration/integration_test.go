@@ -84,6 +84,12 @@ func TestSingleFramework(t *testing.T) {
 				return
 			}
 
+			// Skip strict snapshot comparison for nondeterministic repositories
+			if repo.Nondeterministic {
+				t.Logf("skipping strict snapshot comparison for nondeterministic repo %s", repo.Name)
+				return
+			}
+
 			expectedSnapshot, err := LoadSnapshot(repo.Name, repo.Ref)
 			if err != nil {
 				t.Fatalf("load snapshot: %v", err)

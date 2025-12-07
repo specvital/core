@@ -1,0 +1,138 @@
+{
+  "repository": "storybook",
+  "ref": "v8.4.5",
+  "expectedFramework": "vitest",
+  "fileCount": 302,
+  "testCount": 2778,
+  "frameworkCounts": {
+    "jest": 2,
+    "playwright": 20,
+    "vitest": 280
+  },
+  "sampleFiles": [
+    {
+      "path": "code/addons/a11y/src/a11yRunner.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "code/addons/a11y/src/components/A11YPanel.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "code/addons/a11y/src/components/A11yContext.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 4
+    },
+    {
+      "path": "code/addons/a11y/src/components/Report/HighlightToggle.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "code/addons/a11y/src/components/VisionSimulator.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "code/addons/a11y/src/manager.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "code/addons/actions/src/addArgsHelpers.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 12
+    },
+    {
+      "path": "code/addons/actions/src/runtime/__tests__/action.test.js",
+      "framework": "vitest",
+      "suiteCount": 3,
+      "testCount": 6
+    },
+    {
+      "path": "code/addons/actions/src/runtime/__tests__/actions.test.js",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "code/addons/actions/src/runtime/__tests__/configureActions.test.js",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "code/addons/docs/src/compiler/index.test.ts",
+      "framework": "vitest",
+      "suiteCount": 4,
+      "testCount": 19
+    },
+    {
+      "path": "code/addons/interactions/src/Panel.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "code/addons/jest/src/shared.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "code/addons/links/src/react/components/link.test.tsx",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "code/addons/links/src/utils.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "code/addons/test/src/Panel.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "code/addons/test/src/node/boot-test-runner.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "code/addons/test/src/node/test-manager.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 7
+    },
+    {
+      "path": "code/addons/test/src/vitest-plugin/setup-file.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "code/addons/test/src/vitest-plugin/viewports.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 17
+    }
+  ],
+  "stats": {
+    "filesMatched": 302,
+    "filesScanned": 302
+  }
+}

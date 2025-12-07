@@ -1,0 +1,136 @@
+{
+  "repository": "etcd",
+  "ref": "v3.5.17",
+  "expectedFramework": "go-testing",
+  "fileCount": 367,
+  "testCount": 1792,
+  "frameworkCounts": {
+    "go-testing": 367
+  },
+  "sampleFiles": [
+    {
+      "path": "api/etcdserverpb/raft_internal_stringer_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "api/v3rpc/rpctypes/error_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/fileutil/filereader_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/fileutil/fileutil_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 7
+    },
+    {
+      "path": "client/pkg/fileutil/lock_linux_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/fileutil/lock_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/fileutil/preallocate_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "client/pkg/fileutil/purge_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "client/pkg/fileutil/read_dir_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/logutil/zap_journal_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/logutil/zap_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/pathutil/path_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/srv/srv_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "client/pkg/testutil/leak_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/tlsutil/cipher_suites_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "client/pkg/tlsutil/versions_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/transport/keepalive_listener_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "client/pkg/transport/listener_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 15
+    },
+    {
+      "path": "client/pkg/transport/timeout_dialer_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "client/pkg/transport/timeout_listener_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    }
+  ],
+  "stats": {
+    "filesMatched": 367,
+    "filesScanned": 367
+  }
+}

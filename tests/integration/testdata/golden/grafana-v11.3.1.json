@@ -1,0 +1,138 @@
+{
+  "repository": "grafana",
+  "ref": "v11.3.1",
+  "expectedFramework": "go-testing",
+  "fileCount": 2549,
+  "testCount": 15801,
+  "frameworkCounts": {
+    "go-testing": 972,
+    "jest": 1393,
+    "playwright": 184
+  },
+  "sampleFiles": [
+    {
+      "path": "e2e/benchmarks/live/4-20hz-panels.spec.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "e2e/cloud-plugins-suite/azure-monitor.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "e2e/dashboards-suite/Repeating_a_panel_horizontally.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "e2e/dashboards-suite/Repeating_a_panel_vertically.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "e2e/dashboards-suite/Repeating_an_empty_row.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-browse-nested.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-browse.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-export-json.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-keybindings.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-live-streaming.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-public-create.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-public-templating.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-share-externally-create.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-share-internally.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-share-snapshot-create.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-templating.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-time-zone.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "e2e/dashboards-suite/dashboard-timepicker.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "e2e/dashboards-suite/embedded-dashboard.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "e2e/dashboards-suite/general-dashboards.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    }
+  ],
+  "stats": {
+    "filesMatched": 2549,
+    "filesScanned": 2549
+  }
+}

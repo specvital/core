@@ -1,0 +1,137 @@
+{
+  "repository": "turborepo",
+  "ref": "v2.3.3",
+  "expectedFramework": "jest",
+  "fileCount": 81,
+  "testCount": 272,
+  "frameworkCounts": {
+    "jest": 77,
+    "vitest": 4
+  },
+  "sampleFiles": [
+    {
+      "path": "examples/kitchen-sink/apps/api/src/__tests__/server.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "examples/kitchen-sink/packages/logger/src/__tests__/log.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/kitchen-sink/packages/ui/src/counter-button/index.test.tsx",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/kitchen-sink/packages/ui/src/link/index.test.tsx",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-docker/apps/api/src/__tests__/server.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "examples/with-docker/packages/logger/src/__tests__/log.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-nestjs/apps/api/src/app.controller.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-nestjs/apps/api/src/links/links.controller.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-nestjs/apps/api/src/links/links.service.spec.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-nestjs/apps/web/test/layout.spec.tsx",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "examples/with-nestjs/apps/web/test/page.spec.tsx",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 0
+    },
+    {
+      "path": "examples/with-svelte/apps/docs/src/index.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-svelte/apps/web/src/index.test.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "examples/with-typeorm/packages/typeorm-service/__test__/todo-service.test.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "examples/with-typeorm/packages/typeorm-service/__test__/typeorm.test.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-turbo/__tests__/git.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 11
+    },
+    {
+      "path": "packages/create-turbo/__tests__/index.test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "packages/create-turbo/__tests__/test-utils.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/eslint-plugin-turbo/__tests__/cwd.test.ts",
+      "framework": "jest",
+      "suiteCount": 2,
+      "testCount": 3
+    },
+    {
+      "path": "packages/eslint-plugin-turbo/__tests__/cwdFlat.test.ts",
+      "framework": "jest",
+      "suiteCount": 2,
+      "testCount": 3
+    }
+  ],
+  "stats": {
+    "filesMatched": 81,
+    "filesScanned": 87
+  }
+}

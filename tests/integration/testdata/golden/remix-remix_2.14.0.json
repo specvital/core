@@ -1,0 +1,136 @@
+{
+  "repository": "remix",
+  "ref": "remix@2.14.0",
+  "expectedFramework": "jest",
+  "fileCount": 86,
+  "testCount": 355,
+  "frameworkCounts": {
+    "jest": 86
+  },
+  "sampleFiles": [
+    {
+      "path": "packages/create-remix/__tests__/create-remix-test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 49
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/failing-remix-init/remix.init/index.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/stack/app/entry.client.tsx",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/stack/app/entry.server.tsx",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/stack/app/root.tsx",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/stack/app/utils.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/stack/remix.config.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/stack/remix.env.d.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/stack/remix.init/index.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/successful-remix-init/remix.init/index.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/fixtures/tar.js",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/github-mocks.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/msw-register.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/msw.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/create-remix/__tests__/setupAfterEnv.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/remix-architect/__tests__/binaryTypes-test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "packages/remix-architect/__tests__/server-test.ts",
+      "framework": "jest",
+      "suiteCount": 4,
+      "testCount": 16
+    },
+    {
+      "path": "packages/remix-architect/__tests__/setup.ts",
+      "framework": "jest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "packages/remix-dev/__tests__/cli-test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "packages/remix-dev/__tests__/cssSideEffectImports-test.ts",
+      "framework": "jest",
+      "suiteCount": 1,
+      "testCount": 22
+    }
+  ],
+  "stats": {
+    "filesMatched": 86,
+    "filesScanned": 86
+  }
+}

@@ -13,10 +13,12 @@ import (
 
 // Repository represents a target repository for integration testing.
 type Repository struct {
-	Framework string `yaml:"framework"`
-	Name      string `yaml:"name"`
-	Ref       string `yaml:"ref"`
-	URL       string `yaml:"url"`
+	Framework        string `yaml:"framework"`
+	Name             string `yaml:"name"`
+	Ref              string `yaml:"ref"`
+	URL              string `yaml:"url"`
+	Complex          bool   `yaml:"complex,omitempty"`
+	Nondeterministic bool   `yaml:"nondeterministic,omitempty"`
 }
 
 // ReposConfig holds the list of repositories to test.
