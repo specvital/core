@@ -1,0 +1,58 @@
+{
+  "repository": "python-unittest-tutorial",
+  "ref": "master",
+  "expectedFramework": "unittest",
+  "fileCount": 7,
+  "testCount": 12,
+  "frameworkCounts": {
+    "unittest": 7
+  },
+  "sampleFiles": [
+    {
+      "path": "test_exception.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "test_failwithmessage.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test_fixtures.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test_notequal.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "test_outcomes.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "test_simple.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test_truth.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 2
+    }
+  ],
+  "stats": {
+    "filesMatched": 7,
+    "filesScanned": 7
+  }
+}

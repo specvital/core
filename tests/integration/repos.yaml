@@ -9,6 +9,17 @@ repositories:
     ref: 2.2.3
     framework: pytest
 
+  - name: boto3
+    url: https://github.com/boto/boto3
+    ref: 1.35.0
+    framework: unittest
+    nondeterministic: true
+
+  - name: python-unittest-tutorial
+    url: https://github.com/cgoldberg/python-unittest-tutorial
+    ref: master
+    framework: unittest
+
   - name: testing-library-react
     url: https://github.com/testing-library/react-testing-library
     ref: v16.1.0

@@ -1,0 +1,137 @@
+{
+  "repository": "boto3",
+  "ref": "1.35.0",
+  "expectedFramework": "unittest",
+  "fileCount": 53,
+  "testCount": 524,
+  "frameworkCounts": {
+    "pytest": 20,
+    "unittest": 33
+  },
+  "sampleFiles": [
+    {
+      "path": "tests/__init__.py",
+      "framework": "unittest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "tests/functional/docs/__init__.py",
+      "framework": "unittest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "tests/functional/docs/test_cloudwatch.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "tests/functional/docs/test_dynamodb.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "tests/functional/docs/test_ec2.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "tests/functional/docs/test_s3.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "tests/functional/docs/test_smoke.py",
+      "framework": "pytest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "tests/functional/dynamodb/test_stubber_conditions.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "tests/functional/dynamodb/test_table.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "tests/functional/test_collection.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "tests/functional/test_crt.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "tests/functional/test_dynamodb.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "tests/functional/test_ec2.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "tests/functional/test_resource.py",
+      "framework": "pytest",
+      "suiteCount": 3,
+      "testCount": 3
+    },
+    {
+      "path": "tests/functional/test_s3.py",
+      "framework": "pytest",
+      "suiteCount": 6,
+      "testCount": 23
+    },
+    {
+      "path": "tests/functional/test_session.py",
+      "framework": "unittest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "tests/functional/test_smoke.py",
+      "framework": "pytest",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "tests/functional/test_utils.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "tests/integration/test_collections.py",
+      "framework": "pytest",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "tests/integration/test_dynamodb.py",
+      "framework": "unittest",
+      "suiteCount": 3,
+      "testCount": 23
+    }
+  ],
+  "stats": {
+    "filesMatched": 53,
+    "filesScanned": 103
+  }
+}
