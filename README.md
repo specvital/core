@@ -135,6 +135,36 @@ type Test struct {
 - Configurable worker count for parallel file processing
 - Context-based cancellation and timeout support
 
+## Development
+
+### Running Tests
+
+```bash
+# Unit tests only
+just test unit
+
+# Integration tests (clones real GitHub repos)
+just test integration
+
+# All tests
+just test
+```
+
+### Integration Tests
+
+Integration tests validate the parser against real open-source repositories:
+
+- **Single-framework repos**: testing-library/react, vite, playwright, gin
+- **Complex cases**: next.js, storybook, turborepo, grafana, trpc, prisma, remix, etcd
+
+Repositories are shallow-cloned and cached in `tests/integration/testdata/cache/`.
+
+To update golden snapshots after parser changes:
+
+```bash
+go test -tags integration ./tests/integration/... -update
+```
+
 ## License
 
 MIT
