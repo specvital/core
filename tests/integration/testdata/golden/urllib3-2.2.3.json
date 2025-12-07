@@ -1,0 +1,136 @@
+{
+  "repository": "urllib3",
+  "ref": "2.2.3",
+  "expectedFramework": "pytest",
+  "fileCount": 33,
+  "testCount": 717,
+  "frameworkCounts": {
+    "pytest": 33
+  },
+  "sampleFiles": [
+    {
+      "path": "dummyserver/testcase.py",
+      "framework": "pytest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "test/__init__.py",
+      "framework": "pytest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "test/contrib/emscripten/test_emscripten.py",
+      "framework": "pytest",
+      "suiteCount": 0,
+      "testCount": 29
+    },
+    {
+      "path": "test/contrib/test_pyopenssl.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "test/contrib/test_pyopenssl_dependencies.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "test/contrib/test_socks.py",
+      "framework": "pytest",
+      "suiteCount": 4,
+      "testCount": 19
+    },
+    {
+      "path": "test/test_collections.py",
+      "framework": "pytest",
+      "suiteCount": 2,
+      "testCount": 44
+    },
+    {
+      "path": "test/test_compatibility.py",
+      "framework": "pytest",
+      "suiteCount": 2,
+      "testCount": 2
+    },
+    {
+      "path": "test/test_connection.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 25
+    },
+    {
+      "path": "test/test_connectionpool.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 27
+    },
+    {
+      "path": "test/test_exceptions.py",
+      "framework": "pytest",
+      "suiteCount": 3,
+      "testCount": 3
+    },
+    {
+      "path": "test/test_fields.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 10
+    },
+    {
+      "path": "test/test_filepost.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "test/test_http2_connection.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 18
+    },
+    {
+      "path": "test/test_no_ssl.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "test/test_poolmanager.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 31
+    },
+    {
+      "path": "test/test_proxymanager.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "test/test_queue_monkeypatch.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test/test_response.py",
+      "framework": "pytest",
+      "suiteCount": 3,
+      "testCount": 100
+    },
+    {
+      "path": "test/test_retry.py",
+      "framework": "pytest",
+      "suiteCount": 1,
+      "testCount": 28
+    }
+  ],
+  "stats": {
+    "filesMatched": 33,
+    "filesScanned": 79
+  }
+}

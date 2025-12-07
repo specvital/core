@@ -4,6 +4,11 @@ repositories:
     ref: v2.32.3
     framework: pytest
 
+  - name: urllib3
+    url: https://github.com/urllib3/urllib3
+    ref: 2.2.3
+    framework: pytest
+
   - name: testing-library-react
     url: https://github.com/testing-library/react-testing-library
     ref: v16.1.0

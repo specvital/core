@@ -12,17 +12,10 @@ import (
 	"github.com/specvital/core/pkg/parser"
 	"github.com/specvital/core/pkg/parser/framework"
 	"github.com/specvital/core/pkg/parser/framework/matchers"
+	"github.com/specvital/core/pkg/parser/strategies/shared/pyast"
 )
 
 const frameworkName = "pytest"
-
-// Node types for Python AST parsing.
-const (
-	nodeClassDefinition     = "class_definition"
-	nodeDecorator           = "decorator"
-	nodeDecoratedDefinition = "decorated_definition"
-	nodeFunctionDefinition  = "function_definition"
-)
 
 func init() {
 	framework.Register(NewDefinition())
@@ -162,32 +155,32 @@ func parseTestModule(root *sitter.Node, source []byte, filename string) ([]domai
 		child := root.Child(i)
 
 		switch child.Type() {
-		case nodeFunctionDefinition:
+		case pyast.NodeFunctionDefinition:
 			if test := parseTestFunction(child, source, filename); test != nil {
 				tests = append(tests, *test)
 			}
 
-		case nodeClassDefinition:
+		case pyast.NodeClassDefinition:
 			if suite := parseTestClass(child, source, filename); suite != nil {
 				suites = append(suites, *suite)
 			}
 
-		case nodeDecoratedDefinition:
+		case pyast.NodeDecoratedDefinition:
 			// Handle decorated functions and classes
-			definition := getDecoratedDefinition(child)
+			definition := pyast.GetDecoratedDefinition(child)
 			if definition == nil {
 				continue
 			}
 
-			decorators := getDecorators(child)
+			decorators := pyast.GetDecorators(child)
 			status := getStatusFromDecorators(decorators, source)
 
 			switch definition.Type() {
-			case nodeFunctionDefinition:
+			case pyast.NodeFunctionDefinition:
 				if test := parseTestFunctionWithStatus(definition, source, filename, status); test != nil {
 					tests = append(tests, *test)
 				}
-			case nodeClassDefinition:
+			case pyast.NodeClassDefinition:
 				if suite := parseTestClassWithStatus(definition, source, filename, status); suite != nil {
 					suites = append(suites, *suite)
 				}
@@ -245,7 +238,7 @@ func parseTestClassWithStatus(node *sitter.Node, source []byte, filename string,
 		child := body.Child(i)
 
 		switch child.Type() {
-		case nodeFunctionDefinition:
+		case pyast.NodeFunctionDefinition:
 			if test := parseTestFunction(child, source, filename); test != nil {
 				// Inherit class status if method has no status
 				if test.Status == "" && classStatus != "" {
@@ -254,13 +247,13 @@ func parseTestClassWithStatus(node *sitter.Node, source []byte, filename string,
 				tests = append(tests, *test)
 			}
 
-		case nodeDecoratedDefinition:
-			definition := getDecoratedDefinition(child)
-			if definition == nil || definition.Type() != nodeFunctionDefinition {
+		case pyast.NodeDecoratedDefinition:
+			definition := pyast.GetDecoratedDefinition(child)
+			if definition == nil || definition.Type() != pyast.NodeFunctionDefinition {
 				continue
 			}
 
-			decorators := getDecorators(child)
+			decorators := pyast.GetDecorators(child)
 			status := getStatusFromDecorators(decorators, source)
 			if status == "" {
 				status = classStatus
@@ -282,33 +275,6 @@ func parseTestClassWithStatus(node *sitter.Node, source []byte, filename string,
 		Location: parser.GetLocation(node, filename),
 		Tests:    tests,
 	}
-}
-
-func getDecoratedDefinition(node *sitter.Node) *sitter.Node {
-	definition := node.ChildByFieldName("definition")
-	if definition != nil {
-		return definition
-	}
-
-	// Fallback: find function_definition or class_definition child
-	for i := 0; i < int(node.ChildCount()); i++ {
-		child := node.Child(i)
-		if child.Type() == nodeFunctionDefinition || child.Type() == nodeClassDefinition {
-			return child
-		}
-	}
-	return nil
-}
-
-func getDecorators(node *sitter.Node) []*sitter.Node {
-	var decorators []*sitter.Node
-	for i := 0; i < int(node.ChildCount()); i++ {
-		child := node.Child(i)
-		if child.Type() == nodeDecorator {
-			decorators = append(decorators, child)
-		}
-	}
-	return decorators
 }
 
 func getStatusFromDecorators(decorators []*sitter.Node, source []byte) domain.TestStatus {

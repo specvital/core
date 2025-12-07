@@ -2,12 +2,19 @@
   "repository": "requests",
   "ref": "v2.32.3",
   "expectedFramework": "pytest",
-  "fileCount": 6,
+  "fileCount": 7,
   "testCount": 326,
   "frameworkCounts": {
-    "pytest": 6
+    "pytest": 6,
+    "unittest": 1
   },
   "sampleFiles": [
+    {
+      "path": "tests/test_help.py",
+      "framework": "unittest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
     {
       "path": "tests/test_hooks.py",
       "framework": "pytest",
@@ -46,7 +53,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 6,
+    "filesMatched": 7,
     "filesScanned": 35
   }
 }
