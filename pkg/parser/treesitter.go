@@ -84,7 +84,28 @@ func Query(root *sitter.Node, source []byte, lang domain.Language, queryStr stri
 }
 
 // GetNodeText returns the source text for the given AST node.
-func GetNodeText(node *sitter.Node, source []byte) string {
+// Returns empty string if the node's byte range exceeds the source length.
+// Uses defensive bounds checking and panic recovery to handle edge cases.
+func GetNodeText(node *sitter.Node, source []byte) (result string) {
+	start := node.StartByte()
+	end := node.EndByte()
+	sourceLen := uint32(len(source))
+
+	// Validate bounds before calling tree-sitter C code
+	if start > sourceLen || end > sourceLen {
+		return ""
+	}
+
+	// Call Content() with panic recovery to handle unexpected slice bounds issues
+	// This can occur when tree-sitter's internal C code attempts to access memory
+	// beyond the slice capacity, particularly in concurrent scenarios with parser reuse
+	defer func() {
+		if r := recover(); r != nil {
+			// Return empty string on panic, matching the documented behavior
+			result = ""
+		}
+	}()
+
 	return node.Content(source)
 }
 
