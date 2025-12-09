@@ -145,7 +145,7 @@ func parseTestClasses(root *sitter.Node, source []byte, filename string) []domai
 }
 
 func parseTestCaseClass(node *sitter.Node, source []byte, filename string) *domain.TestSuite {
-	return parseTestCaseClassWithStatus(node, source, filename, "")
+	return parseTestCaseClassWithStatus(node, source, filename, domain.TestStatusActive)
 }
 
 func parseTestCaseClassWithStatus(node *sitter.Node, source []byte, filename string, classStatus domain.TestStatus) *domain.TestSuite {
@@ -175,7 +175,8 @@ func parseTestCaseClassWithStatus(node *sitter.Node, source []byte, filename str
 		switch child.Type() {
 		case pyast.NodeFunctionDefinition:
 			if test := parseTestMethod(child, source, filename); test != nil {
-				if test.Status == "" && classStatus != "" {
+				// Inherit class status if method has default (active) status
+				if test.Status == domain.TestStatusActive && classStatus != domain.TestStatusActive {
 					test.Status = classStatus
 				}
 				tests = append(tests, *test)
@@ -189,7 +190,8 @@ func parseTestCaseClassWithStatus(node *sitter.Node, source []byte, filename str
 
 			decorators := pyast.GetDecorators(child)
 			status := getStatusFromDecorators(decorators, source)
-			if status == "" {
+			// Inherit class status if method has default (active) status
+			if status == domain.TestStatusActive && classStatus != domain.TestStatusActive {
 				status = classStatus
 			}
 
@@ -212,7 +214,7 @@ func parseTestCaseClassWithStatus(node *sitter.Node, source []byte, filename str
 }
 
 func parseTestMethod(node *sitter.Node, source []byte, filename string) *domain.Test {
-	return parseTestMethodWithStatus(node, source, filename, "")
+	return parseTestMethodWithStatus(node, source, filename, domain.TestStatusActive)
 }
 
 func parseTestMethodWithStatus(node *sitter.Node, source []byte, filename string, status domain.TestStatus) *domain.Test {
@@ -255,8 +257,8 @@ func getStatusFromDecorators(decorators []*sitter.Node, source []byte) domain.Te
 		case strings.Contains(text, "unittest.skipUnless"):
 			return domain.TestStatusSkipped
 		case strings.Contains(text, "unittest.expectedFailure"):
-			return domain.TestStatusSkipped
+			return domain.TestStatusXfail
 		}
 	}
-	return ""
+	return domain.TestStatusActive
 }

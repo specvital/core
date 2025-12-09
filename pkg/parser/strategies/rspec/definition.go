@@ -218,11 +218,15 @@ func getStatusFromMethod(name string) domain.TestStatus {
 	if strings.HasPrefix(name, modifierX) {
 		return domain.TestStatusSkipped
 	}
-	// skip and pending are status indicators
-	if name == modifierSkip || name == modifierPending {
+	// skip is a status indicator
+	if name == modifierSkip {
 		return domain.TestStatusSkipped
 	}
-	return ""
+	// RSpec pending runs test but expects failure (xfail semantics)
+	if name == modifierPending {
+		return domain.TestStatusXfail
+	}
+	return domain.TestStatusActive
 }
 
 func getBaseMethod(name string) string {

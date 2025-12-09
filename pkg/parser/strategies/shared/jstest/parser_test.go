@@ -186,13 +186,13 @@ func TestParse_Modifiers(t *testing.T) {
 		{
 			name:       "should parse it.only",
 			source:     `it.only('test', () => {});`,
-			wantStatus: domain.TestStatusOnly,
+			wantStatus: domain.TestStatusFocused,
 			isSuite:    false,
 		},
 		{
 			name:       "should parse test.todo",
 			source:     `test.todo('test');`,
-			wantStatus: domain.TestStatusSkipped,
+			wantStatus: domain.TestStatusTodo,
 			isSuite:    false,
 		},
 		{
@@ -204,7 +204,7 @@ func TestParse_Modifiers(t *testing.T) {
 		{
 			name:       "should parse fit",
 			source:     `fit('test', () => {});`,
-			wantStatus: domain.TestStatusOnly,
+			wantStatus: domain.TestStatusFocused,
 			isSuite:    false,
 		},
 		{
@@ -216,7 +216,7 @@ func TestParse_Modifiers(t *testing.T) {
 		{
 			name:       "should parse describe.only",
 			source:     `describe.only('Suite', () => {});`,
-			wantStatus: domain.TestStatusOnly,
+			wantStatus: domain.TestStatusFocused,
 			isSuite:    true,
 		},
 		{
@@ -228,7 +228,7 @@ func TestParse_Modifiers(t *testing.T) {
 		{
 			name:       "should parse fdescribe",
 			source:     `fdescribe('Suite', () => {});`,
-			wantStatus: domain.TestStatusOnly,
+			wantStatus: domain.TestStatusFocused,
 			isSuite:    true,
 		},
 	}

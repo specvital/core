@@ -71,11 +71,13 @@ func hasSupportedExtension(filename string) bool {
 
 func ParseModifierStatus(modifier string) domain.TestStatus {
 	switch modifier {
-	case ModifierSkip, ModifierTodo:
+	case ModifierSkip:
 		return domain.TestStatusSkipped
+	case ModifierTodo:
+		return domain.TestStatusTodo
 	case ModifierOnly:
-		return domain.TestStatusOnly
+		return domain.TestStatusFocused
 	default:
-		return domain.TestStatusPending
+		return domain.TestStatusActive
 	}
 }

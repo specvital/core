@@ -192,7 +192,7 @@ func parseTestModule(root *sitter.Node, source []byte, filename string) ([]domai
 }
 
 func parseTestFunction(node *sitter.Node, source []byte, filename string) *domain.Test {
-	return parseTestFunctionWithStatus(node, source, filename, "")
+	return parseTestFunctionWithStatus(node, source, filename, domain.TestStatusActive)
 }
 
 func parseTestFunctionWithStatus(node *sitter.Node, source []byte, filename string, status domain.TestStatus) *domain.Test {
@@ -214,7 +214,7 @@ func parseTestFunctionWithStatus(node *sitter.Node, source []byte, filename stri
 }
 
 func parseTestClass(node *sitter.Node, source []byte, filename string) *domain.TestSuite {
-	return parseTestClassWithStatus(node, source, filename, "")
+	return parseTestClassWithStatus(node, source, filename, domain.TestStatusActive)
 }
 
 func parseTestClassWithStatus(node *sitter.Node, source []byte, filename string, classStatus domain.TestStatus) *domain.TestSuite {
@@ -240,8 +240,8 @@ func parseTestClassWithStatus(node *sitter.Node, source []byte, filename string,
 		switch child.Type() {
 		case pyast.NodeFunctionDefinition:
 			if test := parseTestFunction(child, source, filename); test != nil {
-				// Inherit class status if method has no status
-				if test.Status == "" && classStatus != "" {
+				// Inherit class status if method has default (active) status
+				if test.Status == domain.TestStatusActive && classStatus != domain.TestStatusActive {
 					test.Status = classStatus
 				}
 				tests = append(tests, *test)
@@ -255,7 +255,8 @@ func parseTestClassWithStatus(node *sitter.Node, source []byte, filename string,
 
 			decorators := pyast.GetDecorators(child)
 			status := getStatusFromDecorators(decorators, source)
-			if status == "" {
+			// Inherit class status if method has default (active) status
+			if status == domain.TestStatusActive && classStatus != domain.TestStatusActive {
 				status = classStatus
 			}
 
@@ -285,10 +286,10 @@ func getStatusFromDecorators(decorators []*sitter.Node, source []byte) domain.Te
 		case strings.Contains(text, "pytest.mark.skip"):
 			return domain.TestStatusSkipped
 		case strings.Contains(text, "pytest.mark.xfail"):
-			return domain.TestStatusSkipped
+			return domain.TestStatusXfail
 		}
 	}
-	return ""
+	return domain.TestStatusActive
 }
 
 func isTestFunction(name string) bool {

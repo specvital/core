@@ -121,7 +121,7 @@ func getClassStatus(attrLists []*sitter.Node, source []byte) domain.TestStatus {
 			return domain.TestStatusSkipped
 		}
 	}
-	return ""
+	return domain.TestStatusActive
 }
 
 // getDescriptionFromAttribute extracts Description from [Test(Description = "...")] or [TestCase(Description = "...")].

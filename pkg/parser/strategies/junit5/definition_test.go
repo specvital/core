@@ -257,8 +257,8 @@ class SkippedTest {
 		if suite.Tests[1].Name != "testNormal" {
 			t.Errorf("expected Tests[1].Name='testNormal', got '%s'", suite.Tests[1].Name)
 		}
-		if suite.Tests[1].Status != "" {
-			t.Errorf("expected Tests[1].Status='', got '%s'", suite.Tests[1].Status)
+		if suite.Tests[1].Status != domain.TestStatusActive {
+			t.Errorf("expected Tests[1].Status='active', got '%s'", suite.Tests[1].Status)
 		}
 	})
 

@@ -118,8 +118,8 @@ end
 				}
 
 				normal := suite.Tests[1]
-				if normal.Status != "" {
-					t.Errorf("expected empty status, got %q", normal.Status)
+				if normal.Status != domain.TestStatusActive {
+					t.Errorf("expected active status, got %q", normal.Status)
 				}
 			},
 		},

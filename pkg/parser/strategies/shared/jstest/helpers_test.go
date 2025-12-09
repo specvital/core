@@ -149,24 +149,24 @@ func TestParseModifierStatus(t *testing.T) {
 			want:     domain.TestStatusSkipped,
 		},
 		{
-			name:     "should return skipped for todo",
+			name:     "should return todo for todo",
 			modifier: "todo",
-			want:     domain.TestStatusSkipped,
+			want:     domain.TestStatusTodo,
 		},
 		{
-			name:     "should return only for only",
+			name:     "should return focused for only",
 			modifier: "only",
-			want:     domain.TestStatusOnly,
+			want:     domain.TestStatusFocused,
 		},
 		{
-			name:     "should return pending for unknown",
+			name:     "should return active for unknown",
 			modifier: "unknown",
-			want:     domain.TestStatusPending,
+			want:     domain.TestStatusActive,
 		},
 		{
-			name:     "should return pending for empty",
+			name:     "should return active for empty",
 			modifier: "",
-			want:     domain.TestStatusPending,
+			want:     domain.TestStatusActive,
 		},
 	}
 

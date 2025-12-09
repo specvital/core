@@ -308,8 +308,8 @@ def test_normal():
 		if testFile.Tests[1].Name != "test_normal" {
 			t.Errorf("expected Tests[1].Name='test_normal', got '%s'", testFile.Tests[1].Name)
 		}
-		if testFile.Tests[1].Status != "" {
-			t.Errorf("expected Tests[1].Status='', got '%s'", testFile.Tests[1].Status)
+		if testFile.Tests[1].Status != domain.TestStatusActive {
+			t.Errorf("expected Tests[1].Status='active', got '%s'", testFile.Tests[1].Status)
 		}
 	})
 
@@ -329,8 +329,8 @@ def test_xfail():
 		if len(testFile.Tests) != 1 {
 			t.Fatalf("expected 1 Test, got %d", len(testFile.Tests))
 		}
-		if testFile.Tests[0].Status != domain.TestStatusSkipped {
-			t.Errorf("expected Status='skipped', got '%s'", testFile.Tests[0].Status)
+		if testFile.Tests[0].Status != domain.TestStatusXfail {
+			t.Errorf("expected Status='xfail', got '%s'", testFile.Tests[0].Status)
 		}
 	})
 

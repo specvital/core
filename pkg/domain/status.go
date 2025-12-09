@@ -1,16 +1,20 @@
 package domain
 
-// TestStatus represents the execution status of a test.
+// TestStatus represents the execution behavior of a test.
+// Maps to database ENUM: active, skipped, todo, focused, xfail
 type TestStatus string
 
-// Test status values.
+// Test status values aligned with DB schema.
 const (
-	// TestStatusFixme indicates a test marked with .fixme (Playwright).
-	TestStatusFixme TestStatus = "fixme"
-	// TestStatusOnly indicates a test marked to run exclusively (.only).
-	TestStatusOnly TestStatus = "only"
-	// TestStatusPending indicates a test without implementation.
-	TestStatusPending TestStatus = "pending"
-	// TestStatusSkipped indicates a test marked to skip (.skip, xit, etc.).
+	// TestStatusActive indicates a normal test that runs and expects success.
+	TestStatusActive TestStatus = "active"
+	// TestStatusSkipped indicates a test intentionally excluded from execution.
 	TestStatusSkipped TestStatus = "skipped"
+	// TestStatusTodo indicates a test not yet implemented.
+	TestStatusTodo TestStatus = "todo"
+	// TestStatusFocused indicates a debugging-only test (.only, fit).
+	// CI should warn when focused tests are committed.
+	TestStatusFocused TestStatus = "focused"
+	// TestStatusXfail indicates a test expected to fail (pytest xfail, RSpec pending).
+	TestStatusXfail TestStatus = "xfail"
 )

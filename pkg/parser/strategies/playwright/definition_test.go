@@ -134,13 +134,13 @@ test('top-level test', async ({ page }) => {
 
 	// Verify tests within suite
 	assert.Equal(t, "should allow user to login", suite.Tests[0].Name)
-	assert.Equal(t, domain.TestStatusPending, suite.Tests[0].Status)
+	assert.Equal(t, domain.TestStatusActive, suite.Tests[0].Status)
 
 	assert.Equal(t, "skipped test", suite.Tests[1].Name)
 	assert.Equal(t, domain.TestStatusSkipped, suite.Tests[1].Status)
 
 	assert.Equal(t, "broken test", suite.Tests[2].Name)
-	assert.Equal(t, domain.TestStatusFixme, suite.Tests[2].Status)
+	assert.Equal(t, domain.TestStatusSkipped, suite.Tests[2].Status)
 
 	// Verify top-level test
 	require.Len(t, testFile.Tests, 1)
@@ -203,7 +203,7 @@ test.skip('skipped', async ({ page }) => {});
 import { test } from '@playwright/test';
 test.only('focused', async ({ page }) => {});
 `,
-			expectedStatus: domain.TestStatusOnly,
+			expectedStatus: domain.TestStatusFocused,
 		},
 		{
 			name: "test.fixme",
@@ -211,7 +211,7 @@ test.only('focused', async ({ page }) => {});
 import { test } from '@playwright/test';
 test.fixme('needs fix', async ({ page }) => {});
 `,
-			expectedStatus: domain.TestStatusFixme,
+			expectedStatus: domain.TestStatusSkipped,
 		},
 		{
 			name: "test.describe.skip",

@@ -250,8 +250,8 @@ class TestWithSkip(unittest.TestCase):
 		if suite.Tests[1].Name != "test_normal" {
 			t.Errorf("expected Tests[1].Name='test_normal', got '%s'", suite.Tests[1].Name)
 		}
-		if suite.Tests[1].Status != "" {
-			t.Errorf("expected Tests[1].Status='', got '%s'", suite.Tests[1].Status)
+		if suite.Tests[1].Status != domain.TestStatusActive {
+			t.Errorf("expected Tests[1].Status='active', got '%s'", suite.Tests[1].Status)
 		}
 	})
 
@@ -306,8 +306,8 @@ class TestExpectedFailure(unittest.TestCase):
 			t.Fatalf("expected 1 Test, got %d", len(suite.Tests))
 		}
 
-		if suite.Tests[0].Status != domain.TestStatusSkipped {
-			t.Errorf("expected Status='skipped', got '%s'", suite.Tests[0].Status)
+		if suite.Tests[0].Status != domain.TestStatusXfail {
+			t.Errorf("expected Status='xfail', got '%s'", suite.Tests[0].Status)
 		}
 	})
 
@@ -429,8 +429,8 @@ class TestMixed(unittest.TestCase):
 		if suite.Tests[0].Name != "test_method_override" {
 			t.Errorf("expected Tests[0].Name='test_method_override', got '%s'", suite.Tests[0].Name)
 		}
-		if suite.Tests[0].Status != domain.TestStatusSkipped {
-			t.Errorf("expected Tests[0].Status='skipped' (from expectedFailure), got '%s'", suite.Tests[0].Status)
+		if suite.Tests[0].Status != domain.TestStatusXfail {
+			t.Errorf("expected Tests[0].Status='xfail' (from expectedFailure), got '%s'", suite.Tests[0].Status)
 		}
 
 		// Method without decorator inherits class status

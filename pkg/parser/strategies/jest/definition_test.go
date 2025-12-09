@@ -353,7 +353,7 @@ test('top-level test', () => {
 
 	// Verify tests within suite
 	assert.Equal(t, "adds two numbers", suite.Tests[0].Name)
-	assert.Equal(t, domain.TestStatusPending, suite.Tests[0].Status)
+	assert.Equal(t, domain.TestStatusActive, suite.Tests[0].Status)
 
 	assert.Equal(t, "skipped test", suite.Tests[1].Name)
 	assert.Equal(t, domain.TestStatusSkipped, suite.Tests[1].Status)

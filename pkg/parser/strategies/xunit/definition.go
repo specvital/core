@@ -122,7 +122,7 @@ func getClassStatus(attrLists []*sitter.Node, source []byte) domain.TestStatus {
 			return domain.TestStatusSkipped
 		}
 	}
-	return ""
+	return domain.TestStatusActive
 }
 
 // getDisplayNameFromAttribute extracts DisplayName from [Fact(DisplayName = "...")] or [Theory(DisplayName = "...")].

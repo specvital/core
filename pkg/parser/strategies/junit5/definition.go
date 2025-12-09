@@ -251,12 +251,12 @@ func parseTestMethod(node *sitter.Node, source []byte, filename string, classSta
 
 func getClassStatus(modifiers *sitter.Node, source []byte) domain.TestStatus {
 	if modifiers == nil {
-		return ""
+		return domain.TestStatusActive
 	}
 
 	if javaast.HasAnnotation(modifiers, source, "Disabled") {
 		return domain.TestStatusSkipped
 	}
 
-	return ""
+	return domain.TestStatusActive
 }

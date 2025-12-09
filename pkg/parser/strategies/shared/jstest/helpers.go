@@ -138,14 +138,16 @@ func ParseSimpleMemberExpression(obj, prop *sitter.Node, source []byte) (string,
 	propName := parser.GetNodeText(prop, source)
 
 	switch propName {
-	case ModifierSkip, ModifierTodo:
+	case ModifierSkip:
 		return objName, domain.TestStatusSkipped
+	case ModifierTodo:
+		return objName, domain.TestStatusTodo
 	case ModifierOnly:
-		return objName, domain.TestStatusOnly
+		return objName, domain.TestStatusFocused
 	case ModifierEach:
-		return objName + "." + ModifierEach, domain.TestStatusPending
+		return objName + "." + ModifierEach, domain.TestStatusActive
 	default:
-		return "", domain.TestStatusPending
+		return "", domain.TestStatusActive
 	}
 }
 
@@ -154,7 +156,7 @@ func ParseNestedMemberExpression(obj, prop *sitter.Node, source []byte) (string,
 	innerProp := obj.ChildByFieldName("property")
 
 	if innerObj == nil || innerProp == nil {
-		return "", domain.TestStatusPending
+		return "", domain.TestStatusActive
 	}
 
 	objName := parser.GetNodeText(innerObj, source)
@@ -175,7 +177,7 @@ func ParseMemberExpressionFunction(node *sitter.Node, source []byte) (string, do
 	prop := node.ChildByFieldName("property")
 
 	if obj == nil || prop == nil {
-		return "", domain.TestStatusPending
+		return "", domain.TestStatusActive
 	}
 
 	if obj.Type() == "member_expression" {
@@ -193,10 +195,10 @@ func ParseIdentifierFunction(node *sitter.Node, source []byte) (string, domain.T
 	}
 
 	if baseName, ok := FocusedFunctionAliases[name]; ok {
-		return baseName, domain.TestStatusOnly
+		return baseName, domain.TestStatusFocused
 	}
 
-	return name, domain.TestStatusPending
+	return name, domain.TestStatusActive
 }
 
 func ParseFunctionName(node *sitter.Node, source []byte) (string, domain.TestStatus) {
@@ -206,6 +208,6 @@ func ParseFunctionName(node *sitter.Node, source []byte) (string, domain.TestSta
 	case "member_expression":
 		return ParseMemberExpressionFunction(node, source)
 	default:
-		return "", domain.TestStatusPending
+		return "", domain.TestStatusActive
 	}
 }
