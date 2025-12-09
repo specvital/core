@@ -23,7 +23,7 @@ func TestNewDefinition(t *testing.T) {
 	)
 	assert.NotNil(t, def.ConfigParser)
 	assert.NotNil(t, def.Parser)
-	assert.Len(t, def.Matchers, 2) // ImportMatcher + ConfigMatcher
+	assert.Len(t, def.Matchers, 3) // ImportMatcher + ConfigMatcher + ContentMatcher
 }
 
 func TestVitestConfigParser_ParseRoot(t *testing.T) {
@@ -357,6 +357,151 @@ globals: false
 			assert.Equal(t, tt.expected, result)
 		})
 	}
+}
+
+func TestVitestContentMatcher_Match(t *testing.T) {
+	matcher := &VitestContentMatcher{}
+	ctx := context.Background()
+
+	tests := []struct {
+		name               string
+		content            string
+		expectedConfidence int
+		shouldMatch        bool
+	}{
+		{
+			name:               "vi.fn pattern",
+			content:            `const mock = vi.fn()`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "vi.mock pattern",
+			content:            `vi.mock('./module')`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "vi.spyOn pattern",
+			content:            `vi.spyOn(object, 'method')`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "vi.useFakeTimers pattern",
+			content:            `vi.useFakeTimers()`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "vi.clearAllMocks pattern",
+			content:            `vi.clearAllMocks()`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "vi.resetAllMocks pattern",
+			content:            `vi.resetAllMocks()`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "vi.restoreAllMocks pattern",
+			content:            `vi.restoreAllMocks()`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "vi.stubGlobal pattern",
+			content:            `vi.stubGlobal('fetch', mockFetch)`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "vi.stubEnv pattern",
+			content:            `vi.stubEnv('NODE_ENV', 'test')`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name: "complex test file with vi patterns",
+			content: `
+import { describe, it, expect } from 'vitest';
+
+describe('UserService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should fetch user', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({ id: 1 });
+    vi.stubGlobal('fetch', mockFetch);
+
+    const result = await fetchUser(1);
+    expect(result.id).toBe(1);
+  });
+});
+`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "no vitest patterns",
+			content:            `const x = 1; function test() {}`,
+			expectedConfidence: 0,
+			shouldMatch:        false,
+		},
+		{
+			name:               "jest patterns should not match",
+			content:            `jest.fn(); jest.mock('./module')`,
+			expectedConfidence: 0,
+			shouldMatch:        false,
+		},
+		{
+			name: "globals mode test without vi patterns",
+			content: `
+describe('Calculator', () => {
+  it('adds numbers', () => {
+    expect(1 + 1).toBe(2);
+  });
+});
+`,
+			expectedConfidence: 0,
+			shouldMatch:        false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			signal := framework.Signal{
+				Type:    framework.SignalFileContent,
+				Value:   "",
+				Context: []byte(tt.content),
+			}
+
+			result := matcher.Match(ctx, signal)
+
+			if tt.shouldMatch {
+				assert.Equal(t, tt.expectedConfidence, result.Confidence)
+				assert.False(t, result.Negative)
+			} else {
+				assert.Equal(t, 0, result.Confidence)
+			}
+		})
+	}
+}
+
+func TestVitestContentMatcher_NonContentSignal(t *testing.T) {
+	matcher := &VitestContentMatcher{}
+	ctx := context.Background()
+
+	signal := framework.Signal{
+		Type:  framework.SignalImport,
+		Value: "vitest",
+	}
+
+	result := matcher.Match(ctx, signal)
+	assert.Equal(t, 0, result.Confidence)
 }
 
 func TestConfigScope_Contains(t *testing.T) {

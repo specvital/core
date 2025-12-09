@@ -29,6 +29,7 @@ func NewDefinition() *framework.Definition {
 				"vitest.config.mjs",
 				"vitest.config.mts",
 			),
+			&VitestContentMatcher{},
 		},
 		ConfigParser: &VitestConfigParser{},
 		Parser:       &VitestParser{},
@@ -66,4 +67,41 @@ func parseRoot(content []byte) string {
 
 func parseGlobals(ctx context.Context, content []byte) bool {
 	return extraction.MatchPatternExcludingComments(ctx, content, configGlobalsPattern)
+}
+
+// VitestContentMatcher matches vitest-specific patterns (vi.fn, vi.mock, etc.).
+type VitestContentMatcher struct{}
+
+var vitestPatterns = []struct {
+	pattern *regexp.Regexp
+	desc    string
+}{
+	{regexp.MustCompile(`\bvi\.fn\s*\(`), "vi.fn()"},
+	{regexp.MustCompile(`\bvi\.mock\s*\(`), "vi.mock()"},
+	{regexp.MustCompile(`\bvi\.spyOn\s*\(`), "vi.spyOn()"},
+	{regexp.MustCompile(`\bvi\.useFakeTimers\s*\(`), "vi.useFakeTimers()"},
+	{regexp.MustCompile(`\bvi\.clearAllMocks\s*\(`), "vi.clearAllMocks()"},
+	{regexp.MustCompile(`\bvi\.resetAllMocks\s*\(`), "vi.resetAllMocks()"},
+	{regexp.MustCompile(`\bvi\.restoreAllMocks\s*\(`), "vi.restoreAllMocks()"},
+	{regexp.MustCompile(`\bvi\.stubGlobal\s*\(`), "vi.stubGlobal()"},
+	{regexp.MustCompile(`\bvi\.stubEnv\s*\(`), "vi.stubEnv()"},
+}
+
+func (m *VitestContentMatcher) Match(ctx context.Context, signal framework.Signal) framework.MatchResult {
+	if signal.Type != framework.SignalFileContent {
+		return framework.NoMatch()
+	}
+
+	content, ok := signal.Context.([]byte)
+	if !ok {
+		content = []byte(signal.Value)
+	}
+
+	for _, p := range vitestPatterns {
+		if p.pattern.Match(content) {
+			return framework.PartialMatch(40, "Found Vitest-specific pattern: "+p.desc)
+		}
+	}
+
+	return framework.NoMatch()
 }
