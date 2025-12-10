@@ -96,6 +96,8 @@ func (d *Detector) detectFromImport(ctx context.Context, lang domain.Language, c
 		// Third-party frameworks (rstest, proptest, criterion) are not yet supported.
 		// Future: implement ExtractRustImports for `use rstest::rstest;` etc.
 		return ""
+	case domain.LanguagePHP:
+		imports = extraction.ExtractPHPUses(ctx, content)
 	}
 
 	if len(imports) == 0 {
@@ -239,6 +241,8 @@ func detectLanguage(filePath string) domain.Language {
 		return domain.LanguageRust
 	case ".cc", ".cpp", ".cxx":
 		return domain.LanguageCpp
+	case ".php":
+		return domain.LanguagePHP
 	default:
 		return ""
 	}

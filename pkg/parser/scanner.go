@@ -286,6 +286,9 @@ func (s *Scanner) discoverConfigFiles(ctx context.Context, src source.Source) []
 		".rspec",
 		"spec_helper.rb",
 		"rails_helper.rb",
+		"phpunit.xml",
+		"phpunit.xml.dist",
+		"phpunit.dist.xml",
 	}
 
 	rootPath := src.Root()
@@ -634,6 +637,8 @@ func isTestFileCandidate(path string) bool {
 		return isRustTestFile(path)
 	case ".cc", ".cpp", ".cxx":
 		return isCppTestFile(path)
+	case ".php":
+		return isPHPTestFile(path)
 	default:
 		return false
 	}
@@ -808,6 +813,29 @@ func isCppTestFile(path string) bool {
 	normalizedPath := filepath.ToSlash(path)
 
 	// test/ or tests/ directory
+	if strings.Contains(normalizedPath, "/test/") || strings.Contains(normalizedPath, "/tests/") {
+		return true
+	}
+	if strings.HasPrefix(normalizedPath, "test/") || strings.HasPrefix(normalizedPath, "tests/") {
+		return true
+	}
+
+	return false
+}
+
+func isPHPTestFile(path string) bool {
+	base := filepath.Base(path)
+	name := strings.TrimSuffix(base, ".php")
+
+	if strings.HasSuffix(name, "Test") || strings.HasSuffix(name, "Tests") {
+		return true
+	}
+	if strings.HasPrefix(name, "Test") {
+		return true
+	}
+
+	normalizedPath := filepath.ToSlash(path)
+
 	if strings.Contains(normalizedPath, "/test/") || strings.Contains(normalizedPath, "/tests/") {
 		return true
 	}

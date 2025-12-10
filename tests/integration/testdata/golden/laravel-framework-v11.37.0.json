@@ -1,0 +1,136 @@
+{
+  "repository": "laravel-framework",
+  "ref": "v11.37.0",
+  "expectedFramework": "phpunit",
+  "fileCount": 812,
+  "testCount": 9234,
+  "frameworkCounts": {
+    "phpunit": 812
+  },
+  "sampleFiles": [
+    {
+      "path": "src/Illuminate/Foundation/Testing/Concerns/InteractsWithAuthentication.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Foundation/Testing/Concerns/InteractsWithDatabase.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Foundation/Testing/TestCase.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Http/Client/Factory.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Mail/Mailable.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Process/Factory.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Queue/InteractsWithQueue.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Support/Testing/Fakes/BusFake.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Support/Testing/Fakes/EventFake.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Support/Testing/Fakes/ExceptionHandlerFake.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Support/Testing/Fakes/MailFake.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Support/Testing/Fakes/NotificationFake.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Support/Testing/Fakes/QueueFake.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Testing/AssertableJsonString.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Testing/Concerns/AssertsStatusCodes.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Testing/PendingCommand.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Testing/TestResponse.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "src/Illuminate/Testing/TestView.php",
+      "framework": "phpunit",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "tests/Auth/AuthAccessGateTest.php",
+      "framework": "phpunit",
+      "suiteCount": 1,
+      "testCount": 92
+    },
+    {
+      "path": "tests/Auth/AuthAccessResponseTest.php",
+      "framework": "phpunit",
+      "suiteCount": 1,
+      "testCount": 10
+    }
+  ],
+  "stats": {
+    "filesMatched": 812,
+    "filesScanned": 2445
+  }
+}

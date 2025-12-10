@@ -11,6 +11,7 @@ const (
 	LanguageGo         Language = "go"
 	LanguageJava       Language = "java"
 	LanguageJavaScript Language = "javascript"
+	LanguagePHP        Language = "php"
 	LanguagePython     Language = "python"
 	LanguageRuby       Language = "ruby"
 	LanguageRust       Language = "rust"

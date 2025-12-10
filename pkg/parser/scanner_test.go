@@ -17,6 +17,7 @@ import (
 	// Import frameworks to register them via init()
 	_ "github.com/specvital/core/pkg/parser/strategies/gtest"
 	_ "github.com/specvital/core/pkg/parser/strategies/jest"
+	_ "github.com/specvital/core/pkg/parser/strategies/phpunit"
 )
 
 func TestScan(t *testing.T) {
@@ -569,6 +570,234 @@ TEST(CxxTest, Works) {
 		file := result.Inventory.Files[0]
 		if file.Framework != "gtest" {
 			t.Errorf("expected framework 'gtest', got %q", file.Framework)
+		}
+	})
+}
+
+func TestScan_PHPUnit(t *testing.T) {
+	t.Run("should scan PHP PHPUnit files", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		testContent := []byte(`<?php
+use PHPUnit\Framework\TestCase;
+
+class UserTest extends TestCase
+{
+    public function testUserCanBeCreated()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function testUserCanLogin()
+    {
+        $this->assertTrue(true);
+    }
+}
+`)
+		testFile := filepath.Join(tmpDir, "UserTest.php")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(result.Inventory.Files) != 1 {
+			t.Fatalf("expected 1 file, got %d", len(result.Inventory.Files))
+		}
+
+		file := result.Inventory.Files[0]
+		if file.Framework != "phpunit" {
+			t.Errorf("expected framework 'phpunit', got %q", file.Framework)
+		}
+		if file.Language != "php" {
+			t.Errorf("expected language 'php', got %q", file.Language)
+		}
+		if len(file.Suites) != 1 {
+			t.Fatalf("expected 1 suite, got %d", len(file.Suites))
+		}
+		if file.Suites[0].Name != "UserTest" {
+			t.Errorf("expected suite name 'UserTest', got %q", file.Suites[0].Name)
+		}
+		if len(file.Suites[0].Tests) != 2 {
+			t.Errorf("expected 2 tests, got %d", len(file.Suites[0].Tests))
+		}
+	})
+
+	t.Run("should detect @test annotation", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		testContent := []byte(`<?php
+use PHPUnit\Framework\TestCase;
+
+class AnnotationTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function it_creates_a_user()
+    {
+        $this->assertTrue(true);
+    }
+}
+`)
+		testFile := filepath.Join(tmpDir, "AnnotationTest.php")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(result.Inventory.Files) != 1 {
+			t.Fatalf("expected 1 file, got %d", len(result.Inventory.Files))
+		}
+
+		file := result.Inventory.Files[0]
+		if len(file.Suites[0].Tests) != 1 {
+			t.Fatalf("expected 1 test, got %d", len(file.Suites[0].Tests))
+		}
+		if file.Suites[0].Tests[0].Name != "it_creates_a_user" {
+			t.Errorf("expected test name 'it_creates_a_user', got %q", file.Suites[0].Tests[0].Name)
+		}
+	})
+
+	t.Run("should detect #[Test] attribute", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		testContent := []byte(`<?php
+use PHPUnit\Framework\TestCase;
+
+class AttributeTest extends TestCase
+{
+    #[Test]
+    public function userCreation()
+    {
+        $this->assertTrue(true);
+    }
+}
+`)
+		testFile := filepath.Join(tmpDir, "AttributeTest.php")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(result.Inventory.Files) != 1 {
+			t.Fatalf("expected 1 file, got %d", len(result.Inventory.Files))
+		}
+
+		file := result.Inventory.Files[0]
+		if len(file.Suites[0].Tests) != 1 {
+			t.Fatalf("expected 1 test, got %d", len(file.Suites[0].Tests))
+		}
+		if file.Suites[0].Tests[0].Name != "userCreation" {
+			t.Errorf("expected test name 'userCreation', got %q", file.Suites[0].Tests[0].Name)
+		}
+	})
+
+	t.Run("should scan files in tests directory", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		testsDir := filepath.Join(tmpDir, "tests")
+		if err := os.MkdirAll(testsDir, 0755); err != nil {
+			t.Fatalf("failed to create tests dir: %v", err)
+		}
+
+		testContent := []byte(`<?php
+use PHPUnit\Framework\TestCase;
+
+class SomeTest extends TestCase
+{
+    public function testSomething()
+    {
+        $this->assertTrue(true);
+    }
+}
+`)
+		testFile := filepath.Join(testsDir, "SomeTest.php")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(result.Inventory.Files) != 1 {
+			t.Fatalf("expected 1 file, got %d", len(result.Inventory.Files))
+		}
+
+		file := result.Inventory.Files[0]
+		if file.Framework != "phpunit" {
+			t.Errorf("expected framework 'phpunit', got %q", file.Framework)
+		}
+	})
+
+	t.Run("should ignore non-TestCase classes", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		testContent := []byte(`<?php
+class NotATest
+{
+    public function testSomething()
+    {
+        // Not a real test
+    }
+}
+`)
+		testFile := filepath.Join(tmpDir, "NotATest.php")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		// File discovered but no tests parsed (no TestCase inheritance)
+		if len(result.Inventory.Files) != 0 {
+			t.Errorf("expected 0 files (no TestCase), got %d", len(result.Inventory.Files))
 		}
 	})
 }

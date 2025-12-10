@@ -132,3 +132,9 @@ repositories:
     url: https://github.com/google/googletest
     ref: v1.15.2
     framework: gtest
+
+  - name: laravel-framework
+    url: https://github.com/laravel/framework
+    ref: v11.37.0
+    framework: phpunit
+    complex: true

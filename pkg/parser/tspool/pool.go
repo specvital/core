@@ -24,6 +24,7 @@ import (
 	"github.com/smacker/go-tree-sitter/golang"
 	"github.com/smacker/go-tree-sitter/java"
 	"github.com/smacker/go-tree-sitter/javascript"
+	"github.com/smacker/go-tree-sitter/php"
 	"github.com/smacker/go-tree-sitter/python"
 	"github.com/smacker/go-tree-sitter/ruby"
 	"github.com/smacker/go-tree-sitter/rust"
@@ -41,6 +42,7 @@ var (
 	goLang   *sitter.Language
 	javaLang *sitter.Language
 	jsLang   *sitter.Language
+	phpLang  *sitter.Language
 	pyLang   *sitter.Language
 	rbLang   *sitter.Language
 	rsLang   *sitter.Language
@@ -56,6 +58,7 @@ func initLanguages() {
 		goLang = golang.GetLanguage()
 		javaLang = java.GetLanguage()
 		jsLang = javascript.GetLanguage()
+		phpLang = php.GetLanguage()
 		pyLang = python.GetLanguage()
 		rbLang = ruby.GetLanguage()
 		rsLang = rust.GetLanguage()
@@ -77,6 +80,8 @@ func GetLanguage(lang domain.Language) *sitter.Language {
 		return javaLang
 	case domain.LanguageJavaScript:
 		return jsLang
+	case domain.LanguagePHP:
+		return phpLang
 	case domain.LanguagePython:
 		return pyLang
 	case domain.LanguageRuby:
