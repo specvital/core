@@ -16,7 +16,7 @@ const mainTemplate = `{{#if noteGroups}}
 ### {{title}}
 
 {{#each commits}}
-* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}{{#if hash}} ([{{shortHash}}]({{../../../repositoryUrl}}/commit/{{hash}})){{/if}}
+* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}{{#if hash}} ([{{shortHash}}]({{@root.host}}/{{@root.owner}}/{{@root.repository}}/commit/{{hash}})){{/if}}
 {{/each}}
 {{/each}}
 {{/if}}
@@ -28,7 +28,7 @@ const mainTemplate = `{{#if noteGroups}}
 ### {{title}}
 
 {{#each commits}}
-* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}{{#if hash}} ([{{shortHash}}]({{../../../repositoryUrl}}/commit/{{hash}})){{/if}}
+* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}{{#if hash}} ([{{shortHash}}]({{@root.host}}/{{@root.owner}}/{{@root.repository}}/commit/{{hash}})){{/if}}
 {{/each}}
 {{/each}}
 {{/if}}`;
