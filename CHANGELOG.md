@@ -2,6 +2,12 @@
 
 ### 🔧 Internal Fixes
 
+- **release:** fix 404 error on commit links in release notes ([3bcff5e](https://github.com/specvital/core/commit/3bcff5e9498bec9aa56edbb9797d51263888088b))
+
+## 🔧 Maintenance
+
+### 🔧 Internal Fixes
+
 - **release:** fix broken commit links and long hash display in release notes ([fe38507](/commit/fe3850790f60df701af655b4e7177899bfcb80ff))
 
 ### 🔨 Chore
