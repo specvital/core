@@ -16,7 +16,7 @@ const mainTemplate = `{{#if noteGroups}}
 ### {{title}}
 
 {{#each commits}}
-* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}{{#if hash}} ([{{hash}}]({{../../../repositoryUrl}}/commit/{{hash}})){{/if}}
+* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}{{#if hash}} ([{{shortHash}}]({{../../../repositoryUrl}}/commit/{{hash}})){{/if}}
 {{/each}}
 {{/each}}
 {{/if}}
@@ -28,7 +28,7 @@ const mainTemplate = `{{#if noteGroups}}
 ### {{title}}
 
 {{#each commits}}
-* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}{{#if hash}} ([{{hash}}]({{../../../repositoryUrl}}/commit/{{hash}})){{/if}}
+* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}{{#if hash}} ([{{shortHash}}]({{../../../repositoryUrl}}/commit/{{hash}})){{/if}}
 {{/each}}
 {{/each}}
 {{/if}}`;
@@ -36,7 +36,7 @@ const mainTemplate = `{{#if noteGroups}}
 /** @type {import('semantic-release').Options} */
 export default {
   branches: ["release"],
-  repositoryUrl: "https://github.com/specvital/core.git",
+  repositoryUrl: "https://github.com/specvital/core",
   plugins: [
     [
       "@semantic-release/commit-analyzer",
