@@ -56,6 +56,14 @@
       ]
     },
     {
+      "color": "#FF5722",
+      "command": "just release",
+      "insertOnly": false,
+      "name": "$(rocket) Release",
+      "terminalName": "release",
+      "useVsCodeApi": false
+    },
+    {
       "color": "teal",
       "name": "$(tools) Utils",
       "shortcut": "u",
@@ -71,6 +79,45 @@
           "name": "Lint",
           "shortcut": "l",
           "terminalName": "Lint"
+        },
+        {
+          "color": "",
+          "command": "just snapshot-update",
+          "name": "snapshot-update",
+          "shortcut": "s",
+          "terminalName": "snapshot-update",
+          "useVsCodeApi": false
+        }
+      ]
+    },
+    {
+      "color": "#3F51B5",
+      "name": "$(beaker) Test",
+      "shortcut": "t",
+      "group": [
+        {
+          "color": "",
+          "command": "just test all",
+          "name": "all",
+          "shortcut": "a",
+          "terminalName": "all test",
+          "useVsCodeApi": false
+        },
+        {
+          "color": "",
+          "command": "just test unit",
+          "name": "unit",
+          "shortcut": "u",
+          "terminalName": "unit test",
+          "useVsCodeApi": false
+        },
+        {
+          "color": "",
+          "command": "just test integration",
+          "name": "integration",
+          "shortcut": "i",
+          "terminalName": "integration test",
+          "useVsCodeApi": false
         }
       ]
     },
@@ -80,23 +127,6 @@
       "name": "$(hubot) Claude",
       "shortcut": "c",
       "terminalName": "Claude Yolo",
-      "useVsCodeApi": false
-    },
-    {
-      "color": "#FF5722",
-      "command": "just release",
-      "insertOnly": false,
-      "name": "$(rocket) Release",
-      "terminalName": "release",
-      "useVsCodeApi": false
-    },
-    {
-      "color": "#3F51B5",
-      "command": "just test",
-      "insertOnly": false,
-      "name": "$(beaker) Test",
-      "shortcut": "t",
-      "terminalName": "test",
       "useVsCodeApi": false
     }
   ],
