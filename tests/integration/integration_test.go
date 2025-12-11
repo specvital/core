@@ -17,6 +17,7 @@ import (
 	_ "github.com/specvital/core/pkg/parser/strategies/gtest"
 	_ "github.com/specvital/core/pkg/parser/strategies/jest"
 	_ "github.com/specvital/core/pkg/parser/strategies/junit5"
+	_ "github.com/specvital/core/pkg/parser/strategies/mocha"
 	_ "github.com/specvital/core/pkg/parser/strategies/nunit"
 	_ "github.com/specvital/core/pkg/parser/strategies/phpunit"
 	_ "github.com/specvital/core/pkg/parser/strategies/playwright"

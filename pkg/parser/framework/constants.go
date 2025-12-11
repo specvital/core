@@ -26,6 +26,7 @@ const (
 	FrameworkCypress    = "cypress"
 	FrameworkGoTesting  = "go-testing"
 	FrameworkJest       = "jest"
+	FrameworkMocha      = "mocha"
 	FrameworkPlaywright = "playwright"
 	FrameworkVitest     = "vitest"
 )

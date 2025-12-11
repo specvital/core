@@ -144,3 +144,9 @@ repositories:
     ref: v13.17.0
     framework: cypress
     complex: true
+
+  - name: mocha
+    url: https://github.com/mochajs/mocha
+    ref: v11.7.5
+    framework: mocha
+    complex: true

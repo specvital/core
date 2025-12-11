@@ -294,6 +294,14 @@ func (s *Scanner) discoverConfigFiles(ctx context.Context, src source.Source) []
 		"phpunit.xml",
 		"phpunit.xml.dist",
 		"phpunit.dist.xml",
+		".mocharc.cjs",
+		".mocharc.js",
+		".mocharc.json",
+		".mocharc.jsonc",
+		".mocharc.mjs",
+		".mocharc.yaml",
+		".mocharc.yml",
+		"mocha.opts",
 	}
 
 	rootPath := src.Root()

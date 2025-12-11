@@ -1,0 +1,136 @@
+{
+  "repository": "mocha",
+  "ref": "v11.7.5",
+  "expectedFramework": "mocha",
+  "fileCount": 126,
+  "testCount": 1227,
+  "frameworkCounts": {
+    "mocha": 126
+  },
+  "sampleFiles": [
+    {
+      "path": "test/browser-specific/esm.spec.mjs",
+      "framework": "mocha",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "test/integration/color.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test/integration/common-js-require.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test/integration/compiler-cjs.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "test/integration/compiler-esm-only-loader.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "test/integration/compiler-esm.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "test/integration/compiler-globbing.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test/integration/config.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "test/integration/deprecate.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test/integration/diffs.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 0
+    },
+    {
+      "path": "test/integration/duplicate-arguments.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "test/integration/esm.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 7
+    },
+    {
+      "path": "test/integration/events.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "test/integration/file-utils.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 16
+    },
+    {
+      "path": "test/integration/fixtures/glob/glob.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test/integration/fixtures/glob/nested/glob.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "test/integration/glob.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 11
+    },
+    {
+      "path": "test/integration/hook-err.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 18
+    },
+    {
+      "path": "test/integration/hooks.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "test/integration/init.spec.js",
+      "framework": "mocha",
+      "suiteCount": 1,
+      "testCount": 3
+    }
+  ],
+  "stats": {
+    "filesMatched": 126,
+    "filesScanned": 126
+  }
+}

@@ -7,6 +7,7 @@ import (
 	"github.com/specvital/core/pkg/domain"
 	"github.com/specvital/core/pkg/parser/framework"
 	"github.com/specvital/core/pkg/parser/framework/matchers"
+	"github.com/specvital/core/pkg/parser/strategies/shared/configutil"
 	"github.com/specvital/core/pkg/parser/strategies/shared/jstest"
 )
 
@@ -118,7 +119,6 @@ var (
 	componentSpecPatternArrayRegex  = regexp.MustCompile(`(?s)component\s*:\s*\{[\s\S]*?specPattern\s*:\s*\[([^\]]+)\]`)
 	excludeSpecPatternSingleRegex   = regexp.MustCompile(`excludeSpecPattern\s*:\s*['"]([^'"]+)['"]`)
 	excludeSpecPatternArrayRegex    = regexp.MustCompile(`excludeSpecPattern\s*:\s*\[([^\]]+)\]`)
-	quotedStringRegex               = regexp.MustCompile(`['"]([^'"]+)['"]`)
 )
 
 func parsePattern(content []byte, singleRegex, arrayRegex *regexp.Regexp) []string {
@@ -126,7 +126,7 @@ func parsePattern(content []byte, singleRegex, arrayRegex *regexp.Regexp) []stri
 		return []string{string(match[1])}
 	}
 	if match := arrayRegex.FindSubmatch(content); match != nil {
-		return extractQuotedStrings(match[1])
+		return configutil.ExtractQuotedStrings(match[1])
 	}
 	return nil
 }
@@ -144,19 +144,6 @@ func parseSpecPattern(content []byte, section string) []string {
 
 func parseExcludeSpecPattern(content []byte) []string {
 	return parsePattern(content, excludeSpecPatternSingleRegex, excludeSpecPatternArrayRegex)
-}
-
-func extractQuotedStrings(arrayContent []byte) []string {
-	matches := quotedStringRegex.FindAllSubmatch(arrayContent, -1)
-	if len(matches) == 0 {
-		return nil
-	}
-
-	result := make([]string, 0, len(matches))
-	for _, match := range matches {
-		result = append(result, string(match[1]))
-	}
-	return result
 }
 
 type CypressParser struct{}
