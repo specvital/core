@@ -2,10 +2,12 @@
   "repository": "junit5-samples",
   "ref": "main",
   "expectedFramework": "junit5",
-  "fileCount": 30,
-  "testCount": 40,
+  "fileCount": 31,
+  "testCount": 41,
   "frameworkCounts": {
-    "junit5": 30
+    "junit5": 29,
+    "kotest": 1,
+    "testng": 1
   },
   "sampleFiles": [
     {
@@ -130,7 +132,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 30,
-    "filesScanned": 62
+    "filesMatched": 31,
+    "filesScanned": 75
   }
 }

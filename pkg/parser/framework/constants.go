@@ -36,6 +36,7 @@ const (
 	FrameworkPlaywright = "playwright"
 	FrameworkPytest     = "pytest"
 	FrameworkRSpec      = "rspec"
+	FrameworkTestNG     = "testng"
 	FrameworkUnittest   = "unittest"
 	FrameworkVitest     = "vitest"
 	FrameworkXUnit      = "xunit"

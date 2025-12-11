@@ -156,3 +156,9 @@ repositories:
     ref: v6.0.7
     framework: kotest
     complex: true
+
+  - name: testng
+    url: https://github.com/testng-team/testng
+    ref: 7.10.2
+    framework: testng
+    complex: true

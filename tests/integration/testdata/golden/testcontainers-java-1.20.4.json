@@ -5,7 +5,8 @@
   "fileCount": 304,
   "testCount": 920,
   "frameworkCounts": {
-    "junit5": 304
+    "junit5": 287,
+    "testng": 17
   },
   "sampleFiles": [
     {
@@ -88,7 +89,7 @@
     },
     {
       "path": "core/src/test/java/org/testcontainers/containers/ExposedHostTest.java",
-      "framework": "junit5",
+      "framework": "testng",
       "suiteCount": 1,
       "testCount": 6
     },
@@ -131,6 +132,6 @@
   ],
   "stats": {
     "filesMatched": 304,
-    "filesScanned": 715
+    "filesScanned": 721
   }
 }

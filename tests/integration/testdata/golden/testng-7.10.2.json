@@ -1,0 +1,137 @@
+{
+  "repository": "testng",
+  "ref": "7.10.2",
+  "expectedFramework": "testng",
+  "fileCount": 1968,
+  "testCount": 3042,
+  "frameworkCounts": {
+    "junit5": 2,
+    "testng": 1966
+  },
+  "sampleFiles": [
+    {
+      "path": "testng-asserts/src/main/java/org/testng/Assert.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-asserts/src/main/java/org/testng/asserts/LoggingAssert.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-asserts/src/main/java/org/testng/asserts/SoftAssert.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-asserts/src/test/java/org/testng/AssertTest.java",
+      "framework": "testng",
+      "suiteCount": 1,
+      "testCount": 64
+    },
+    {
+      "path": "testng-asserts/src/test/java/test/assertion/AssertionListContainsTest.java",
+      "framework": "testng",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "testng-asserts/src/test/java/test/assertion/AssertionTest.java",
+      "framework": "testng",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "testng-asserts/src/test/java/test/assertion/MyRawAssertion.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-asserts/src/test/java/test/assertion/SoftAssertTest.java",
+      "framework": "testng",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "testng-asserts/src/test/java/test/asserttests/ArrayEqualityAssertTest.java",
+      "framework": "testng",
+      "suiteCount": 1,
+      "testCount": 29
+    },
+    {
+      "path": "testng-asserts/src/test/java/test/asserttests/AssertTest.java",
+      "framework": "testng",
+      "suiteCount": 1,
+      "testCount": 57
+    },
+    {
+      "path": "testng-collections/src/main/java/org/testng/collections/Objects.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-collections/src/main/java/org/testng/util/Strings.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-core-api/src/main/java/org/testng/IAlterSuiteListener.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-core-api/src/main/java/org/testng/IAnnotationTransformer.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-core-api/src/main/java/org/testng/IClass.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-core-api/src/main/java/org/testng/IHookable.java",
+      "framework": "junit5",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-core-api/src/main/java/org/testng/IReporter.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-core-api/src/main/java/org/testng/ISuite.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-core-api/src/main/java/org/testng/ITestContext.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "testng-core-api/src/main/java/org/testng/ITestMethodFinder.java",
+      "framework": "testng",
+      "suiteCount": 0,
+      "testCount": 0
+    }
+  ],
+  "stats": {
+    "filesMatched": 1968,
+    "filesScanned": 2275
+  }
+}
