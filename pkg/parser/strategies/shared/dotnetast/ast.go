@@ -135,33 +135,6 @@ func HasAttribute(attributeLists []*sitter.Node, source []byte, attributeName st
 	return false
 }
 
-// GetAttributeArgument extracts the first string argument from an attribute.
-// For [InlineData("test")], returns "test".
-func GetAttributeArgument(attribute *sitter.Node, source []byte) string {
-	argList := attribute.ChildByFieldName("arguments")
-	if argList == nil {
-		return ""
-	}
-
-	for i := 0; i < int(argList.ChildCount()); i++ {
-		arg := argList.Child(i)
-		if arg.Type() == NodeAttributeArgument {
-			for j := 0; j < int(arg.ChildCount()); j++ {
-				child := arg.Child(j)
-				str := ExtractStringContent(child, source)
-				if str != "" {
-					return str
-				}
-			}
-		}
-		str := ExtractStringContent(arg, source)
-		if str != "" {
-			return str
-		}
-	}
-	return ""
-}
-
 // ExtractStringContent extracts string content from various string literal node types.
 // Supports regular string literals ("..."), verbatim strings (@"..."), and interpolated strings ($"...").
 // This is exported for reuse by xUnit, NUnit, MSTest, and other .NET framework parsers.
@@ -192,17 +165,6 @@ func ExtractStringContent(node *sitter.Node, source []byte) string {
 		}
 	}
 	return ""
-}
-
-// IsPublicMethod checks if a method has the public modifier.
-func IsPublicMethod(node *sitter.Node, source []byte) bool {
-	for i := 0; i < int(node.ChildCount()); i++ {
-		child := node.Child(i)
-		if child.Type() == NodeModifier && child.Content(source) == "public" {
-			return true
-		}
-	}
-	return false
 }
 
 // FindAttributeArgumentList finds the attribute_argument_list child of an attribute node.

@@ -906,8 +906,3 @@ func Scan(ctx context.Context, src source.Source, opts ...ScanOption) (*ScanResu
 	scanner := NewScanner(opts...)
 	return scanner.Scan(ctx, src)
 }
-
-func DetectTestFiles(ctx context.Context, src source.Source, opts ...ScanOption) (*ScanResult, error) {
-	scanner := NewScanner(opts...)
-	return scanner.Scan(ctx, src)
-}

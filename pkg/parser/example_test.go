@@ -71,54 +71,6 @@ func Example_withOptions() {
 	fmt.Printf("Found %d test files\n", len(result.Inventory.Files))
 }
 
-func ExampleDetectTestFiles() {
-	ctx := context.Background()
-
-	// Create a source for the project directory
-	src, err := source.NewLocalSource("/path/to/project")
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		return
-	}
-	defer src.Close()
-
-	// Detect test files without parsing
-	result, err := parser.DetectTestFiles(ctx, src)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		return
-	}
-
-	fmt.Printf("Found %d test files:\n", len(result.Inventory.Files))
-	for _, file := range result.Inventory.Files {
-		fmt.Printf("  - %s\n", file.Path)
-	}
-}
-
-func ExampleDetectTestFiles_withPatterns() {
-	ctx := context.Background()
-
-	// Create a source for the project directory
-	src, err := source.NewLocalSource("/path/to/project")
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		return
-	}
-	defer src.Close()
-
-	// Detect only specific test files
-	result, err := parser.DetectTestFiles(ctx, src,
-		parser.WithPatterns([]string{"src/**/*.spec.ts"}),
-		parser.WithMaxFileSize(5*1024*1024), // 5MB max
-	)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		return
-	}
-
-	fmt.Printf("Found %d matching test files\n", len(result.Inventory.Files))
-}
-
 func ExampleScan_testInventory() {
 	ctx := context.Background()
 

@@ -62,18 +62,6 @@ result, err := parser.Scan(ctx, rootPath,
 )
 ```
 
-### DetectTestFiles
-
-Detects test files without parsing.
-
-```go
-result, err := parser.DetectTestFiles(ctx, rootPath,
-    parser.WithPatterns([]string{"src/**/*.spec.ts"}),
-    parser.WithMaxFileSize(5*1024*1024), // 5MB max
-    parser.WithSkipPatterns([]string{"node_modules", ".git"}),
-)
-```
-
 ## Supported Test Patterns
 
 | Framework  | File Patterns                           | Test Functions      |
