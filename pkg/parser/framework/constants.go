@@ -23,10 +23,19 @@ const (
 
 // Common framework names as constants to ensure consistency.
 const (
+	FrameworkCargoTest  = "cargo-test"
 	FrameworkCypress    = "cypress"
 	FrameworkGoTesting  = "go-testing"
+	FrameworkGTest      = "gtest"
 	FrameworkJest       = "jest"
+	FrameworkJUnit5     = "junit5"
 	FrameworkMocha      = "mocha"
+	FrameworkNUnit      = "nunit"
+	FrameworkPHPUnit    = "phpunit"
 	FrameworkPlaywright = "playwright"
+	FrameworkPytest     = "pytest"
+	FrameworkRSpec      = "rspec"
+	FrameworkUnittest   = "unittest"
 	FrameworkVitest     = "vitest"
+	FrameworkXUnit      = "xunit"
 )
