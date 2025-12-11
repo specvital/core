@@ -123,6 +123,11 @@ repositories:
     ref: v3.13.2
     framework: rspec
 
+  - name: minitest
+    url: https://github.com/minitest/minitest
+    ref: v5.25.4
+    framework: minitest
+
   - name: ripgrep
     url: https://github.com/BurntSushi/ripgrep
     ref: 14.1.1

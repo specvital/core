@@ -363,49 +363,21 @@ func extractNameFromArgs(args *sitter.Node, source []byte) string {
 }
 
 func extractStringContent(node *sitter.Node, source []byte) string {
-	text := parser.GetNodeText(node, source)
-	// Remove surrounding quotes
-	if len(text) >= 2 {
-		if (text[0] == '"' && text[len(text)-1] == '"') ||
-			(text[0] == '\'' && text[len(text)-1] == '\'') {
-			return text[1 : len(text)-1]
-		}
-	}
-	return text
+	return rubyast.ExtractStringContent(node, source)
 }
 
 func extractSymbolContent(node *sitter.Node, source []byte) string {
-	text := parser.GetNodeText(node, source)
-	// Remove leading colon from symbol
-	if len(text) > 0 && text[0] == ':' {
-		return text[1:]
-	}
-	return text
+	return rubyast.ExtractSymbolContent(node, source)
 }
 
 func findBlock(node *sitter.Node) *sitter.Node {
-	// Look for block or do_block child
-	for i := 0; i < int(node.ChildCount()); i++ {
-		child := node.Child(i)
-		if child.Type() == rubyast.NodeBlock || child.Type() == rubyast.NodeDoBlock {
-			return child
-		}
-	}
-	return nil
+	return rubyast.FindBlock(node)
 }
 
 func addTestToTarget(test domain.Test, parentSuite *domain.TestSuite, file *domain.TestFile) {
-	if parentSuite != nil {
-		parentSuite.Tests = append(parentSuite.Tests, test)
-	} else {
-		file.Tests = append(file.Tests, test)
-	}
+	rubyast.AddTestToTarget(test, parentSuite, file)
 }
 
 func addSuiteToTarget(suite domain.TestSuite, parentSuite *domain.TestSuite, file *domain.TestFile) {
-	if parentSuite != nil {
-		parentSuite.Suites = append(parentSuite.Suites, suite)
-	} else {
-		file.Suites = append(file.Suites, suite)
-	}
+	rubyast.AddSuiteToTarget(suite, parentSuite, file)
 }

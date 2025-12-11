@@ -1,0 +1,22 @@
+{
+  "repository": "minitest",
+  "ref": "v5.25.4",
+  "expectedFramework": "minitest",
+  "fileCount": 1,
+  "testCount": 76,
+  "frameworkCounts": {
+    "minitest": 1
+  },
+  "sampleFiles": [
+    {
+      "path": "test/minitest/test_minitest_spec.rb",
+      "framework": "minitest",
+      "suiteCount": 8,
+      "testCount": 76
+    }
+  ],
+  "stats": {
+    "filesMatched": 1,
+    "filesScanned": 1
+  }
+}
