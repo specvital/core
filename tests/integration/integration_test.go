@@ -19,6 +19,7 @@ import (
 	_ "github.com/specvital/core/pkg/parser/strategies/junit5"
 	_ "github.com/specvital/core/pkg/parser/strategies/kotest"
 	_ "github.com/specvital/core/pkg/parser/strategies/mocha"
+	_ "github.com/specvital/core/pkg/parser/strategies/mstest"
 	_ "github.com/specvital/core/pkg/parser/strategies/nunit"
 	_ "github.com/specvital/core/pkg/parser/strategies/phpunit"
 	_ "github.com/specvital/core/pkg/parser/strategies/playwright"

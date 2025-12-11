@@ -162,3 +162,9 @@ repositories:
     ref: 7.10.2
     framework: testng
     complex: true
+
+  - name: testfx
+    url: https://github.com/microsoft/testfx
+    ref: v4.0.2
+    framework: mstest
+    complex: true

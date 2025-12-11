@@ -1,0 +1,136 @@
+{
+  "repository": "testfx",
+  "ref": "v4.0.2",
+  "expectedFramework": "mstest",
+  "fileCount": 1487,
+  "testCount": 112802,
+  "frameworkCounts": {
+    "mstest": 1487
+  },
+  "sampleFiles": [
+    {
+      "path": "samples/FxExtensibility/AssertEx.cs",
+      "framework": "mstest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "samples/FxExtensibility/AssertIs.cs",
+      "framework": "mstest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "samples/Playground/Program.cs",
+      "framework": "mstest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "samples/Playground/Tests.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/BlankUwpNet9App/UnitTests.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/BlankWinUINet9App/UnitTests.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/DemoMSTestSdk/ProjectUsingAspire/IntegrationTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "samples/public/DemoMSTestSdk/ProjectUsingMSTestRunner/UnitTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/DemoMSTestSdk/ProjectUsingPlaywright/UnitTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/DemoMSTestSdk/ProjectUsingVSTest/UnitTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/DemoMSTestSdk/ProjectWithNativeAOT/UnitTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/TestingPlatformExamples/TestingPlatformExplorer/UnitTests.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "samples/public/mstest-runner/CustomReportExtension/CustomReportExtension/UnitTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "samples/public/mstest-runner/MSTestProjectWithExplicitMain/MSTestProjectWithExplicitMain/Test1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/mstest-runner/MSTestRunnerWinUI/UnitTest/App.xaml.cs",
+      "framework": "mstest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "samples/public/mstest-runner/MSTestRunnerWinUI/UnitTest/TestClass.cs",
+      "framework": "mstest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
+    {
+      "path": "samples/public/mstest-runner/NativeAotRunner/TestProject1/UnitTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "samples/public/mstest-runner/RunInDocker/MyServer.Tests/UnitTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/mstest-runner/Simple1/UnitTest1.cs",
+      "framework": "mstest",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "samples/public/mstest-runner/runner_vs_vstest/1000C_100M/MSTestConfiguration.cs",
+      "framework": "mstest",
+      "suiteCount": 0,
+      "testCount": 0
+    }
+  ],
+  "stats": {
+    "filesMatched": 1487,
+    "filesScanned": 2649
+  }
+}
