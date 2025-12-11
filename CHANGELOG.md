@@ -1,3 +1,28 @@
+## 🎯 Highlights
+
+### ✨ Features
+
+- **cypress:** add Cypress E2E testing framework support ([b87f92b](https://github.com/specvital/core/commit/b87f92b68e0e0263f9571a238693e6a96390c232))
+- **gtest:** add C++ Google Test framework support ([3821565](https://github.com/specvital/core/commit/382156588fe30534679fb24e7005cd45be1315e7))
+- **kotest:** add Kotlin Kotest test framework support ([374b696](https://github.com/specvital/core/commit/374b6963d5d9a666297c450ec2d8aeecb8adfca9))
+- **minitest:** add Ruby Minitest test framework support ([2cf2c22](https://github.com/specvital/core/commit/2cf2c22eb6fb3964b3611ee72f12d50a96cb4566))
+- **mocha:** add Mocha JavaScript test framework support ([fdbb49e](https://github.com/specvital/core/commit/fdbb49e7d7d048238da0e1af53e1f4ed3d24b627))
+- **mstest:** add C# MSTest test framework support ([9ab6565](https://github.com/specvital/core/commit/9ab6565c8141a0b8fe4a80eb197da76432306bb0))
+- **phpunit:** add PHP PHPUnit framework support ([d395cd5](https://github.com/specvital/core/commit/d395cd5627a94e54eeaee989c0e48817810f79ca))
+- **testng:** add Java TestNG test framework support ([3c50d31](https://github.com/specvital/core/commit/3c50d318b58031b0c833c6872de8c248aa97cacb))
+- **xctest:** add Swift XCTest test framework support ([7c62c95](https://github.com/specvital/core/commit/7c62c95a2f4b7120b938daf7f6e09466479f3d23))
+
+## 🔧 Maintenance
+
+### ♻️ Refactoring
+
+- delete deprecated code ([c55a9ac](https://github.com/specvital/core/commit/c55a9ac53695ae0e4bfac1f5c70d9c20b9a20239))
+- remove dead code from MVP development ([3a08c21](https://github.com/specvital/core/commit/3a08c21fe0e15ed11a793bb2a7943b1c53736191))
+
+### 🔨 Chore
+
+- add missing framework constants ([324bad0](https://github.com/specvital/core/commit/324bad03d66c25fcaeb4ee6be0859e2dfa5e2607))
+
 ## 🔧 Maintenance
 
 ### 🔧 Internal Fixes
