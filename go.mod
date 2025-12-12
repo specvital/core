@@ -6,7 +6,7 @@ toolchain go1.24.11
 
 require github.com/smacker/go-tree-sitter v0.0.0-20240827094217-dd81d9e9be82
 
-require github.com/bmatcuk/doublestar/v4 v4.8.1
+require github.com/bmatcuk/doublestar/v4 v4.9.1
 
 require (
 	github.com/stretchr/testify v1.9.0
