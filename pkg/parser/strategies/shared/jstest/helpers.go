@@ -138,14 +138,16 @@ func ParseSimpleMemberExpression(obj, prop *sitter.Node, source []byte) (string,
 	propName := parser.GetNodeText(prop, source)
 
 	switch propName {
+	case ModifierConcurrent:
+		return objName, domain.TestStatusActive, ""
+	case ModifierEach:
+		return objName + "." + ModifierEach, domain.TestStatusActive, ""
+	case ModifierOnly:
+		return objName, domain.TestStatusFocused, ModifierOnly
 	case ModifierSkip:
 		return objName, domain.TestStatusSkipped, ModifierSkip
 	case ModifierTodo:
 		return objName, domain.TestStatusTodo, ModifierTodo
-	case ModifierOnly:
-		return objName, domain.TestStatusFocused, ModifierOnly
-	case ModifierEach:
-		return objName + "." + ModifierEach, domain.TestStatusActive, ""
 	default:
 		return "", domain.TestStatusActive, ""
 	}
@@ -162,6 +164,19 @@ func ParseNestedMemberExpression(obj, prop *sitter.Node, source []byte) (string,
 	objName := parser.GetNodeText(innerObj, source)
 	middleProp := parser.GetNodeText(innerProp, source)
 	propName := parser.GetNodeText(prop, source)
+
+	// Handle test.concurrent.skip, describe.concurrent.only, etc.
+	if middleProp == ModifierConcurrent {
+		status := ParseModifierStatus(propName)
+		modifier := ""
+		if status != domain.TestStatusActive {
+			modifier = propName
+		}
+		if propName == ModifierEach {
+			return objName + "." + ModifierEach, domain.TestStatusActive, ""
+		}
+		return objName, status, modifier
+	}
 
 	status := ParseModifierStatus(middleProp)
 	modifier := ""

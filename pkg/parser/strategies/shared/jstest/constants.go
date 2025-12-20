@@ -16,10 +16,11 @@ const (
 	FuncSpecify = "specify"
 	FuncSuite   = "suite"
 
-	ModifierSkip = "skip"
-	ModifierOnly = "only"
-	ModifierEach = "each"
-	ModifierTodo = "todo"
+	ModifierConcurrent = "concurrent"
+	ModifierEach       = "each"
+	ModifierOnly       = "only"
+	ModifierSkip       = "skip"
+	ModifierTodo       = "todo"
 
 	DynamicCasesSuffix = " (dynamic cases)"
 )

@@ -542,6 +542,161 @@ func TestParse_TDDModifiers(t *testing.T) {
 	}
 }
 
+func TestParse_Concurrent(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name       string
+		source     string
+		wantCount  int
+		wantStatus domain.TestStatus
+		isSuite    bool
+	}{
+		{
+			name:       "should parse test.concurrent",
+			source:     `test.concurrent('async test', async () => {});`,
+			wantCount:  1,
+			wantStatus: domain.TestStatusActive,
+			isSuite:    false,
+		},
+		{
+			name:       "should parse it.concurrent",
+			source:     `it.concurrent('async test', async () => {});`,
+			wantCount:  1,
+			wantStatus: domain.TestStatusActive,
+			isSuite:    false,
+		},
+		{
+			name:       "should parse describe.concurrent",
+			source:     `describe.concurrent('async suite', () => {});`,
+			wantCount:  1,
+			wantStatus: domain.TestStatusActive,
+			isSuite:    true,
+		},
+		{
+			name:       "should parse test.concurrent.skip",
+			source:     `test.concurrent.skip('skipped async', async () => {});`,
+			wantCount:  1,
+			wantStatus: domain.TestStatusSkipped,
+			isSuite:    false,
+		},
+		{
+			name:       "should parse it.concurrent.only",
+			source:     `it.concurrent.only('focused async', async () => {});`,
+			wantCount:  1,
+			wantStatus: domain.TestStatusFocused,
+			isSuite:    false,
+		},
+		{
+			name:       "should parse describe.concurrent.skip",
+			source:     `describe.concurrent.skip('skipped async suite', () => {});`,
+			wantCount:  1,
+			wantStatus: domain.TestStatusSkipped,
+			isSuite:    true,
+		},
+		{
+			name: "should parse tests inside concurrent suite",
+			source: `describe.concurrent('suite', () => {
+				it('test1', async () => {});
+				it('test2', async () => {});
+			});`,
+			wantCount:  1,
+			wantStatus: domain.TestStatusActive,
+			isSuite:    true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			file, err := Parse(context.Background(), []byte(tt.source), "test.ts", "jest")
+
+			if err != nil {
+				t.Fatalf("Parse() error = %v", err)
+			}
+
+			if tt.isSuite {
+				if len(file.Suites) != tt.wantCount {
+					t.Fatalf("len(Suites) = %d, want %d", len(file.Suites), tt.wantCount)
+				}
+				if file.Suites[0].Status != tt.wantStatus {
+					t.Errorf("Status = %q, want %q", file.Suites[0].Status, tt.wantStatus)
+				}
+			} else {
+				if len(file.Tests) != tt.wantCount {
+					t.Fatalf("len(Tests) = %d, want %d", len(file.Tests), tt.wantCount)
+				}
+				if file.Tests[0].Status != tt.wantStatus {
+					t.Errorf("Status = %q, want %q", file.Tests[0].Status, tt.wantStatus)
+				}
+			}
+		})
+	}
+}
+
+func TestParse_ConcurrentEach(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		source    string
+		wantCount int
+		wantFirst string
+		isSuite   bool
+	}{
+		{
+			name:      "should parse test.concurrent.each",
+			source:    `test.concurrent.each([[1], [2], [3]])('test %d', async () => {});`,
+			wantCount: 3,
+			wantFirst: "test 1",
+			isSuite:   false,
+		},
+		{
+			name:      "should parse it.concurrent.each",
+			source:    `it.concurrent.each([['a'], ['b']])('test %s', async () => {});`,
+			wantCount: 2,
+			wantFirst: "test a",
+			isSuite:   false,
+		},
+		{
+			name:      "should parse describe.concurrent.each",
+			source:    `describe.concurrent.each([['x'], ['y']])('suite %s', () => {});`,
+			wantCount: 2,
+			wantFirst: "suite x",
+			isSuite:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			file, err := Parse(context.Background(), []byte(tt.source), "test.ts", "jest")
+
+			if err != nil {
+				t.Fatalf("Parse() error = %v", err)
+			}
+
+			if tt.isSuite {
+				if len(file.Suites) != tt.wantCount {
+					t.Fatalf("len(Suites) = %d, want %d", len(file.Suites), tt.wantCount)
+				}
+				if file.Suites[0].Name != tt.wantFirst {
+					t.Errorf("Suites[0].Name = %q, want %q", file.Suites[0].Name, tt.wantFirst)
+				}
+			} else {
+				if len(file.Tests) != tt.wantCount {
+					t.Fatalf("len(Tests) = %d, want %d", len(file.Tests), tt.wantCount)
+				}
+				if file.Tests[0].Name != tt.wantFirst {
+					t.Errorf("Tests[0].Name = %q, want %q", file.Tests[0].Name, tt.wantFirst)
+				}
+			}
+		})
+	}
+}
+
 func TestResolveEachNames(t *testing.T) {
 	t.Parallel()
 
