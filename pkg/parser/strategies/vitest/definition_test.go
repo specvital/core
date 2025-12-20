@@ -446,6 +446,24 @@ describe('UserService', () => {
 			shouldMatch:        true,
 		},
 		{
+			name:               "bench pattern",
+			content:            `bench('sort array', () => { array.sort(); });`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "bench.skip pattern",
+			content:            `bench.skip('slow sort', () => { array.sort(); });`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
+			name:               "bench.only pattern",
+			content:            `bench.only('critical sort', () => { array.sort(); });`,
+			expectedConfidence: 40,
+			shouldMatch:        true,
+		},
+		{
 			name:               "no vitest patterns",
 			content:            `const x = 1; function test() {}`,
 			expectedConfidence: 0,

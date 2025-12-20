@@ -76,6 +76,9 @@ var vitestPatterns = []struct {
 	pattern *regexp.Regexp
 	desc    string
 }{
+	{regexp.MustCompile(`\bbench\s*\(`), "bench()"},
+	{regexp.MustCompile(`\bbench\.skip\s*\(`), "bench.skip()"},
+	{regexp.MustCompile(`\bbench\.only\s*\(`), "bench.only()"},
 	{regexp.MustCompile(`\bvi\.fn\s*\(`), "vi.fn()"},
 	{regexp.MustCompile(`\bvi\.mock\s*\(`), "vi.mock()"},
 	{regexp.MustCompile(`\bvi\.spyOn\s*\(`), "vi.spyOn()"},

@@ -187,6 +187,8 @@ func ProcessCallExpression(node *sitter.Node, source []byte, filename string, fi
 	}
 
 	switch funcName {
+	case FuncBench:
+		ProcessTest(node, args, source, filename, file, currentSuite, status, modifier)
 	case FuncDescribe, FuncContext, FuncSuite:
 		ProcessSuite(node, args, source, filename, file, currentSuite, status, modifier)
 	case FuncIt, FuncTest, FuncSpecify:

@@ -744,3 +744,122 @@ func TestResolveEachNames(t *testing.T) {
 		})
 	}
 }
+
+func TestParse_Bench(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name       string
+		source     string
+		wantCount  int
+		wantName   string
+		wantStatus domain.TestStatus
+	}{
+		{
+			name:       "should parse bench",
+			source:     `bench('sort array', () => { array.sort(); });`,
+			wantCount:  1,
+			wantName:   "sort array",
+			wantStatus: domain.TestStatusActive,
+		},
+		{
+			name:       "should parse bench.skip",
+			source:     `bench.skip('slow sort', () => { array.sort(); });`,
+			wantCount:  1,
+			wantName:   "slow sort",
+			wantStatus: domain.TestStatusSkipped,
+		},
+		{
+			name:       "should parse bench.only",
+			source:     `bench.only('critical sort', () => { array.sort(); });`,
+			wantCount:  1,
+			wantName:   "critical sort",
+			wantStatus: domain.TestStatusFocused,
+		},
+		{
+			name: "should parse bench inside describe",
+			source: `describe('Sorting', () => {
+				bench('sort 1000 items', () => {});
+				bench('sort 10000 items', () => {});
+			});`,
+			wantCount:  0,
+			wantName:   "",
+			wantStatus: domain.TestStatusActive,
+		},
+		{
+			name:       "should parse multiple top-level bench",
+			source:     `bench('bench1', () => {}); bench('bench2', () => {});`,
+			wantCount:  2,
+			wantName:   "bench1",
+			wantStatus: domain.TestStatusActive,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			file, err := Parse(context.Background(), []byte(tt.source), "bench.test.ts", "vitest")
+
+			if err != nil {
+				t.Fatalf("Parse() error = %v", err)
+			}
+
+			if len(file.Tests) != tt.wantCount {
+				t.Errorf("len(Tests) = %d, want %d", len(file.Tests), tt.wantCount)
+			}
+
+			if tt.wantCount > 0 && len(file.Tests) > 0 {
+				if file.Tests[0].Name != tt.wantName {
+					t.Errorf("Tests[0].Name = %q, want %q", file.Tests[0].Name, tt.wantName)
+				}
+				if file.Tests[0].Status != tt.wantStatus {
+					t.Errorf("Tests[0].Status = %q, want %q", file.Tests[0].Status, tt.wantStatus)
+				}
+			}
+		})
+	}
+}
+
+func TestParse_BenchInSuite(t *testing.T) {
+	t.Parallel()
+
+	source := `describe('Sorting', () => {
+		bench('sort 1000 items', () => {});
+		bench.skip('sort 10000 items', () => {});
+		bench.only('sort 100 items', () => {});
+	});`
+
+	file, err := Parse(context.Background(), []byte(source), "bench.test.ts", "vitest")
+
+	if err != nil {
+		t.Fatalf("Parse() error = %v", err)
+	}
+
+	if len(file.Suites) != 1 {
+		t.Fatalf("len(Suites) = %d, want 1", len(file.Suites))
+	}
+
+	suite := file.Suites[0]
+	if len(suite.Tests) != 3 {
+		t.Fatalf("len(suite.Tests) = %d, want 3", len(suite.Tests))
+	}
+
+	expectedBenches := []struct {
+		name   string
+		status domain.TestStatus
+	}{
+		{"sort 1000 items", domain.TestStatusActive},
+		{"sort 10000 items", domain.TestStatusSkipped},
+		{"sort 100 items", domain.TestStatusFocused},
+	}
+
+	for i, expected := range expectedBenches {
+		if suite.Tests[i].Name != expected.name {
+			t.Errorf("Tests[%d].Name = %q, want %q", i, suite.Tests[i].Name, expected.name)
+		}
+		if suite.Tests[i].Status != expected.status {
+			t.Errorf("Tests[%d].Status = %q, want %q", i, suite.Tests[i].Status, expected.status)
+		}
+	}
+}

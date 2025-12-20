@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	FuncBench    = "bench"
 	FuncDescribe = "describe"
 	FuncIt       = "it"
 	FuncTest     = "test"
