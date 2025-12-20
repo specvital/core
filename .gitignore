@@ -3,6 +3,7 @@
 node_modules
 docs/work
 .claude/settings.local.json
+.claude-sessions/
 
 # Go
 *.exe
