@@ -3,7 +3,7 @@
   "ref": "v1.10.0",
   "expectedFramework": "go-testing",
   "fileCount": 38,
-  "testCount": 457,
+  "testCount": 480,
   "frameworkCounts": {
     "go-testing": 38
   },
@@ -18,7 +18,7 @@
       "path": "benchmarks_test.go",
       "framework": "go-testing",
       "suiteCount": 0,
-      "testCount": 0
+      "testCount": 10
     },
     {
       "path": "binding/binding_msgpack_test.go",
@@ -36,7 +36,7 @@
       "path": "binding/default_validator_benchmark_test.go",
       "framework": "go-testing",
       "suiteCount": 0,
-      "testCount": 0
+      "testCount": 1
     },
     {
       "path": "binding/default_validator_test.go",
@@ -48,7 +48,7 @@
       "path": "binding/form_mapping_benchmark_test.go",
       "framework": "go-testing",
       "suiteCount": 0,
-      "testCount": 0
+      "testCount": 2
     },
     {
       "path": "binding/form_mapping_test.go",

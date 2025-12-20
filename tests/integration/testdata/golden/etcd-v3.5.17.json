@@ -3,7 +3,7 @@
   "ref": "v3.5.17",
   "expectedFramework": "go-testing",
   "fileCount": 367,
-  "testCount": 1792,
+  "testCount": 1931,
   "frameworkCounts": {
     "go-testing": 367
   },
