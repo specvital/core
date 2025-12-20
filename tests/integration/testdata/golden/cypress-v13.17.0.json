@@ -2,11 +2,11 @@
   "repository": "cypress",
   "ref": "v13.17.0",
   "expectedFramework": "cypress",
-  "fileCount": 1339,
-  "testCount": 4029,
+  "fileCount": 1341,
+  "testCount": 8665,
   "frameworkCounts": {
     "cypress": 1251,
-    "mocha": 88
+    "mocha": 90
   },
   "sampleFiles": [
     {
@@ -73,7 +73,7 @@
       "path": "npm/grep/cypress/e2e/nested-describe-spec.js",
       "framework": "cypress",
       "suiteCount": 2,
-      "testCount": 0
+      "testCount": 2
     },
     {
       "path": "npm/grep/cypress/e2e/omit-and-skip-spec.js",
@@ -97,7 +97,7 @@
       "path": "npm/grep/cypress/e2e/specify-spec.js",
       "framework": "cypress",
       "suiteCount": 0,
-      "testCount": 0
+      "testCount": 5
     },
     {
       "path": "npm/grep/cypress/e2e/tags/test1.spec.js",
@@ -131,7 +131,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 1339,
+    "filesMatched": 1341,
     "filesScanned": 1513
   }
 }

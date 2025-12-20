@@ -3,7 +3,7 @@
   "ref": "v11.7.5",
   "expectedFramework": "mocha",
   "fileCount": 126,
-  "testCount": 1227,
+  "testCount": 1232,
   "frameworkCounts": {
     "mocha": 126
   },
