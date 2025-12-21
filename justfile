@@ -90,3 +90,7 @@ test target="all":
         exit 1
         ;;
     esac
+
+# Scan a directory for tests (used by /validate-parser command)
+scan path:
+    go run {{ root_dir }}/scripts/scan.go {{ path }}
