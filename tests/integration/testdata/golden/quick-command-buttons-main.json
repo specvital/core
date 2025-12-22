@@ -1,0 +1,137 @@
+{
+  "repository": "quick-command-buttons",
+  "ref": "main",
+  "expectedFramework": "vitest",
+  "fileCount": 71,
+  "testCount": 767,
+  "frameworkCounts": {
+    "playwright": 48,
+    "vitest": 23
+  },
+  "sampleFiles": [
+    {
+      "path": "src/extension/main.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 7
+    },
+    {
+      "path": "src/internal/adapters.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 15
+    },
+    {
+      "path": "src/internal/command-executor.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 57
+    },
+    {
+      "path": "src/internal/event-bus.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 14
+    },
+    {
+      "path": "src/internal/keyboard-layout-converter.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 5,
+      "testCount": 46
+    },
+    {
+      "path": "src/internal/managers/backup-manager.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 8
+    },
+    {
+      "path": "src/internal/managers/button-set-manager.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 29
+    },
+    {
+      "path": "src/internal/managers/config-manager.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 17
+    },
+    {
+      "path": "src/internal/managers/import-export-manager.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 43
+    },
+    {
+      "path": "src/internal/managers/status-bar-manager.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 32
+    },
+    {
+      "path": "src/internal/managers/terminal-manager.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 17
+    },
+    {
+      "path": "src/internal/providers/command-tree-provider.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 27
+    },
+    {
+      "path": "src/internal/providers/webview-provider.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 43
+    },
+    {
+      "path": "src/internal/schemas/export-format.schema.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 17
+    },
+    {
+      "path": "src/internal/show-all-commands.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 8
+    },
+    {
+      "path": "src/internal/stores/app-store.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 18
+    },
+    {
+      "path": "src/internal/stores/store-sync.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 38
+    },
+    {
+      "path": "src/internal/utils/ensure-id.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 4,
+      "testCount": 39
+    },
+    {
+      "path": "src/internal/utils/ui-items.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 20
+    },
+    {
+      "path": "src/internal/utils/validate-button-config.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 18
+    }
+  ],
+  "stats": {
+    "filesMatched": 71,
+    "filesScanned": 71
+  }
+}

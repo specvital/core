@@ -178,3 +178,9 @@ repositories:
     url: https://github.com/Alamofire/Alamofire
     ref: 5.10.2
     framework: xctest
+
+  - name: quick-command-buttons
+    url: https://github.com/KubrickCode/Quick-Command-Buttons
+    ref: main
+    framework: vitest
+    complex: true # multi-framework: vitest + playwright
