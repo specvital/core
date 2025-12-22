@@ -57,6 +57,13 @@ repositories:
     frameworks:
       - go-testing
 
+  - name: specvital-collector
+    url: https://github.com/specvital/collector
+    ref: v1.0.6
+    subdir: src
+    frameworks:
+      - go-testing
+
   # Complex cases: monorepos, mixed frameworks
   - name: next.js
     url: https://github.com/vercel/next.js

@@ -1,0 +1,82 @@
+{
+  "repository": "specvital-collector",
+  "ref": "v1.0.6",
+  "expectedFrameworks": ["go-testing"],
+  "fileCount": 11,
+  "testCount": 62,
+  "frameworkCounts": {
+    "go-testing": 11
+  },
+  "sampleFiles": [
+    {
+      "path": "src/cmd/enqueue/url_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "src/internal/adapter/mapping/core_domain_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 5
+    },
+    {
+      "path": "src/internal/adapter/parser/core_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "src/internal/adapter/queue/analyze_test.go",
+      "framework": "go-testing",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "src/internal/adapter/repository/postgres/analysis_test.go",
+      "framework": "go-testing",
+      "suiteCount": 5,
+      "testCount": 11
+    },
+    {
+      "path": "src/internal/adapter/repository/postgres/user_test.go",
+      "framework": "go-testing",
+      "suiteCount": 1,
+      "testCount": 9
+    },
+    {
+      "path": "src/internal/adapter/vcs/git_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "src/internal/domain/analysis/decay_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "src/internal/domain/analysis/model_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "src/internal/usecase/analysis/analyze_test.go",
+      "framework": "go-testing",
+      "suiteCount": 4,
+      "testCount": 14
+    },
+    {
+      "path": "src/internal/usecase/autorefresh/refresh_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 7
+    }
+  ],
+  "stats": {
+    "filesMatched": 11,
+    "filesScanned": 11
+  }
+}
