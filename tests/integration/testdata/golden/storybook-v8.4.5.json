@@ -1,7 +1,7 @@
 {
   "repository": "storybook",
   "ref": "v8.4.5",
-  "expectedFramework": "vitest",
+  "expectedFrameworks": ["cypress", "jest", "playwright", "vitest"],
   "fileCount": 305,
   "testCount": 2781,
   "frameworkCounts": {

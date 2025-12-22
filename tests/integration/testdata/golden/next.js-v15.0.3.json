@@ -1,7 +1,7 @@
 {
   "repository": "next.js",
   "ref": "v15.0.3",
-  "expectedFramework": "jest",
+  "expectedFrameworks": ["cargo-test", "cypress", "jest", "mocha", "playwright", "vitest"],
   "fileCount": 1262,
   "testCount": 6665,
   "frameworkCounts": {

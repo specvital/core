@@ -1,7 +1,7 @@
 {
   "repository": "remix",
   "ref": "remix@2.14.0",
-  "expectedFramework": "jest",
+  "expectedFrameworks": ["jest"],
   "fileCount": 87,
   "testCount": 356,
   "frameworkCounts": {

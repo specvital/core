@@ -1,7 +1,7 @@
 {
   "repository": "etcd",
   "ref": "v3.5.17",
-  "expectedFramework": "go-testing",
+  "expectedFrameworks": ["go-testing"],
   "fileCount": 367,
   "testCount": 1931,
   "frameworkCounts": {

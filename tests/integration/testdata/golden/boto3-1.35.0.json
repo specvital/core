@@ -1,7 +1,7 @@
 {
   "repository": "boto3",
   "ref": "1.35.0",
-  "expectedFramework": "unittest",
+  "expectedFrameworks": ["pytest", "unittest"],
   "fileCount": 53,
   "testCount": 524,
   "frameworkCounts": {

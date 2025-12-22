@@ -1,7 +1,7 @@
 {
   "repository": "kotest",
   "ref": "v6.0.7",
-  "expectedFramework": "kotest",
+  "expectedFrameworks": ["kotest"],
   "fileCount": 1721,
   "testCount": 1805,
   "frameworkCounts": {

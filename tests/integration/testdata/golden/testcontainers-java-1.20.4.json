@@ -1,7 +1,7 @@
 {
   "repository": "testcontainers-java",
   "ref": "1.20.4",
-  "expectedFramework": "junit5",
+  "expectedFrameworks": ["junit5", "testng"],
   "fileCount": 304,
   "testCount": 920,
   "frameworkCounts": {

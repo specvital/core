@@ -1,7 +1,7 @@
 {
   "repository": "minitest",
   "ref": "v5.25.4",
-  "expectedFramework": "minitest",
+  "expectedFrameworks": ["minitest"],
   "fileCount": 1,
   "testCount": 76,
   "frameworkCounts": {

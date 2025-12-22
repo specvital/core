@@ -90,9 +90,7 @@ func TestSingleFramework(t *testing.T) {
 			}
 
 			frameworkCount := countByFramework(scanResult)
-			if count, ok := frameworkCount[repo.Framework]; !ok || count == 0 {
-				t.Errorf("expected framework %s files, got: %v", repo.Framework, frameworkCount)
-			}
+			validateFrameworkMatch(t, repo.Frameworks, frameworkCount)
 
 			t.Logf("framework distribution: %v", frameworkCount)
 
@@ -132,4 +130,39 @@ func countByFramework(result *parser.ScanResult) map[string]int {
 		counts[file.Framework]++
 	}
 	return counts
+}
+
+// validateFrameworkMatch ensures expected frameworks exactly match actual frameworks.
+// This prevents silent failures where secondary frameworks go unvalidated.
+func validateFrameworkMatch(t *testing.T, expected []string, actual map[string]int) {
+	t.Helper()
+
+	expectedSet := make(map[string]bool)
+	for _, fw := range expected {
+		expectedSet[fw] = true
+	}
+
+	actualSet := make(map[string]bool)
+	for fw := range actual {
+		actualSet[fw] = true
+	}
+
+	var missing, extra []string
+	for fw := range expectedSet {
+		if !actualSet[fw] {
+			missing = append(missing, fw)
+		}
+	}
+	for fw := range actualSet {
+		if !expectedSet[fw] {
+			extra = append(extra, fw)
+		}
+	}
+
+	if len(missing) > 0 {
+		t.Errorf("expected frameworks not found: %v", missing)
+	}
+	if len(extra) > 0 {
+		t.Errorf("unexpected frameworks detected: %v (update repos.yaml)", extra)
+	}
 }

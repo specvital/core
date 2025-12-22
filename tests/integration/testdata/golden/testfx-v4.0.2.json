@@ -1,7 +1,7 @@
 {
   "repository": "testfx",
   "ref": "v4.0.2",
-  "expectedFramework": "mstest",
+  "expectedFrameworks": ["mstest"],
   "fileCount": 1487,
   "testCount": 112802,
   "frameworkCounts": {

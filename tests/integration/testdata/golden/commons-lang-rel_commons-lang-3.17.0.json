@@ -1,7 +1,7 @@
 {
   "repository": "commons-lang",
   "ref": "rel/commons-lang-3.17.0",
-  "expectedFramework": "junit5",
+  "expectedFrameworks": ["junit5"],
   "fileCount": 218,
   "testCount": 4339,
   "frameworkCounts": {

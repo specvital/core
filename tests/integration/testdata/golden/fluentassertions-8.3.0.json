@@ -1,7 +1,7 @@
 {
   "repository": "fluentassertions",
   "ref": "8.3.0",
-  "expectedFramework": "xunit",
+  "expectedFrameworks": ["mstest", "nunit", "xunit"],
   "fileCount": 331,
   "testCount": 4868,
   "frameworkCounts": {

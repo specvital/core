@@ -1,7 +1,7 @@
 {
   "repository": "googletest",
   "ref": "v1.15.2",
-  "expectedFramework": "gtest",
+  "expectedFrameworks": ["gtest", "unittest"],
   "fileCount": 111,
   "testCount": 2566,
   "frameworkCounts": {

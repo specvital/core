@@ -1,7 +1,7 @@
 {
   "repository": "trpc",
   "ref": "v10.45.2",
-  "expectedFramework": "vitest",
+  "expectedFrameworks": ["playwright", "vitest"],
   "fileCount": 172,
   "testCount": 742,
   "frameworkCounts": {

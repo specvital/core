@@ -1,7 +1,7 @@
 {
   "repository": "turborepo",
   "ref": "v2.3.3",
-  "expectedFramework": "jest",
+  "expectedFrameworks": ["cargo-test", "jest", "vitest"],
   "fileCount": 245,
   "testCount": 777,
   "frameworkCounts": {

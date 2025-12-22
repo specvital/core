@@ -79,24 +79,24 @@ func TestSnapshotDiff_ExtraFiles(t *testing.T) {
 
 func TestCompareSnapshots_Identical(t *testing.T) {
 	expected := &Snapshot{
-		Repository:        "test",
-		Ref:               "v1.0.0",
-		ExpectedFramework: "jest",
-		FileCount:         5,
-		TestCount:         20,
-		FrameworkCounts:   map[string]int{"jest": 5},
+		Repository:         "test",
+		Ref:                "v1.0.0",
+		ExpectedFrameworks: []string{"jest"},
+		FileCount:          5,
+		TestCount:          20,
+		FrameworkCounts:    map[string]int{"jest": 5},
 		SampleFiles: []SnapshotFile{
 			{Path: "src/a.test.ts", Framework: "jest", SuiteCount: 1, TestCount: 4},
 		},
 	}
 
 	actual := &Snapshot{
-		Repository:        "test",
-		Ref:               "v1.0.0",
-		ExpectedFramework: "jest",
-		FileCount:         5,
-		TestCount:         20,
-		FrameworkCounts:   map[string]int{"jest": 5},
+		Repository:         "test",
+		Ref:                "v1.0.0",
+		ExpectedFrameworks: []string{"jest"},
+		FileCount:          5,
+		TestCount:          20,
+		FrameworkCounts:    map[string]int{"jest": 5},
 		SampleFiles: []SnapshotFile{
 			{Path: "src/a.test.ts", Framework: "jest", SuiteCount: 1, TestCount: 4},
 		},

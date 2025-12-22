@@ -1,7 +1,7 @@
 {
   "repository": "mocha",
   "ref": "v11.7.5",
-  "expectedFramework": "mocha",
+  "expectedFrameworks": ["mocha"],
   "fileCount": 126,
   "testCount": 1232,
   "frameworkCounts": {

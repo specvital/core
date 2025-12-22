@@ -1,7 +1,7 @@
 {
   "repository": "grafana",
   "ref": "v11.3.1",
-  "expectedFramework": "go-testing",
+  "expectedFrameworks": ["cypress", "go-testing", "jest"],
   "fileCount": 2549,
   "testCount": 17456,
   "frameworkCounts": {

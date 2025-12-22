@@ -1,7 +1,7 @@
 {
   "repository": "laravel-framework",
   "ref": "v11.37.0",
-  "expectedFramework": "phpunit",
+  "expectedFrameworks": ["phpunit"],
   "fileCount": 812,
   "testCount": 9234,
   "frameworkCounts": {

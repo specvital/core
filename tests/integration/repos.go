@@ -13,12 +13,12 @@ import (
 
 // Repository represents a target repository for integration testing.
 type Repository struct {
-	Framework        string `yaml:"framework"`
-	Name             string `yaml:"name"`
-	Ref              string `yaml:"ref"`
-	URL              string `yaml:"url"`
-	Complex          bool   `yaml:"complex,omitempty"`
-	Nondeterministic bool   `yaml:"nondeterministic,omitempty"`
+	Complex          bool     `yaml:"complex,omitempty"`
+	Frameworks       []string `yaml:"frameworks"`
+	Name             string   `yaml:"name"`
+	Nondeterministic bool     `yaml:"nondeterministic,omitempty"`
+	Ref              string   `yaml:"ref"`
+	URL              string   `yaml:"url"`
 }
 
 // ReposConfig holds the list of repositories to test.
@@ -69,8 +69,8 @@ func validateReposConfig(config *ReposConfig) error {
 		if repo.Ref == "" {
 			return fmt.Errorf("repository %s: ref is required", repo.Name)
 		}
-		if repo.Framework == "" {
-			return fmt.Errorf("repository %s: framework is required", repo.Name)
+		if len(repo.Frameworks) == 0 {
+			return fmt.Errorf("repository %s: frameworks is required", repo.Name)
 		}
 	}
 	return nil

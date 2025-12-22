@@ -1,7 +1,7 @@
 {
   "repository": "gin",
   "ref": "v1.10.0",
-  "expectedFramework": "go-testing",
+  "expectedFrameworks": ["go-testing"],
   "fileCount": 38,
   "testCount": 480,
   "frameworkCounts": {

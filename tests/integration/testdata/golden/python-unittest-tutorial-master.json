@@ -1,7 +1,7 @@
 {
   "repository": "python-unittest-tutorial",
   "ref": "master",
-  "expectedFramework": "unittest",
+  "expectedFrameworks": ["unittest"],
   "fileCount": 7,
   "testCount": 12,
   "frameworkCounts": {

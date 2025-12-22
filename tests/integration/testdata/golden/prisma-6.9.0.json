@@ -1,7 +1,7 @@
 {
   "repository": "prisma",
   "ref": "6.9.0",
-  "expectedFramework": "vitest",
+  "expectedFrameworks": ["jest", "vitest"],
   "fileCount": 449,
   "testCount": 1640,
   "frameworkCounts": {

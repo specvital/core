@@ -2,185 +2,245 @@ repositories:
   - name: requests
     url: https://github.com/psf/requests
     ref: v2.32.3
-    framework: pytest
+    frameworks:
+      - pytest
+      - unittest
 
   - name: urllib3
     url: https://github.com/urllib3/urllib3
     ref: 2.2.3
-    framework: pytest
+    frameworks:
+      - pytest
 
   - name: boto3
     url: https://github.com/boto/boto3
     ref: 1.35.0
-    framework: unittest
+    frameworks:
+      - pytest
+      - unittest
     nondeterministic: true
 
   - name: python-unittest-tutorial
     url: https://github.com/cgoldberg/python-unittest-tutorial
     ref: master
-    framework: unittest
+    frameworks:
+      - unittest
 
   - name: testing-library-react
     url: https://github.com/testing-library/react-testing-library
     ref: v16.1.0
-    framework: jest
+    frameworks:
+      - jest
 
   - name: vite
     url: https://github.com/vitejs/vite
     ref: v6.0.0
-    framework: vitest
+    frameworks:
+      - vitest
 
   - name: playwright
     url: https://github.com/microsoft/playwright
     ref: v1.49.0
-    framework: playwright
+    frameworks:
+      - playwright
+      - junit5
 
   - name: gin
     url: https://github.com/gin-gonic/gin
     ref: v1.10.0
-    framework: go-testing
+    frameworks:
+      - go-testing
 
   # Complex cases: monorepos, mixed frameworks
   - name: next.js
     url: https://github.com/vercel/next.js
     ref: v15.0.3
-    framework: jest
+    frameworks:
+      - cargo-test
+      - cypress
+      - jest
+      - mocha
+      - playwright
+      - vitest
     complex: true
 
   - name: storybook
     url: https://github.com/storybookjs/storybook
     ref: v8.4.5
-    framework: vitest
+    frameworks:
+      - cypress
+      - jest
+      - playwright
+      - vitest
     complex: true
 
   - name: turborepo
     url: https://github.com/vercel/turborepo
     ref: v2.3.3
-    framework: jest
+    frameworks:
+      - cargo-test
+      - jest
+      - vitest
     complex: true
 
   - name: grafana
     url: https://github.com/grafana/grafana
     ref: v11.3.1
-    framework: go-testing
+    frameworks:
+      - cypress
+      - go-testing
+      - jest
     complex: true
     nondeterministic: true
 
   - name: trpc
     url: https://github.com/trpc/trpc
     ref: v10.45.2
-    framework: vitest
+    frameworks:
+      - playwright
+      - vitest
     complex: true
     nondeterministic: true
 
   - name: prisma
     url: https://github.com/prisma/prisma
     ref: 6.9.0
-    framework: vitest
+    frameworks:
+      - jest
+      - vitest
     complex: true
     nondeterministic: true
 
   - name: remix
     url: https://github.com/remix-run/remix
     ref: remix@2.14.0
-    framework: jest
+    frameworks:
+      - jest
     complex: true
 
   - name: etcd
     url: https://github.com/etcd-io/etcd
     ref: v3.5.17
-    framework: go-testing
+    frameworks:
+      - go-testing
     complex: true
 
   - name: junit5-samples
     url: https://github.com/junit-team/junit5-samples
     ref: main
-    framework: junit5
+    frameworks:
+      - junit5
+      - kotest
+      - testng
 
   - name: testcontainers-java
     url: https://github.com/testcontainers/testcontainers-java
     ref: 1.20.4
-    framework: junit5
+    frameworks:
+      - junit5
+      - testng
     complex: true
 
   - name: commons-lang
     url: https://github.com/apache/commons-lang
     ref: rel/commons-lang-3.17.0
-    framework: junit5
+    frameworks:
+      - junit5
 
   - name: fluentassertions
     url: https://github.com/fluentassertions/fluentassertions
     ref: 8.3.0
-    framework: xunit
+    frameworks:
+      - mstest
+      - nunit
+      - xunit
 
   - name: nunit
     url: https://github.com/nunit/nunit
     ref: 4.3.2
-    framework: nunit
+    frameworks:
+      - nunit
 
   - name: rspec-core
     url: https://github.com/rspec/rspec-core
     ref: v3.13.2
-    framework: rspec
+    frameworks:
+      - minitest
+      - rspec
 
   - name: minitest
     url: https://github.com/minitest/minitest
     ref: v5.25.4
-    framework: minitest
+    frameworks:
+      - minitest
 
   - name: ripgrep
     url: https://github.com/BurntSushi/ripgrep
     ref: 14.1.1
-    framework: cargo-test
+    frameworks:
+      - cargo-test
 
   - name: googletest
     url: https://github.com/google/googletest
     ref: v1.15.2
-    framework: gtest
+    frameworks:
+      - gtest
+      - unittest
 
   - name: laravel-framework
     url: https://github.com/laravel/framework
     ref: v11.37.0
-    framework: phpunit
+    frameworks:
+      - phpunit
     complex: true
 
   - name: cypress
     url: https://github.com/cypress-io/cypress
     ref: v13.17.0
-    framework: cypress
+    frameworks:
+      - cypress
+      - mocha
     complex: true
 
   - name: mocha
     url: https://github.com/mochajs/mocha
     ref: v11.7.5
-    framework: mocha
+    frameworks:
+      - mocha
     complex: true
 
   - name: kotest
     url: https://github.com/kotest/kotest
     ref: v6.0.7
-    framework: kotest
+    frameworks:
+      - kotest
     complex: true
 
   - name: testng
     url: https://github.com/testng-team/testng
     ref: 7.10.2
-    framework: testng
+    frameworks:
+      - junit5
+      - testng
     complex: true
 
   - name: testfx
     url: https://github.com/microsoft/testfx
     ref: v4.0.2
-    framework: mstest
+    frameworks:
+      - mstest
     complex: true
 
   - name: alamofire
     url: https://github.com/Alamofire/Alamofire
     ref: 5.10.2
-    framework: xctest
+    frameworks:
+      - xctest
 
   - name: quick-command-buttons
     url: https://github.com/KubrickCode/Quick-Command-Buttons
     ref: main
-    framework: vitest
-    complex: true # multi-framework: vitest + playwright
+    frameworks:
+      - playwright
+      - vitest
+    complex: true

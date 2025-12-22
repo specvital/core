@@ -1,7 +1,7 @@
 {
   "repository": "ripgrep",
   "ref": "14.1.1",
-  "expectedFramework": "cargo-test",
+  "expectedFrameworks": ["cargo-test"],
   "fileCount": 47,
   "testCount": 427,
   "frameworkCounts": {

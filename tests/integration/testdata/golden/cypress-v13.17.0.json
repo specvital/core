@@ -1,7 +1,7 @@
 {
   "repository": "cypress",
   "ref": "v13.17.0",
-  "expectedFramework": "cypress",
+  "expectedFrameworks": ["cypress", "mocha"],
   "fileCount": 1341,
   "testCount": 8665,
   "frameworkCounts": {

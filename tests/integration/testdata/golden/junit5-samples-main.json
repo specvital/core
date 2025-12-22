@@ -1,7 +1,7 @@
 {
   "repository": "junit5-samples",
   "ref": "main",
-  "expectedFramework": "junit5",
+  "expectedFrameworks": ["junit5", "kotest", "testng"],
   "fileCount": 31,
   "testCount": 41,
   "frameworkCounts": {

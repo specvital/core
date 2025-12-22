@@ -1,7 +1,7 @@
 {
   "repository": "rspec-core",
   "ref": "v3.13.2",
-  "expectedFramework": "rspec",
+  "expectedFrameworks": ["minitest", "rspec"],
   "fileCount": 80,
   "testCount": 848,
   "frameworkCounts": {

@@ -15,14 +15,14 @@ import (
 
 // Snapshot represents a golden snapshot for a repository scan result.
 type Snapshot struct {
-	Repository        string         `json:"repository"`
-	Ref               string         `json:"ref"`
-	ExpectedFramework string         `json:"expectedFramework"`
-	FileCount         int            `json:"fileCount"`
-	TestCount         int            `json:"testCount"`
-	FrameworkCounts   map[string]int `json:"frameworkCounts"`
-	SampleFiles       []SnapshotFile `json:"sampleFiles"`
-	Stats             SnapshotStats  `json:"stats"`
+	Repository         string         `json:"repository"`
+	Ref                string         `json:"ref"`
+	ExpectedFrameworks []string       `json:"expectedFrameworks"`
+	FileCount          int            `json:"fileCount"`
+	TestCount          int            `json:"testCount"`
+	FrameworkCounts    map[string]int `json:"frameworkCounts"`
+	SampleFiles        []SnapshotFile `json:"sampleFiles"`
+	Stats              SnapshotStats  `json:"stats"`
 }
 
 // SnapshotFile represents a sample of parsed test files in the snapshot.
@@ -49,13 +49,13 @@ func SnapshotFromScanResult(repo Repository, result *parser.ScanResult, rootPath
 	sampleFiles := extractSampleFiles(result, rootPath, 20)
 
 	return &Snapshot{
-		Repository:        repo.Name,
-		Ref:               repo.Ref,
-		ExpectedFramework: repo.Framework,
-		FileCount:         len(result.Inventory.Files),
-		TestCount:         result.Inventory.CountTests(),
-		FrameworkCounts:   frameworkCounts,
-		SampleFiles:       sampleFiles,
+		Repository:         repo.Name,
+		Ref:                repo.Ref,
+		ExpectedFrameworks: repo.Frameworks,
+		FileCount:          len(result.Inventory.Files),
+		TestCount:          result.Inventory.CountTests(),
+		FrameworkCounts:    frameworkCounts,
+		SampleFiles:        sampleFiles,
 		Stats: SnapshotStats{
 			FilesMatched: result.Stats.FilesMatched,
 			FilesScanned: result.Stats.FilesScanned,

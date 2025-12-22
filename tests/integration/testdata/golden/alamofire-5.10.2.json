@@ -1,7 +1,7 @@
 {
   "repository": "alamofire",
   "ref": "5.10.2",
-  "expectedFramework": "xctest",
+  "expectedFrameworks": ["xctest"],
   "fileCount": 32,
   "testCount": 803,
   "frameworkCounts": {

@@ -1,7 +1,7 @@
 {
   "repository": "urllib3",
   "ref": "2.2.3",
-  "expectedFramework": "pytest",
+  "expectedFrameworks": ["pytest"],
   "fileCount": 33,
   "testCount": 717,
   "frameworkCounts": {

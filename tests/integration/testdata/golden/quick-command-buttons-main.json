@@ -1,7 +1,7 @@
 {
   "repository": "quick-command-buttons",
   "ref": "main",
-  "expectedFramework": "vitest",
+  "expectedFrameworks": ["playwright", "vitest"],
   "fileCount": 71,
   "testCount": 767,
   "frameworkCounts": {

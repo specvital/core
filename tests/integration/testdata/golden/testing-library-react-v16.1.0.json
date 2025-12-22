@@ -1,7 +1,7 @@
 {
   "repository": "testing-library-react",
   "ref": "v16.1.0",
-  "expectedFramework": "jest",
+  "expectedFrameworks": ["jest"],
   "fileCount": 14,
   "testCount": 76,
   "frameworkCounts": {

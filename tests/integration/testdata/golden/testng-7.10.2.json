@@ -1,7 +1,7 @@
 {
   "repository": "testng",
   "ref": "7.10.2",
-  "expectedFramework": "testng",
+  "expectedFrameworks": ["junit5", "testng"],
   "fileCount": 1968,
   "testCount": 3042,
   "frameworkCounts": {
