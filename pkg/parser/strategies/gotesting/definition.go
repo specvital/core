@@ -159,19 +159,19 @@ func extractTestName(funcDecl *sitter.Node, source []byte) string {
 func classifyTestFunction(name string) goTestFuncType {
 	switch {
 	case strings.HasPrefix(name, "Benchmark"):
-		if len(name) > 9 && unicode.IsUpper(rune(name[9])) {
+		if len(name) > 9 && !unicode.IsLower(rune(name[9])) {
 			return funcTypeBenchmark
 		}
 	case strings.HasPrefix(name, "Example"):
-		if len(name) == 7 || unicode.IsUpper(rune(name[7])) || name[7] == '_' {
+		if len(name) == 7 || !unicode.IsLower(rune(name[7])) {
 			return funcTypeExample
 		}
 	case strings.HasPrefix(name, "Fuzz"):
-		if len(name) > 4 && unicode.IsUpper(rune(name[4])) {
+		if len(name) > 4 && !unicode.IsLower(rune(name[4])) {
 			return funcTypeFuzz
 		}
 	case strings.HasPrefix(name, "Test"):
-		if len(name) > 4 && unicode.IsUpper(rune(name[4])) {
+		if len(name) > 4 && !unicode.IsLower(rune(name[4])) {
 			return funcTypeTest
 		}
 	}

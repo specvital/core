@@ -200,15 +200,15 @@ func TestCase123(t *testing.T) {}
 			expectedTestName:   "TestCase123",
 		},
 		{
-			name: "test with underscores (invalid - starts with underscore)",
+			name: "test with underscore after Test prefix",
 			source: `
 package test
 import "testing"
 func Test_With_Underscores(t *testing.T) {}
 `,
-			expectedTestCount:  0,
+			expectedTestCount:  1,
 			expectedSuiteCount: 0,
-			// Test_ is not a valid test name in Go - must be TestX where X is uppercase
+			expectedTestName:   "Test_With_Underscores",
 		},
 		{
 			name: "test with underscores (valid)",
@@ -475,9 +475,12 @@ func TestClassifyTestFunction(t *testing.T) {
 		{"valid Test", "TestFoo", funcTypeTest},
 		{"invalid Test lowercase", "Testfoo", funcTypeNone},
 		{"Test only", "Test", funcTypeNone},
+		{"Test with underscore", "Test_foo", funcTypeTest},
+		{"Test with number", "Test123", funcTypeTest},
 		{"valid Benchmark", "BenchmarkFoo", funcTypeBenchmark},
 		{"invalid Benchmark lowercase", "Benchmarkfoo", funcTypeNone},
 		{"Benchmark only", "Benchmark", funcTypeNone},
+		{"Benchmark with underscore", "Benchmark_foo", funcTypeBenchmark},
 		{"valid Example with name", "ExampleFoo", funcTypeExample},
 		{"Example only", "Example", funcTypeExample},
 		{"Example with underscore", "Example_foo", funcTypeExample},
@@ -485,6 +488,7 @@ func TestClassifyTestFunction(t *testing.T) {
 		{"valid Fuzz", "FuzzFoo", funcTypeFuzz},
 		{"invalid Fuzz lowercase", "Fuzzfoo", funcTypeNone},
 		{"Fuzz only", "Fuzz", funcTypeNone},
+		{"Fuzz with underscore", "Fuzz_foo", funcTypeFuzz},
 		{"random function", "DoSomething", funcTypeNone},
 	}
 
