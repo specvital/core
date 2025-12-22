@@ -38,6 +38,12 @@ repositories:
     frameworks:
       - vitest
 
+  - name: baedal
+    url: https://github.com/KubrickCode/baedal
+    ref: v1.3.1
+    frameworks:
+      - vitest
+
   - name: playwright
     url: https://github.com/microsoft/playwright
     ref: v1.49.0

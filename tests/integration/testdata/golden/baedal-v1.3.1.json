@@ -1,0 +1,136 @@
+{
+  "repository": "baedal",
+  "ref": "v1.3.1",
+  "expectedFrameworks": ["vitest"],
+  "fileCount": 24,
+  "testCount": 358,
+  "frameworkCounts": {
+    "vitest": 24
+  },
+  "sampleFiles": [
+    {
+      "path": "src/cli.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 14
+    },
+    {
+      "path": "src/cli/adapter.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 31
+    },
+    {
+      "path": "src/internal/core/errors/base.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "src/internal/core/errors/filesystem.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 10
+    },
+    {
+      "path": "src/internal/core/errors/network.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 6
+    },
+    {
+      "path": "src/internal/core/errors/validation.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 8
+    },
+    {
+      "path": "src/internal/domain/extract.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 4,
+      "testCount": 29
+    },
+    {
+      "path": "src/internal/domain/parser.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 23
+    },
+    {
+      "path": "src/internal/infra/download.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 7
+    },
+    {
+      "path": "src/internal/infra/github-client.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 14
+    },
+    {
+      "path": "src/internal/infra/schemas.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 10
+    },
+    {
+      "path": "src/internal/utils/check-existing.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "src/internal/utils/file-compare.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 13
+    },
+    {
+      "path": "src/internal/utils/path-helpers.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 3,
+      "testCount": 38
+    },
+    {
+      "path": "src/internal/utils/zod-helpers.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 16
+    },
+    {
+      "path": "src/pkg/pull/archive.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 7
+    },
+    {
+      "path": "src/pkg/pull/github.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 15
+    },
+    {
+      "path": "src/pkg/pull/index.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 10
+    },
+    {
+      "path": "src/pkg/pull/types.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 3,
+      "testCount": 19
+    },
+    {
+      "path": "src/pkg/push/config.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 8
+    }
+  ],
+  "stats": {
+    "filesMatched": 24,
+    "filesScanned": 24
+  }
+}
