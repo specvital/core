@@ -1,0 +1,136 @@
+{
+  "repository": "specvital-core",
+  "ref": "v1.4.0",
+  "expectedFrameworks": ["go-testing"],
+  "fileCount": 56,
+  "testCount": 412,
+  "frameworkCounts": {
+    "go-testing": 56
+  },
+  "sampleFiles": [
+    {
+      "path": "pkg/crypto/encryptor_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 14
+    },
+    {
+      "path": "pkg/crypto/keygen_test.go",
+      "framework": "go-testing",
+      "suiteCount": 2,
+      "testCount": 8
+    },
+    {
+      "path": "pkg/domain/inventory_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "pkg/domain/test_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/detection/detector_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 15
+    },
+    {
+      "path": "pkg/parser/detection/extraction/csharp_test.go",
+      "framework": "go-testing",
+      "suiteCount": 1,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/detection/extraction/go_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/detection/extraction/java_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/detection/extraction/javascript_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/detection/extraction/php_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/detection/extraction/python_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/detection/extraction/ruby_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/detection/extraction/swift_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "pkg/parser/example_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "pkg/parser/framework/example_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 4
+    },
+    {
+      "path": "pkg/parser/framework/matchers/config_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "pkg/parser/framework/matchers/content_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "pkg/parser/framework/matchers/import_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 3
+    },
+    {
+      "path": "pkg/parser/framework/registry_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 5
+    },
+    {
+      "path": "pkg/parser/framework/scope_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 5
+    }
+  ],
+  "stats": {
+    "filesMatched": 56,
+    "filesScanned": 56
+  }
+}

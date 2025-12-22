@@ -64,6 +64,12 @@ repositories:
     frameworks:
       - go-testing
 
+  - name: specvital-core
+    url: https://github.com/specvital/core
+    ref: v1.4.0
+    frameworks:
+      - go-testing
+
   # Complex cases: monorepos, mixed frameworks
   - name: next.js
     url: https://github.com/vercel/next.js
