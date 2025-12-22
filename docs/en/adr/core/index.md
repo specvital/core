@@ -10,9 +10,10 @@ Architecture Decision Records for the [specvital/core](https://github.com/specvi
 
 ## ADR Index
 
-| #   | Title                                                      | Date       |
-| --- | ---------------------------------------------------------- | ---------- |
-| 01  | [Core Library Separation](./01-core-library-separation.md) | 2024-12-17 |
+| #   | Title                                                                | Date       |
+| --- | -------------------------------------------------------------------- | ---------- |
+| 01  | [Core Library Separation](./01-core-library-separation.md)           | 2024-12-17 |
+| 02  | [Dynamic Test Counting Policy](./02-dynamic-test-counting-policy.md) | 2025-12-22 |
 
 ## Related
 

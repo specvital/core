@@ -66,9 +66,10 @@ XX-brief-decision-title.md
 
 ### Core Repository
 
-| #   | Title                                                           | Area | Date       |
-| --- | --------------------------------------------------------------- | ---- | ---------- |
-| 01  | [Core Library Separation](./core/01-core-library-separation.md) | Core | 2024-12-17 |
+| #   | Title                                                                     | Area | Date       |
+| --- | ------------------------------------------------------------------------- | ---- | ---------- |
+| 01  | [Core Library Separation](./core/01-core-library-separation.md)           | Core | 2024-12-17 |
+| 02  | [Dynamic Test Counting Policy](./core/02-dynamic-test-counting-policy.md) | Core | 2025-12-22 |
 
 ### Collector Repository
 
