@@ -1,0 +1,137 @@
+{
+  "repository": "specvital-web",
+  "ref": "v1.1.2",
+  "expectedFrameworks": ["go-testing", "vitest"],
+  "fileCount": 22,
+  "testCount": 146,
+  "frameworkCounts": {
+    "go-testing": 16,
+    "vitest": 6
+  },
+  "sampleFiles": [
+    {
+      "path": "src/backend/cmd/server/security_integration_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 4
+    },
+    {
+      "path": "src/backend/common/health/handler_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "src/backend/common/middleware/auth_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 9
+    },
+    {
+      "path": "src/backend/common/middleware/compress_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 6
+    },
+    {
+      "path": "src/backend/common/middleware/cors_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 2
+    },
+    {
+      "path": "src/backend/common/middleware/ratelimit_test.go",
+      "framework": "go-testing",
+      "suiteCount": 1,
+      "testCount": 11
+    },
+    {
+      "path": "src/backend/common/middleware/security_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 6
+    },
+    {
+      "path": "src/backend/internal/client/git_test.go",
+      "framework": "go-testing",
+      "suiteCount": 2,
+      "testCount": 4
+    },
+    {
+      "path": "src/backend/modules/analyzer/handler_test.go",
+      "framework": "go-testing",
+      "suiteCount": 2,
+      "testCount": 7
+    },
+    {
+      "path": "src/backend/modules/analyzer/service_auth_test.go",
+      "framework": "go-testing",
+      "suiteCount": 3,
+      "testCount": 16
+    },
+    {
+      "path": "src/backend/modules/auth/github/client_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 5
+    },
+    {
+      "path": "src/backend/modules/auth/handler_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 12
+    },
+    {
+      "path": "src/backend/modules/auth/jwt/manager_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 6
+    },
+    {
+      "path": "src/backend/modules/auth/mapper/github_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 6
+    },
+    {
+      "path": "src/backend/modules/auth/service_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 9
+    },
+    {
+      "path": "src/backend/modules/auth/state_store_test.go",
+      "framework": "go-testing",
+      "suiteCount": 0,
+      "testCount": 5
+    },
+    {
+      "path": "src/frontend/features/analysis/components/empty-state.spec.tsx",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "src/frontend/features/auth/components/auth-status.spec.tsx",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "src/frontend/features/auth/components/login-button.spec.tsx",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "src/frontend/features/home/lib/github-url.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 2,
+      "testCount": 19
+    }
+  ],
+  "stats": {
+    "filesMatched": 22,
+    "filesScanned": 22
+  }
+}

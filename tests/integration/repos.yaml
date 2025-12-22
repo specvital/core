@@ -267,3 +267,11 @@ repositories:
       - playwright
       - vitest
     complex: true
+
+  - name: specvital-web
+    url: https://github.com/specvital/web
+    ref: v1.1.2
+    frameworks:
+      - go-testing
+      - vitest
+    complex: true
