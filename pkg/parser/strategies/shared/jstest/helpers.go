@@ -230,7 +230,40 @@ func ParseFunctionName(node *sitter.Node, source []byte) (string, domain.TestSta
 		return ParseIdentifierFunction(node, source)
 	case "member_expression":
 		return ParseMemberExpressionFunction(node, source)
+	case "parenthesized_expression":
+		return parseParenthesizedFunction(node, source)
 	default:
 		return "", domain.TestStatusActive, ""
 	}
+}
+
+func parseParenthesizedFunction(node *sitter.Node, source []byte) (string, domain.TestStatus, string) {
+	for i := 0; i < int(node.ChildCount()); i++ {
+		child := node.Child(i)
+		switch child.Type() {
+		case "ternary_expression":
+			return parseConditionalFunction(child, source)
+		case "identifier", "member_expression", "parenthesized_expression":
+			return ParseFunctionName(child, source)
+		}
+	}
+	return "", domain.TestStatusActive, ""
+}
+
+func parseConditionalFunction(node *sitter.Node, source []byte) (string, domain.TestStatus, string) {
+	consequence := node.ChildByFieldName("consequence")
+	if consequence != nil {
+		if name, _, _ := ParseFunctionName(consequence, source); name != "" {
+			return name, domain.TestStatusActive, ""
+		}
+	}
+
+	alternative := node.ChildByFieldName("alternative")
+	if alternative != nil {
+		if name, _, _ := ParseFunctionName(alternative, source); name != "" {
+			return name, domain.TestStatusActive, ""
+		}
+	}
+
+	return "", domain.TestStatusActive, ""
 }

@@ -1278,3 +1278,130 @@ func TestParse_ForLoopWithDescribe(t *testing.T) {
 		t.Errorf("suite.Tests[0].Name = %q, want %q", suite.Tests[0].Name, "should parse")
 	}
 }
+
+func TestParse_IIFEConditionalDescribe(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name       string
+		source     string
+		wantSuites int
+		wantTests  int
+	}{
+		{
+			name: "should parse IIFE with ternary describe",
+			source: `;(process.env.SKIP ? describe.skip : describe)(
+  'test suite',
+  () => {
+    it('should work', () => {})
+  }
+)`,
+			wantSuites: 1,
+			wantTests:  0,
+		},
+		{
+			name: "should parse nested IIFE ternary describes",
+			source: `;(condition1 ? describe.skip : describe)(
+  'outer suite',
+  () => {
+    ;(condition2 ? describe.skip : describe)(
+      'inner suite',
+      () => {
+        it('test', () => {})
+      }
+    )
+  }
+)`,
+			wantSuites: 1,
+			wantTests:  0,
+		},
+		{
+			name: "should parse IIFE with ternary it",
+			source: `;(process.env.SKIP ? it.skip : it)(
+  'test case',
+  () => {}
+)`,
+			wantSuites: 0,
+			wantTests:  1,
+		},
+		{
+			name: "should parse parenthesized describe without ternary",
+			source: `(describe)(
+  'simple suite',
+  () => {
+    it('test', () => {})
+  }
+)`,
+			wantSuites: 1,
+			wantTests:  0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			file, err := Parse(context.Background(), []byte(tt.source), "test.ts", "jest")
+
+			if err != nil {
+				t.Fatalf("Parse() error = %v", err)
+			}
+
+			if len(file.Suites) != tt.wantSuites {
+				t.Errorf("len(Suites) = %d, want %d", len(file.Suites), tt.wantSuites)
+			}
+
+			if len(file.Tests) != tt.wantTests {
+				t.Errorf("len(Tests) = %d, want %d", len(file.Tests), tt.wantTests)
+			}
+		})
+	}
+}
+
+func TestParse_IIFENestedTests(t *testing.T) {
+	t.Parallel()
+
+	source := `;(process.env.IS_TURBOPACK_TEST ? describe.skip : describe)(
+  'build trace with extra entries',
+  () => {
+    ;(process.env.TURBOPACK_DEV ? describe.skip : describe)(
+      'production mode',
+      () => {
+        it('should build and trace correctly', async () => {})
+      }
+    )
+  }
+)`
+
+	file, err := Parse(context.Background(), []byte(source), "test.ts", "jest")
+
+	if err != nil {
+		t.Fatalf("Parse() error = %v", err)
+	}
+
+	if len(file.Suites) != 1 {
+		t.Fatalf("len(Suites) = %d, want 1", len(file.Suites))
+	}
+
+	outerSuite := file.Suites[0]
+	if outerSuite.Name != "build trace with extra entries" {
+		t.Errorf("outer suite name = %q, want %q", outerSuite.Name, "build trace with extra entries")
+	}
+
+	if len(outerSuite.Suites) != 1 {
+		t.Fatalf("len(outerSuite.Suites) = %d, want 1", len(outerSuite.Suites))
+	}
+
+	innerSuite := outerSuite.Suites[0]
+	if innerSuite.Name != "production mode" {
+		t.Errorf("inner suite name = %q, want %q", innerSuite.Name, "production mode")
+	}
+
+	if len(innerSuite.Tests) != 1 {
+		t.Fatalf("len(innerSuite.Tests) = %d, want 1", len(innerSuite.Tests))
+	}
+
+	if innerSuite.Tests[0].Name != "should build and trace correctly" {
+		t.Errorf("test name = %q, want %q", innerSuite.Tests[0].Name, "should build and trace correctly")
+	}
+}
