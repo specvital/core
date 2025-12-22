@@ -258,3 +258,12 @@ repositories:
       - go-testing
       - vitest
     complex: true
+
+  - name: loa-work
+    url: https://github.com/KubrickCode/loa-work
+    ref: main
+    frameworks:
+      - go-testing
+      - playwright
+      - vitest
+    complex: true

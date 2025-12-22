@@ -2,15 +2,21 @@
   "repository": "storybook",
   "ref": "v8.4.5",
   "expectedFrameworks": ["cypress", "jest", "playwright", "vitest"],
-  "fileCount": 305,
+  "fileCount": 309,
   "testCount": 2837,
   "frameworkCounts": {
-    "cypress": 2,
-    "jest": 1,
+    "cypress": 3,
+    "jest": 2,
     "playwright": 22,
-    "vitest": 280
+    "vitest": 282
   },
   "sampleFiles": [
+    {
+      "path": "code/.storybook/storybook.setup.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 0
+    },
     {
       "path": "code/addons/a11y/src/a11yRunner.test.ts",
       "framework": "vitest",
@@ -124,16 +130,10 @@
       "framework": "vitest",
       "suiteCount": 1,
       "testCount": 4
-    },
-    {
-      "path": "code/addons/test/src/vitest-plugin/viewports.test.ts",
-      "framework": "vitest",
-      "suiteCount": 1,
-      "testCount": 17
     }
   ],
   "stats": {
-    "filesMatched": 305,
-    "filesScanned": 305
+    "filesMatched": 309,
+    "filesScanned": 309
   }
 }

@@ -1,0 +1,138 @@
+{
+  "repository": "loa-work",
+  "ref": "main",
+  "expectedFrameworks": ["go-testing", "playwright", "vitest"],
+  "fileCount": 65,
+  "testCount": 432,
+  "frameworkCounts": {
+    "go-testing": 14,
+    "playwright": 34,
+    "vitest": 17
+  },
+  "sampleFiles": [
+    {
+      "path": "e2e/accessibility.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 11
+    },
+    {
+      "path": "e2e/admin-page.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 2,
+      "testCount": 2
+    },
+    {
+      "path": "e2e/api-error-state.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "e2e/auth.setup.ts",
+      "framework": "playwright",
+      "suiteCount": 0,
+      "testCount": 1
+    },
+    {
+      "path": "e2e/authenticated.auth.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 10
+    },
+    {
+      "path": "e2e/browser-history.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "e2e/content-detail-dialog.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 8
+    },
+    {
+      "path": "e2e/content-reward-list.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 8
+    },
+    {
+      "path": "e2e/dark-mode.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "e2e/empty-state.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "e2e/extra-item-tab.auth.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "e2e/extra-item-tab.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "e2e/filter-dialog.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 15
+    },
+    {
+      "path": "e2e/footer-popups.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "e2e/guide-dialog.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 4
+    },
+    {
+      "path": "e2e/home.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "e2e/item-price-accordion.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "e2e/item-price-list.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 13
+    },
+    {
+      "path": "e2e/keyboard-navigation.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "e2e/loading-state.spec.ts",
+      "framework": "playwright",
+      "suiteCount": 1,
+      "testCount": 4
+    }
+  ],
+  "stats": {
+    "filesMatched": 65,
+    "filesScanned": 65
+  }
+}

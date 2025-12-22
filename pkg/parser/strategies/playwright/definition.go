@@ -18,6 +18,8 @@ const (
 	funcTest         = "test"
 	funcTestDescribe = "test.describe"
 	modifierFixme    = "fixme"
+
+	playwrightImportPath = "@playwright/test"
 )
 
 func init() {
@@ -70,27 +72,109 @@ func (p *PlaywrightParser) Parse(ctx context.Context, source []byte, filename st
 		Framework: frameworkName,
 	}
 
-	parseNode(root, source, filename, testFile, nil)
+	testAliases := extractTestAliases(root, source)
+	parseNode(root, source, filename, testFile, nil, testAliases)
 
 	return testFile, nil
 }
 
-func parseFunctionName(node *sitter.Node, source []byte) (string, domain.TestStatus, string) {
+func extractTestAliases(root *sitter.Node, source []byte) map[string]bool {
+	aliases := map[string]bool{funcTest: true}
+
+	for i := 0; i < int(root.ChildCount()); i++ {
+		child := root.Child(i)
+		if child == nil || child.Type() != "import_statement" {
+			continue
+		}
+
+		if !isPlaywrightImport(child, source) {
+			continue
+		}
+
+		extractAliasesFromImport(child, source, aliases)
+	}
+
+	return aliases
+}
+
+func isPlaywrightImport(node *sitter.Node, source []byte) bool {
+	sourceNode := node.ChildByFieldName("source")
+	if sourceNode == nil {
+		return false
+	}
+
+	importPath := jstest.UnquoteString(parser.GetNodeText(sourceNode, source))
+	return importPath == playwrightImportPath
+}
+
+func extractAliasesFromImport(importNode *sitter.Node, source []byte, aliases map[string]bool) {
+	for i := 0; i < int(importNode.ChildCount()); i++ {
+		child := importNode.Child(i)
+		if child == nil || child.Type() != "import_clause" {
+			continue
+		}
+
+		processImportClause(child, source, aliases)
+	}
+}
+
+func processImportClause(clause *sitter.Node, source []byte, aliases map[string]bool) {
+	for i := 0; i < int(clause.ChildCount()); i++ {
+		child := clause.Child(i)
+		if child == nil || child.Type() != "named_imports" {
+			continue
+		}
+
+		processNamedImports(child, source, aliases)
+	}
+}
+
+func processNamedImports(namedImports *sitter.Node, source []byte, aliases map[string]bool) {
+	for i := 0; i < int(namedImports.ChildCount()); i++ {
+		specifier := namedImports.Child(i)
+		if specifier == nil || specifier.Type() != "import_specifier" {
+			continue
+		}
+
+		processImportSpecifier(specifier, source, aliases)
+	}
+}
+
+func processImportSpecifier(specifier *sitter.Node, source []byte, aliases map[string]bool) {
+	nameNode := specifier.ChildByFieldName("name")
+	aliasNode := specifier.ChildByFieldName("alias")
+
+	if nameNode == nil {
+		return
+	}
+
+	originalName := parser.GetNodeText(nameNode, source)
+	if originalName != funcTest {
+		return
+	}
+
+	if aliasNode != nil {
+		aliasName := parser.GetNodeText(aliasNode, source)
+		aliases[aliasName] = true
+	}
+}
+
+func parseFunctionName(node *sitter.Node, source []byte, testAliases map[string]bool) (string, domain.TestStatus, string) {
 	switch node.Type() {
 	case "identifier":
 		name := parser.GetNodeText(node, source)
-		if name == funcTest {
+		if testAliases[name] {
 			return funcTest, domain.TestStatusActive, ""
 		}
 		return "", domain.TestStatusActive, ""
 	case "member_expression":
-		return parseMemberExpression(node, source)
+		return parseMemberExpression(node, source, testAliases)
 	default:
 		return "", domain.TestStatusActive, ""
 	}
 }
 
-func parseMemberExpression(node *sitter.Node, source []byte) (string, domain.TestStatus, string) {
+func parseMemberExpression(node *sitter.Node, source []byte, testAliases map[string]bool) (string, domain.TestStatus, string) {
 	obj := node.ChildByFieldName("object")
 	prop := node.ChildByFieldName("property")
 
@@ -100,9 +184,9 @@ func parseMemberExpression(node *sitter.Node, source []byte) (string, domain.Tes
 
 	switch obj.Type() {
 	case "identifier":
-		return parseSimpleMemberExpression(obj, prop, source)
+		return parseSimpleMemberExpression(obj, prop, source, testAliases)
 	case "member_expression":
-		return parseNestedMemberExpression(obj, prop, source)
+		return parseNestedMemberExpression(obj, prop, source, testAliases)
 	}
 
 	return "", domain.TestStatusActive, ""
@@ -121,7 +205,7 @@ func parseModifierStatusAndModifier(modifier string) (domain.TestStatus, string)
 	}
 }
 
-func parseNestedMemberExpression(obj *sitter.Node, prop *sitter.Node, source []byte) (string, domain.TestStatus, string) {
+func parseNestedMemberExpression(obj *sitter.Node, prop *sitter.Node, source []byte, testAliases map[string]bool) (string, domain.TestStatus, string) {
 	innerObj := obj.ChildByFieldName("object")
 	innerProp := obj.ChildByFieldName("property")
 
@@ -130,7 +214,7 @@ func parseNestedMemberExpression(obj *sitter.Node, prop *sitter.Node, source []b
 	}
 
 	objName := parser.GetNodeText(innerObj, source)
-	if objName != funcTest {
+	if !testAliases[objName] {
 		return "", domain.TestStatusActive, ""
 	}
 
@@ -144,24 +228,24 @@ func parseNestedMemberExpression(obj *sitter.Node, prop *sitter.Node, source []b
 	return "", domain.TestStatusActive, ""
 }
 
-func parseNode(node *sitter.Node, source []byte, filename string, file *domain.TestFile, currentSuite *domain.TestSuite) {
+func parseNode(node *sitter.Node, source []byte, filename string, file *domain.TestFile, currentSuite *domain.TestSuite, testAliases map[string]bool) {
 	for i := 0; i < int(node.ChildCount()); i++ {
 		child := node.Child(i)
 
 		switch child.Type() {
 		case "expression_statement":
 			if expr := parser.FindChildByType(child, "call_expression"); expr != nil {
-				processCallExpression(expr, source, filename, file, currentSuite)
+				processCallExpression(expr, source, filename, file, currentSuite, testAliases)
 			}
 		default:
-			parseNode(child, source, filename, file, currentSuite)
+			parseNode(child, source, filename, file, currentSuite, testAliases)
 		}
 	}
 }
 
-func parseSimpleMemberExpression(obj *sitter.Node, prop *sitter.Node, source []byte) (string, domain.TestStatus, string) {
+func parseSimpleMemberExpression(obj *sitter.Node, prop *sitter.Node, source []byte, testAliases map[string]bool) (string, domain.TestStatus, string) {
 	objName := parser.GetNodeText(obj, source)
-	if objName != funcTest {
+	if !testAliases[objName] {
 		return "", domain.TestStatusActive, ""
 	}
 
@@ -180,7 +264,7 @@ func parseSimpleMemberExpression(obj *sitter.Node, prop *sitter.Node, source []b
 	return "", domain.TestStatusActive, ""
 }
 
-func processCallExpression(node *sitter.Node, source []byte, filename string, file *domain.TestFile, currentSuite *domain.TestSuite) {
+func processCallExpression(node *sitter.Node, source []byte, filename string, file *domain.TestFile, currentSuite *domain.TestSuite, testAliases map[string]bool) {
 	funcNode := node.ChildByFieldName("function")
 	if funcNode == nil {
 		return
@@ -191,20 +275,20 @@ func processCallExpression(node *sitter.Node, source []byte, filename string, fi
 		return
 	}
 
-	funcName, status, modifier := parseFunctionName(funcNode, source)
+	funcName, status, modifier := parseFunctionName(funcNode, source, testAliases)
 	if funcName == "" {
 		return
 	}
 
 	switch funcName {
 	case funcTestDescribe:
-		processSuite(node, args, source, filename, file, currentSuite, status, modifier)
+		processSuite(node, args, source, filename, file, currentSuite, status, modifier, testAliases)
 	case funcTest:
 		processTest(node, args, source, filename, file, currentSuite, status, modifier)
 	}
 }
 
-func processSuite(callNode *sitter.Node, args *sitter.Node, source []byte, filename string, file *domain.TestFile, parentSuite *domain.TestSuite, status domain.TestStatus, modifier string) {
+func processSuite(callNode *sitter.Node, args *sitter.Node, source []byte, filename string, file *domain.TestFile, parentSuite *domain.TestSuite, status domain.TestStatus, modifier string, testAliases map[string]bool) {
 	name := jstest.ExtractTestName(args, source)
 	if name == "" {
 		return
@@ -220,7 +304,7 @@ func processSuite(callNode *sitter.Node, args *sitter.Node, source []byte, filen
 	if callback := jstest.FindCallback(args); callback != nil {
 		body := callback.ChildByFieldName("body")
 		if body != nil {
-			parseNode(body, source, filename, file, &suite)
+			parseNode(body, source, filename, file, &suite, testAliases)
 		}
 	}
 

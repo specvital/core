@@ -245,3 +245,95 @@ test.describe.skip('skipped suite', () => {
 		})
 	}
 }
+
+func TestPlaywrightParser_SetupAlias(t *testing.T) {
+	tests := []struct {
+		name         string
+		source       string
+		expectedName string
+	}{
+		{
+			name: "setup alias from test",
+			source: `
+import { test as setup } from '@playwright/test';
+
+setup("authenticate", async ({ request }) => {
+  await request.post('/api/login');
+});
+`,
+			expectedName: "authenticate",
+		},
+		{
+			name: "teardown alias from test",
+			source: `
+import { test as teardown } from '@playwright/test';
+
+teardown("cleanup", async ({ page }) => {
+  await page.close();
+});
+`,
+			expectedName: "cleanup",
+		},
+		{
+			name: "multiple aliases",
+			source: `
+import { test, test as setup, expect } from '@playwright/test';
+
+setup("auth setup", async ({ request }) => {});
+test("regular test", async ({ page }) => {});
+`,
+			expectedName: "auth setup",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			parser := &PlaywrightParser{}
+			ctx := context.Background()
+
+			testFile, err := parser.Parse(ctx, []byte(tt.source), "setup.spec.ts")
+
+			require.NoError(t, err)
+			require.NotEmpty(t, testFile.Tests, "Expected at least one test to be detected")
+			assert.Equal(t, tt.expectedName, testFile.Tests[0].Name)
+		})
+	}
+
+	t.Run("multiple aliases detects all tests", func(t *testing.T) {
+		source := `
+import { test, test as setup, expect } from '@playwright/test';
+
+setup("auth setup", async ({ request }) => {});
+test("regular test", async ({ page }) => {});
+`
+		parser := &PlaywrightParser{}
+		ctx := context.Background()
+
+		testFile, err := parser.Parse(ctx, []byte(source), "setup.spec.ts")
+
+		require.NoError(t, err)
+		require.Len(t, testFile.Tests, 2, "Both tests should be detected")
+		assert.Equal(t, "auth setup", testFile.Tests[0].Name)
+		assert.Equal(t, "regular test", testFile.Tests[1].Name)
+	})
+}
+
+func TestPlaywrightParser_NonPlaywrightAlias(t *testing.T) {
+	t.Run("alias from non-playwright import should not be detected", func(t *testing.T) {
+		source := `
+import { test as customTest } from './custom-utils';
+import { test } from '@playwright/test';
+
+customTest("should not be detected", async () => {});
+test("should be detected", async ({ page }) => {});
+`
+		parser := &PlaywrightParser{}
+		ctx := context.Background()
+
+		testFile, err := parser.Parse(ctx, []byte(source), "mixed.spec.ts")
+
+		require.NoError(t, err)
+		require.Len(t, testFile.Tests, 1, "Only Playwright test should be detected")
+		assert.Equal(t, "should be detected", testFile.Tests[0].Name)
+	})
+}

@@ -704,6 +704,15 @@ func isJSTestFile(path string) bool {
 		return true
 	}
 
+	// Playwright setup/teardown files: *.setup.{js,ts,jsx,tsx}
+	ext := filepath.Ext(lowerBase)
+	if ext == ".js" || ext == ".ts" || ext == ".jsx" || ext == ".tsx" {
+		nameWithoutExt := strings.TrimSuffix(lowerBase, ext)
+		if strings.HasSuffix(nameWithoutExt, ".setup") || strings.HasSuffix(nameWithoutExt, ".teardown") {
+			return true
+		}
+	}
+
 	// Cypress E2E test files: *.cy.{js,ts,jsx,tsx}
 	if strings.Contains(lowerBase, ".cy.") {
 		return true
