@@ -1,5 +1,6 @@
 ---
 title: Repository Strategy
+description: ADR on polyrepo strategy for independent service deployment and technology freedom
 ---
 
 # ADR-05: Polyrepo Repository Strategy

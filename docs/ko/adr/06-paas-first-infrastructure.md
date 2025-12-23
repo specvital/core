@@ -1,5 +1,6 @@
 ---
 title: PaaS 우선 인프라
+description: 운영 오버헤드 최소화를 위한 PaaS 우선 인프라 전략
 ---
 
 # ADR-06: PaaS 우선 인프라 전략

@@ -1,5 +1,6 @@
 ---
 title: Shared Infra
+description: ADR on shared database and cache for operational simplicity and data consistency
 ---
 
 # ADR-07: Shared Infrastructure Strategy

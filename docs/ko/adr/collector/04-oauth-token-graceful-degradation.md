@@ -1,5 +1,6 @@
 ---
 title: OAuth 토큰 Graceful Degradation
+description: OAuth 토큰 처리를 위한 예외 분류 및 우아한 저하 전략
 ---
 
 # ADR-04: OAuth 토큰 Graceful Degradation

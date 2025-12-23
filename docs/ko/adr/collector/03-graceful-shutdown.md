@@ -1,5 +1,6 @@
 ---
 title: Graceful Shutdown
+description: context 기반 서비스 생명주기 및 우아한 종료 관리 패턴
 ---
 
 # ADR-03: Graceful Shutdown 및 컨텍스트 기반 생명주기 관리

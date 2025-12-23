@@ -1,5 +1,6 @@
 ---
 title: API/Worker 분리
+description: 독립적 스케일링과 장애 격리를 위한 API와 Worker 서비스 분리
 ---
 
 # ADR-03: API와 Worker 서비스 분리

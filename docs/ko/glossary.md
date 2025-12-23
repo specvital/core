@@ -1,5 +1,6 @@
 ---
 title: 용어집
+description: Specvital 플랫폼 전반에서 사용되는 도메인 용어 정의
 ---
 
 # 용어집

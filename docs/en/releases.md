@@ -1,5 +1,6 @@
 ---
 title: Release Notes
+description: Release notes and versioning information for all Specvital services
 ---
 
 # Release Notes

@@ -1,5 +1,6 @@
 ---
 title: Collector ADR
+description: Architecture Decision Records for the Collector background worker service
 ---
 
 # Collector Repository ADR

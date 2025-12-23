@@ -1,5 +1,6 @@
 ---
 title: Core ADR
+description: Architecture Decision Records for the Core parser library
 ---
 
 # Core Repository ADR

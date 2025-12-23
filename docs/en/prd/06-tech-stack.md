@@ -1,5 +1,6 @@
 ---
 title: Tech Stack
+description: Technology stack choices and technical principles
 ---
 
 # Technology Stack

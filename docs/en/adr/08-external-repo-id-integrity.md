@@ -1,5 +1,6 @@
 ---
 title: External Repo ID Integrity
+description: ADR on external repository ID-based data integrity verification
 ---
 
 # ADR-08: External Repository ID-Based Data Integrity

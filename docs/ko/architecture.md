@@ -1,5 +1,6 @@
 ---
 title: 아키텍처
+description: SpecVital 플랫폼 아키텍처 및 데이터 흐름
 ---
 
 # SpecVital Architecture

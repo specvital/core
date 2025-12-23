@@ -1,5 +1,6 @@
 ---
 title: 기술 스택
+description: Specvital 플랫폼 기술 스택 선택 및 기술 원칙
 ---
 
 # 기술 스택

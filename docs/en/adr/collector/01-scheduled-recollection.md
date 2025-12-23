@@ -1,5 +1,6 @@
 ---
 title: Scheduled Re-collection
+description: ADR on scheduler-based re-collection with adaptive decay for data freshness
 ---
 
 # ADR-01: Scheduled Re-collection Architecture

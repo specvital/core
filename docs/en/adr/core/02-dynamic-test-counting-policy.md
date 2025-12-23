@@ -1,5 +1,6 @@
 ---
 title: Dynamic Test Counting Policy
+description: ADR on counting dynamically generated tests as 1 due to static analysis limitations
 ---
 
 # ADR-02: Dynamic Test Counting Policy

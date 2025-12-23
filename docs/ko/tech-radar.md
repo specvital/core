@@ -1,5 +1,6 @@
 ---
 title: 기술 레이더
+description: Specvital 플랫폼 기술 채택 현황 및 평가
 ---
 
 # 기술 레이더

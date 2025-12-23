@@ -1,5 +1,6 @@
 ---
 title: API Worker
+description: ADR on separating API and worker services for independent scaling and fault isolation
 ---
 
 # ADR-03: API and Worker Service Separation

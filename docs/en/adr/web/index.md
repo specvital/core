@@ -1,5 +1,6 @@
 ---
 title: Web ADR
+description: Architecture Decision Records for the Web platform service
 ---
 
 # Web Repository ADR

@@ -1,5 +1,6 @@
 ---
 title: Clean Architecture Layers
+description: ADR on six-layer Clean Architecture for separation of concerns and testability
 ---
 
 # ADR-02: Clean Architecture Layer Introduction

@@ -1,5 +1,6 @@
 ---
 title: Glossary
+description: Domain terminology used across the Specvital platform
 ---
 
 # Glossary

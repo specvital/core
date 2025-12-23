@@ -1,5 +1,6 @@
 ---
 title: 클린 아키텍처 레이어
+description: 6개의 명확한 레이어로 구성된 Clean Architecture 구조
 ---
 
 # ADR-02: 클린 아키텍처 레이어 도입

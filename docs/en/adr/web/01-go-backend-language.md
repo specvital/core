@@ -1,5 +1,6 @@
 ---
 title: Go Backend Language
+description: ADR on choosing Go for backend to share infrastructure with existing services
 ---
 
 # ADR-01: Go as Backend Language

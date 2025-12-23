@@ -1,5 +1,6 @@
 ---
 title: Home
+description: Specvital documentation hub with PRD, ADR, architecture, and API references
 ---
 
 # Specvital Documentation

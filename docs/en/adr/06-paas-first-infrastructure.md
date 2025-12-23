@@ -1,5 +1,6 @@
 ---
 title: PaaS First
+description: ADR on PaaS-first infrastructure to minimize operational overhead
 ---
 
 # ADR-06: PaaS-First Infrastructure Strategy

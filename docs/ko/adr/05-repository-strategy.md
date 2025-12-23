@@ -1,5 +1,6 @@
 ---
 title: 리포지토리 전략
+description: 독립적 서비스 배포와 기술 자유도를 위한 Polyrepo 전략
 ---
 
 # ADR-05: Polyrepo 리포지토리 전략

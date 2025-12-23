@@ -1,5 +1,6 @@
 ---
 title: 워커-스케줄러 분리
+description: 독립적 스케일링을 위한 Worker와 Scheduler 프로세스 분리 아키텍처
 ---
 
 # ADR-05: 워커-스케줄러 프로세스 분리

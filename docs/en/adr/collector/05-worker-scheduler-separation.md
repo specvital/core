@@ -1,5 +1,6 @@
 ---
 title: Worker-Scheduler Separation
+description: ADR on separating Worker and Scheduler into independent processes
 ---
 
 # ADR-05: Worker-Scheduler Process Separation

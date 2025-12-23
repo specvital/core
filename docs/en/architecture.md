@@ -1,5 +1,6 @@
 ---
 title: Architecture
+description: High-level system architecture and deployment overview
 ---
 
 # SpecVital Architecture

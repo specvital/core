@@ -1,5 +1,6 @@
 ---
 title: Architecture
+description: Specvital system architecture and service composition
 ---
 
 # System Architecture

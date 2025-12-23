@@ -1,5 +1,6 @@
 ---
 title: Semaphore-Based Clone Concurrency
+description: ADR on weighted semaphore for limiting concurrent git clone operations
 ---
 
 # ADR-06: Semaphore-Based Clone Concurrency Control

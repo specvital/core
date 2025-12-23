@@ -1,5 +1,6 @@
 ---
 title: Repository Pattern
+description: ADR on Repository pattern for data access abstraction and testability
 ---
 
 # ADR-07: Repository Pattern Data Access Abstraction

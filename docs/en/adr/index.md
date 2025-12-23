@@ -1,5 +1,6 @@
 ---
 title: ADR
+description: Architecture Decision Records documenting key technical decisions in Specvital
 ---
 
 # Architecture Decision Records (ADR)

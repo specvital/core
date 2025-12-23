@@ -1,5 +1,6 @@
 ---
 title: Collector ADR
+description: 수집 서비스(백그라운드 분석 워커) 아키텍처 의사결정 기록
 ---
 
 # Collector 리포지토리 ADR

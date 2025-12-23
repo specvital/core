@@ -1,5 +1,6 @@
 ---
 title: OAuth Token Graceful Degradation
+description: ADR on graceful degradation for OAuth tokens with public access fallback
 ---
 
 # ADR-04: OAuth Token Graceful Degradation

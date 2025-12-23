@@ -1,5 +1,6 @@
 ---
 title: 아키텍처
+description: Specvital 시스템 아키텍처 및 서비스 구성
 ---
 
 # 시스템 아키텍처

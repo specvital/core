@@ -1,5 +1,6 @@
 ---
 title: Tech Radar
+description: Technology adoption status and evaluation across the platform
 ---
 
 # Tech Radar

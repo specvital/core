@@ -1,5 +1,6 @@
 ---
 title: 홈
+description: Specvital 문서 허브 - PRD, ADR, 아키텍처, API 레퍼런스 제공
 ---
 
 # Specvital 문서

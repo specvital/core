@@ -1,5 +1,6 @@
 ---
 title: ADR (한국어)
+description: Specvital 프로젝트의 핵심 기술 의사결정 기록 문서
 ---
 
 # 아키텍처 의사결정 기록 (ADR)

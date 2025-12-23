@@ -1,5 +1,6 @@
 ---
 title: External Repo ID 무결성
+description: External Repository ID 기반 데이터 무결성 검증 메커니즘
 ---
 
 # ADR-08: External Repository ID 기반 데이터 무결성

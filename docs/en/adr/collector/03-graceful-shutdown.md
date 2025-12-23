@@ -1,5 +1,6 @@
 ---
 title: Graceful Shutdown
+description: ADR on context-based lifecycle management for graceful shutdown in PaaS environments
 ---
 
 # ADR-03: Graceful Shutdown and Context-Based Lifecycle Management

@@ -1,5 +1,6 @@
 ---
 title: Queue Processing
+description: ADR on queue-based async processing for long-running analysis tasks
 ---
 
 # ADR-04: Queue-Based Asynchronous Processing

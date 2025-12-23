@@ -1,5 +1,6 @@
 ---
 title: 웹 ADR
+description: 웹 플랫폼(대시보드 및 API) 아키텍처 의사결정 기록
 ---
 
 # 웹 리포지토리 ADR
