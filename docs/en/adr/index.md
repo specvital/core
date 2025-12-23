@@ -68,10 +68,21 @@ XX-brief-decision-title.md
 
 ### Core Repository
 
-| #   | Title                                                                     | Area | Date       |
-| --- | ------------------------------------------------------------------------- | ---- | ---------- |
-| 01  | [Core Library Separation](./core/01-core-library-separation.md)           | Core | 2024-12-17 |
-| 02  | [Dynamic Test Counting Policy](./core/02-dynamic-test-counting-policy.md) | Core | 2025-12-22 |
+| #   | Title                                                                                          | Area    | Date       |
+| --- | ---------------------------------------------------------------------------------------------- | ------- | ---------- |
+| 01  | [Core Library Separation](./core/01-core-library-separation.md)                                | Core    | 2024-12-17 |
+| 02  | [Dynamic Test Counting Policy](./core/02-dynamic-test-counting-policy.md)                      | Core    | 2024-12-22 |
+| 03  | [Tree-sitter as AST Parsing Engine](./core/03-tree-sitter-ast-parsing-engine.md)               | Parser  | 2024-12-23 |
+| 04  | [Early-Return Framework Detection](./core/04-early-return-framework-detection.md)              | Parser  | 2024-12-23 |
+| 05  | [Parser Pooling Disabled](./core/05-parser-pooling-disabled.md)                                | Parser  | 2024-12-23 |
+| 06  | [Unified Framework Definition](./core/06-unified-framework-definition.md)                      | Parser  | 2024-12-23 |
+| 07  | [Source Abstraction Interface](./core/07-source-abstraction-interface.md)                      | Parser  | 2024-12-23 |
+| 08  | [Shared Parser Modules](./core/08-shared-parser-modules.md)                                    | Parser  | 2024-12-23 |
+| 09  | [Config Scope Resolution](./core/09-config-scope-resolution.md)                                | Config  | 2024-12-23 |
+| 10  | [Standard Go Project Layout](./core/10-standard-go-project-layout.md)                          | Project | 2024-12-23 |
+| 11  | [Integration Testing with Golden Snapshots](./core/11-integration-testing-golden-snapshots.md) | Testing | 2024-12-23 |
+| 12  | [Parallel Scanning with Worker Pool](./core/12-parallel-scanning-worker-pool.md)               | Perf    | 2024-12-23 |
+| 13  | [NaCl SecretBox Encryption](./core/13-nacl-secretbox-encryption.md)                            | Crypto  | 2024-12-23 |
 
 ### Collector Repository
 

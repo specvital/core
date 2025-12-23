@@ -42,6 +42,18 @@ Documentation of architectural decisions made during the development of Specvita
 **[Core](./adr/core/)**
 
 - [Core Library Separation](./adr/core/01-core-library-separation.md)
+- [Dynamic Test Counting Policy](./adr/core/02-dynamic-test-counting-policy.md)
+- [Tree-sitter AST Parsing Engine](./adr/core/03-tree-sitter-ast-parsing-engine.md)
+- [Early-Return Framework Detection](./adr/core/04-early-return-framework-detection.md)
+- [Parser Pooling Disabled](./adr/core/05-parser-pooling-disabled.md)
+- [Unified Framework Definition](./adr/core/06-unified-framework-definition.md)
+- [Source Abstraction Interface](./adr/core/07-source-abstraction-interface.md)
+- [Shared Parser Modules](./adr/core/08-shared-parser-modules.md)
+- [Config Scope Resolution](./adr/core/09-config-scope-resolution.md)
+- [Standard Go Project Layout](./adr/core/10-standard-go-project-layout.md)
+- [Integration Testing with Golden Snapshots](./adr/core/11-integration-testing-golden-snapshots.md)
+- [Parallel Scanning with Worker Pool](./adr/core/12-parallel-scanning-worker-pool.md)
+- [NaCl SecretBox Encryption](./adr/core/13-nacl-secretbox-encryption.md)
 
 **[Collector](./adr/collector/)**
 

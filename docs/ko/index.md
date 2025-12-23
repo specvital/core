@@ -42,6 +42,18 @@ Specvital 개발 중 내린 아키텍처 결정에 대한 문서.
 **[Core](./adr/core/)**
 
 - [코어 라이브러리 분리](./adr/core/01-core-library-separation.md)
+- [동적 테스트 카운팅 정책](./adr/core/02-dynamic-test-counting-policy.md)
+- [Tree-sitter AST 파싱 엔진](./adr/core/03-tree-sitter-ast-parsing-engine.md)
+- [Early-Return 프레임워크 탐지](./adr/core/04-early-return-framework-detection.md)
+- [파서 풀링 비활성화](./adr/core/05-parser-pooling-disabled.md)
+- [통합 Framework Definition](./adr/core/06-unified-framework-definition.md)
+- [Source 추상화 인터페이스](./adr/core/07-source-abstraction-interface.md)
+- [공유 파서 모듈](./adr/core/08-shared-parser-modules.md)
+- [Config 스코프 해석](./adr/core/09-config-scope-resolution.md)
+- [표준 Go 프로젝트 레이아웃](./adr/core/10-standard-go-project-layout.md)
+- [골든 스냅샷 통합 테스트](./adr/core/11-integration-testing-golden-snapshots.md)
+- [Worker Pool 병렬 스캔](./adr/core/12-parallel-scanning-worker-pool.md)
+- [NaCl SecretBox 암호화](./adr/core/13-nacl-secretbox-encryption.md)
 
 **[Collector](./adr/collector/)**
 
