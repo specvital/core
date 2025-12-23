@@ -3,7 +3,7 @@
   "ref": "v16.1.0",
   "expectedFrameworks": ["jest"],
   "fileCount": 14,
-  "testCount": 78,
+  "testCount": 60,
   "frameworkCounts": {
     "jest": 14
   },
@@ -47,8 +47,8 @@
     {
       "path": "src/__tests__/end-to-end.js",
       "framework": "jest",
-      "suiteCount": 9,
-      "testCount": 27
+      "suiteCount": 3,
+      "testCount": 9
     },
     {
       "path": "src/__tests__/events.js",

@@ -3,7 +3,7 @@
   "ref": "6.9.0",
   "expectedFrameworks": ["jest", "vitest"],
   "fileCount": 449,
-  "testCount": 1645,
+  "testCount": 1637,
   "frameworkCounts": {
     "jest": 370,
     "vitest": 79

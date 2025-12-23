@@ -3,7 +3,7 @@
   "ref": "v10.45.2",
   "expectedFrameworks": ["playwright", "vitest"],
   "fileCount": 172,
-  "testCount": 742,
+  "testCount": 738,
   "frameworkCounts": {
     "playwright": 9,
     "vitest": 163

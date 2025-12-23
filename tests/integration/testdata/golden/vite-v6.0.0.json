@@ -3,7 +3,7 @@
   "ref": "v6.0.0",
   "expectedFrameworks": ["vitest"],
   "fileCount": 232,
-  "testCount": 1063,
+  "testCount": 1061,
   "frameworkCounts": {
     "vitest": 232
   },

@@ -148,18 +148,18 @@ func TestParseJestNode(t *testing.T) {
 		wantNestedTests int
 	}{
 		{
-			name:            "should parse describe.each",
+			name:            "should parse describe.each as single dynamic suite (ADR-02)",
 			source:          `describe.each([['a'], ['b']])('case %s', () => { it('test', () => {}); });`,
-			wantSuites:      2,
+			wantSuites:      1,
 			wantTests:       0,
 			wantNestedTests: 1,
 		},
 		{
-			name:            "should parse it.each inside describe",
+			name:            "should parse it.each as single dynamic test (ADR-02)",
 			source:          `describe('Suite', () => { it.each([[1], [2]])('test %s', () => {}); });`,
 			wantSuites:      1,
 			wantTests:       0,
-			wantNestedTests: 2,
+			wantNestedTests: 1,
 		},
 		{
 			name:       "should handle mixed content",

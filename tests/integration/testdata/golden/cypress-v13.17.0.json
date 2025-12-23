@@ -3,7 +3,7 @@
   "ref": "v13.17.0",
   "expectedFrameworks": ["cypress", "mocha"],
   "fileCount": 1341,
-  "testCount": 8892,
+  "testCount": 8890,
   "frameworkCounts": {
     "cypress": 1251,
     "mocha": 90
@@ -55,7 +55,7 @@
       "path": "npm/grep/cypress/e2e/each-spec.js",
       "framework": "cypress",
       "suiteCount": 1,
-      "testCount": 3
+      "testCount": 1
     },
     {
       "path": "npm/grep/cypress/e2e/inherits-tag-spec.js",

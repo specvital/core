@@ -3,7 +3,7 @@
   "ref": "v15.0.3",
   "expectedFrameworks": ["cargo-test", "cypress", "jest", "mocha", "playwright", "vitest"],
   "fileCount": 1351,
-  "testCount": 8332,
+  "testCount": 7725,
   "frameworkCounts": {
     "cargo-test": 56,
     "cypress": 3,

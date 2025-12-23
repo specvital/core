@@ -274,28 +274,28 @@ func TestParse_Each(t *testing.T) {
 		isSuite   bool
 	}{
 		{
-			name:      "should parse describe.each with arrays",
+			name:      "should parse describe.each as single dynamic suite (ADR-02)",
 			source:    `describe.each([['a'], ['b']])('case %s', () => {});`,
-			wantCount: 2,
-			wantFirst: "case a",
+			wantCount: 1,
+			wantFirst: "case %s (dynamic cases)",
 			isSuite:   true,
 		},
 		{
-			name:      "should parse it.each with arrays",
+			name:      "should parse it.each as single dynamic test (ADR-02)",
 			source:    `it.each([[1], [2], [3]])('test %d', () => {});`,
-			wantCount: 3,
-			wantFirst: "test 1",
+			wantCount: 1,
+			wantFirst: "test %d (dynamic cases)",
 			isSuite:   false,
 		},
 		{
-			name:      "should parse test.each with strings",
+			name:      "should parse test.each as single dynamic test (ADR-02)",
 			source:    `test.each(['foo', 'bar'])('val %s', () => {});`,
-			wantCount: 2,
-			wantFirst: "val foo",
+			wantCount: 1,
+			wantFirst: "val %s (dynamic cases)",
 			isSuite:   false,
 		},
 		{
-			name:      "should handle dynamic cases",
+			name:      "should handle variable-based dynamic cases",
 			source:    `it.each(testData)('test %s', () => {});`,
 			wantCount: 1,
 			wantFirst: "test %s (dynamic cases)",
@@ -646,24 +646,24 @@ func TestParse_ConcurrentEach(t *testing.T) {
 		isSuite   bool
 	}{
 		{
-			name:      "should parse test.concurrent.each",
+			name:      "should parse test.concurrent.each as single dynamic test (ADR-02)",
 			source:    `test.concurrent.each([[1], [2], [3]])('test %d', async () => {});`,
-			wantCount: 3,
-			wantFirst: "test 1",
+			wantCount: 1,
+			wantFirst: "test %d (dynamic cases)",
 			isSuite:   false,
 		},
 		{
-			name:      "should parse it.concurrent.each",
+			name:      "should parse it.concurrent.each as single dynamic test (ADR-02)",
 			source:    `it.concurrent.each([['a'], ['b']])('test %s', async () => {});`,
-			wantCount: 2,
-			wantFirst: "test a",
+			wantCount: 1,
+			wantFirst: "test %s (dynamic cases)",
 			isSuite:   false,
 		},
 		{
-			name:      "should parse describe.concurrent.each",
+			name:      "should parse describe.concurrent.each as single dynamic suite (ADR-02)",
 			source:    `describe.concurrent.each([['x'], ['y']])('suite %s', () => {});`,
-			wantCount: 2,
-			wantFirst: "suite x",
+			wantCount: 1,
+			wantFirst: "suite %s (dynamic cases)",
 			isSuite:   true,
 		},
 	}
@@ -691,54 +691,6 @@ func TestParse_ConcurrentEach(t *testing.T) {
 				}
 				if file.Tests[0].Name != tt.wantFirst {
 					t.Errorf("Tests[0].Name = %q, want %q", file.Tests[0].Name, tt.wantFirst)
-				}
-			}
-		})
-	}
-}
-
-func TestResolveEachNames(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name      string
-		template  string
-		testCases []string
-		want      []string
-	}{
-		{
-			name:      "should resolve with test cases",
-			template:  "test %s",
-			testCases: []string{"a", "b"},
-			want:      []string{"test a", "test b"},
-		},
-		{
-			name:      "should add dynamic suffix when empty",
-			template:  "test %s",
-			testCases: []string{},
-			want:      []string{"test %s (dynamic cases)"},
-		},
-		{
-			name:      "should handle nil",
-			template:  "test %s",
-			testCases: nil,
-			want:      []string{"test %s (dynamic cases)"},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := ResolveEachNames(tt.template, tt.testCases)
-
-			if len(got) != len(tt.want) {
-				t.Fatalf("len(result) = %d, want %d", len(got), len(tt.want))
-			}
-
-			for i, want := range tt.want {
-				if got[i] != want {
-					t.Errorf("result[%d] = %q, want %q", i, got[i], want)
 				}
 			}
 		})
@@ -973,16 +925,16 @@ func TestParse_EachWithObjectArray(t *testing.T) {
 		wantFirst string
 	}{
 		{
-			name: "should parse it.each with object array",
+			name: "should parse it.each with object array as single dynamic test (ADR-02)",
 			source: `it.each([
   { input: 1, expected: 2 },
   { input: 2, expected: 4 },
 ])('test $input', ({ input, expected }) => {});`,
-			wantCount: 2,
-			wantFirst: "test $input",
+			wantCount: 1,
+			wantFirst: "test $input (dynamic cases)",
 		},
 		{
-			name: "should parse describe.each with object array",
+			name: "should parse describe.each with object array as single dynamic suite (ADR-02)",
 			source: `describe.each([
   { name: 'Chrome' },
   { name: 'Firefox' },

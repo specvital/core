@@ -40,20 +40,6 @@ func AddSuiteToTarget(suite domain.TestSuite, parentSuite *domain.TestSuite, fil
 	}
 }
 
-// ResolveEachNames generates test names from a template and test cases.
-func ResolveEachNames(template string, testCases []string) []string {
-	if len(testCases) == 0 {
-		return []string{template + DynamicCasesSuffix}
-	}
-
-	names := make([]string, len(testCases))
-	for i, testCase := range testCases {
-		names[i] = FormatEachName(template, testCase)
-	}
-
-	return names
-}
-
 // ParseCallbackBody parses the body of a callback function.
 func ParseCallbackBody(callback *sitter.Node, source []byte, filename string, file *domain.TestFile, suite *domain.TestSuite) {
 	body := callback.ChildByFieldName("body")
@@ -101,41 +87,43 @@ func ProcessSuite(callNode *sitter.Node, args *sitter.Node, source []byte, filen
 	AddSuiteToTarget(suite, parentSuite, file)
 }
 
-// ProcessEachTests creates multiple tests from a .each() call.
-func ProcessEachTests(callNode *sitter.Node, testCases []string, nameTemplate string, filename string, file *domain.TestFile, parentSuite *domain.TestSuite, status domain.TestStatus, modifier string) {
-	names := ResolveEachNames(nameTemplate, testCases)
-
-	for _, name := range names {
-		test := domain.Test{
-			Name:     name,
-			Status:   status,
-			Modifier: modifier,
-			Location: parser.GetLocation(callNode, filename),
-		}
-
-		AddTestToTarget(test, parentSuite, file)
+// ProcessEachTests creates a single test from a .each() call.
+// Per ADR-02, dynamic test patterns are counted as 1 test regardless of runtime count.
+func ProcessEachTests(callNode *sitter.Node, _ []string, nameTemplate string, filename string, file *domain.TestFile, parentSuite *domain.TestSuite, status domain.TestStatus, modifier string) {
+	if nameTemplate == "" {
+		return
 	}
+
+	test := domain.Test{
+		Name:     nameTemplate + DynamicCasesSuffix,
+		Status:   status,
+		Modifier: modifier,
+		Location: parser.GetLocation(callNode, filename),
+	}
+
+	AddTestToTarget(test, parentSuite, file)
 }
 
-// ProcessEachSuites creates multiple suites from a describe.each() call.
-func ProcessEachSuites(callNode *sitter.Node, testCases []string, nameTemplate string, callback *sitter.Node, source []byte, filename string, file *domain.TestFile, parentSuite *domain.TestSuite, status domain.TestStatus, modifier string) {
+// ProcessEachSuites creates a single suite from a describe.each() call.
+// Per ADR-02, dynamic test patterns are counted as 1 test regardless of runtime count.
+func ProcessEachSuites(callNode *sitter.Node, _ []string, nameTemplate string, callback *sitter.Node, source []byte, filename string, file *domain.TestFile, parentSuite *domain.TestSuite, status domain.TestStatus, modifier string) {
 	if callback == nil {
 		return
 	}
 
-	names := ResolveEachNames(nameTemplate, testCases)
-
-	for _, name := range names {
-		suite := domain.TestSuite{
-			Name:     name,
-			Status:   status,
-			Modifier: modifier,
-			Location: parser.GetLocation(callNode, filename),
-		}
-
-		ParseCallbackBody(callback, source, filename, file, &suite)
-		AddSuiteToTarget(suite, parentSuite, file)
+	if nameTemplate == "" {
+		return
 	}
+
+	suite := domain.TestSuite{
+		Name:     nameTemplate + DynamicCasesSuffix,
+		Status:   status,
+		Modifier: modifier,
+		Location: parser.GetLocation(callNode, filename),
+	}
+
+	ParseCallbackBody(callback, source, filename, file, &suite)
+	AddSuiteToTarget(suite, parentSuite, file)
 }
 
 // ProcessEachCall handles .each() call patterns for both describe and test/it.
