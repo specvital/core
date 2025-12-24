@@ -719,6 +719,13 @@ func isJSTestFile(path string) bool {
 	}
 
 	normalizedPath := filepath.ToSlash(path)
+
+	// Exclude fixture and mock directories (not actual test files)
+	if strings.Contains(normalizedPath, "/__fixtures__/") || strings.HasPrefix(normalizedPath, "__fixtures__/") ||
+		strings.Contains(normalizedPath, "/__mocks__/") || strings.HasPrefix(normalizedPath, "__mocks__/") {
+		return false
+	}
+
 	if strings.Contains(normalizedPath, "/__tests__/") || strings.HasPrefix(normalizedPath, "__tests__/") {
 		return true
 	}

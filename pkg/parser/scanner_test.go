@@ -801,3 +801,53 @@ class NotATest
 		}
 	})
 }
+
+func TestScan_FixtureExclusion(t *testing.T) {
+	tests := []struct {
+		name         string
+		excludedDir  string
+		excludedFile string
+	}{
+		{"__fixtures__", "__fixtures__", "data.js"},
+		{"__mocks__", "__mocks__", "module.js"},
+	}
+
+	for _, tt := range tests {
+		t.Run("should not scan files in "+tt.name+" directory", func(t *testing.T) {
+			tmpDir := t.TempDir()
+
+			excludedPath := filepath.Join(tmpDir, "__tests__", tt.excludedDir)
+			if err := os.MkdirAll(excludedPath, 0755); err != nil {
+				t.Fatalf("failed to create dir: %v", err)
+			}
+
+			if err := os.WriteFile(filepath.Join(excludedPath, tt.excludedFile), []byte(`module.exports = {};`), 0644); err != nil {
+				t.Fatalf("failed to write excluded file: %v", err)
+			}
+
+			testDir := filepath.Join(tmpDir, "__tests__")
+			testContent := []byte(`import { it } from '@jest/globals'; it('test', () => {});`)
+			if err := os.WriteFile(filepath.Join(testDir, "component.test.ts"), testContent, 0644); err != nil {
+				t.Fatalf("failed to write test: %v", err)
+			}
+
+			src, err := source.NewLocalSource(tmpDir)
+			if err != nil {
+				t.Fatalf("failed to create source: %v", err)
+			}
+			defer src.Close()
+
+			result, err := parser.Scan(context.Background(), src)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			if len(result.Inventory.Files) != 1 {
+				t.Errorf("expected 1 file, got %d", len(result.Inventory.Files))
+				for _, f := range result.Inventory.Files {
+					t.Logf("found file: %s", f.Path)
+				}
+			}
+		})
+	}
+}
