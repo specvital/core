@@ -384,7 +384,9 @@ func (s *Scanner) parseConfigFiles(ctx context.Context, src source.Source, files
 			}
 
 			if matched {
-				configScope, err := def.ConfigParser.Parse(ctx, file, content)
+				// Use absolute path for config parsing to ensure correct BaseDir resolution
+				absConfigPath := filepath.Join(src.Root(), file)
+				configScope, err := def.ConfigParser.Parse(ctx, absConfigPath, content)
 				if err != nil {
 					*errors = append(*errors, ScanError{
 						Err:   err,
@@ -392,7 +394,7 @@ func (s *Scanner) parseConfigFiles(ctx context.Context, src source.Source, files
 						Phase: "config-parse",
 					})
 				} else {
-					scope.AddConfig(file, configScope)
+					scope.AddConfig(absConfigPath, configScope)
 					parsed = true
 				}
 				break
@@ -567,7 +569,9 @@ func (s *Scanner) parseFile(ctx context.Context, src source.Source, path string)
 		}, ""
 	}
 
-	detectionResult := s.detector.Detect(ctx, path, content)
+	// Use absolute path for detection to match config scope paths
+	absPath := filepath.Join(src.Root(), path)
+	detectionResult := s.detector.Detect(ctx, absPath, content)
 
 	if !detectionResult.IsDetected() {
 		return nil, nil, "unknown"

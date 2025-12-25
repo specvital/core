@@ -3,6 +3,7 @@ package playwright
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"regexp"
 
 	sitter "github.com/smacker/go-tree-sitter"
@@ -53,15 +54,36 @@ func (p *PlaywrightConfigParser) Parse(ctx context.Context, configPath string, c
 	scope := framework.NewConfigScope(configPath, testDir)
 	scope.Framework = frameworkName
 	scope.GlobalsMode = false // Playwright always requires explicit imports
+
+	configDir := filepath.Dir(configPath)
+	if projects := parseProjects(content, configDir); len(projects) > 0 {
+		scope.Projects = projects
+	}
+
 	return scope, nil
 }
 
 var (
 	testDirStringPattern   = regexp.MustCompile(`testDir\s*[=:]\s*['"]([^'"]+)['"]`)
 	testDirPathJoinPattern = regexp.MustCompile(`(?:const\s+)?testDir\s*[=:]\s*path\.join\s*\(\s*__dirname\s*,\s*['"]([^'"]+)['"]\s*\)`)
+	// Fallback: matches testDirRoot variable declaration (e.g., const testDirRoot = 'e2e-playwright')
+	testDirRootVarPattern = regexp.MustCompile(`(?:const|let|var|export\s+const)\s+testDirRoot\s*=\s*['"]([^'"]+)['"]`)
+
+	projectsArrayPattern = regexp.MustCompile(`projects\s*:\s*\[`)
+	// Limitation: only handles up to 2 levels of nesting (sufficient for name/testDir extraction)
+	projectBlockPattern      = regexp.MustCompile(`\{\s*(?:[^{}]*(?:\{[^{}]*\})?)*\s*\}`)
+	projectNamePattern       = regexp.MustCompile(`name\s*:\s*['"]([^'"]+)['"]`)
+	projectTestDirPattern    = regexp.MustCompile(`testDir\s*:\s*['"]([^'"]+)['"]`)
+	projectTestDirJoinSimple = regexp.MustCompile(`testDir\s*:\s*path\.join\s*\([^)]+,\s*['"]([^'"]+)['"]\s*\)`)
 )
 
 func parseTestDir(content []byte) string {
+	// Priority 1: testDirRoot variable (e.g., const testDirRoot = 'e2e-playwright')
+	// This is more reliable as it's always at root level
+	if match := testDirRootVarPattern.FindSubmatch(content); match != nil {
+		return string(match[1])
+	}
+	// Priority 2: root-level testDir property
 	if match := testDirStringPattern.FindSubmatch(content); match != nil {
 		return string(match[1])
 	}
@@ -69,6 +91,73 @@ func parseTestDir(content []byte) string {
 		return string(match[1])
 	}
 	return ""
+}
+
+func parseProjects(content []byte, configDir string) []framework.ProjectScope {
+	loc := projectsArrayPattern.FindIndex(content)
+	if loc == nil {
+		return nil
+	}
+
+	startIdx := loc[1]
+	depth := 1
+	endIdx := startIdx
+
+	for i := startIdx; i < len(content) && depth > 0; i++ {
+		switch content[i] {
+		case '[':
+			depth++
+		case ']':
+			depth--
+		}
+		endIdx = i
+	}
+
+	if depth != 0 {
+		return nil
+	}
+
+	projectsContent := content[startIdx:endIdx]
+	return extractProjectScopes(projectsContent, configDir)
+}
+
+func extractProjectScopes(projectsContent []byte, configDir string) []framework.ProjectScope {
+	var projects []framework.ProjectScope
+
+	blocks := projectBlockPattern.FindAll(projectsContent, -1)
+	for _, block := range blocks {
+		project := parseProjectBlock(block, configDir)
+		if project.BaseDir != "" {
+			projects = append(projects, project)
+		}
+	}
+
+	return projects
+}
+
+func parseProjectBlock(block []byte, configDir string) framework.ProjectScope {
+	var project framework.ProjectScope
+
+	if match := projectNamePattern.FindSubmatch(block); match != nil {
+		project.Name = string(match[1])
+	}
+
+	if match := projectTestDirPattern.FindSubmatch(block); match != nil {
+		testDir := string(match[1])
+		project.BaseDir = resolveTestDir(configDir, testDir)
+	} else if match := projectTestDirJoinSimple.FindSubmatch(block); match != nil {
+		testDir := string(match[1])
+		project.BaseDir = resolveTestDir(configDir, testDir)
+	}
+
+	return project
+}
+
+func resolveTestDir(configDir, testDir string) string {
+	if testDir == "" {
+		return ""
+	}
+	return filepath.Clean(filepath.Join(configDir, testDir))
 }
 
 type PlaywrightParser struct{}

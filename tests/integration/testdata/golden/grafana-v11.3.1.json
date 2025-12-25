@@ -3,12 +3,12 @@
   "ref": "v11.3.1",
   "expectedFrameworks": ["cypress", "go-testing", "jest", "playwright"],
   "fileCount": 2549,
-  "testCount": 18376,
+  "testCount": 18390,
   "frameworkCounts": {
     "cypress": 1,
     "go-testing": 972,
-    "jest": 1570,
-    "playwright": 6
+    "jest": 1560,
+    "playwright": 16
   },
   "sampleFiles": [
     {

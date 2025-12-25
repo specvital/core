@@ -31,6 +31,7 @@ func TestPlaywrightConfigParser_Parse(t *testing.T) {
 		configContent       string
 		configPath          string
 		expectedGlobalsMode bool
+		expectedBaseDir     string
 	}{
 		{
 			name: "basic playwright config",
@@ -50,6 +51,7 @@ export default defineConfig({
 `,
 			configPath:          "/project/playwright.config.ts",
 			expectedGlobalsMode: false,
+			expectedBaseDir:     "/project/tests",
 		},
 		{
 			name: "playwright config with multiple projects",
@@ -64,12 +66,29 @@ export default defineConfig({
 `,
 			configPath:          "/project/apps/web/playwright.config.ts",
 			expectedGlobalsMode: false,
+			expectedBaseDir:     "/project/apps/web/e2e",
 		},
 		{
 			name:                "minimal config",
 			configContent:       `export default defineConfig({});`,
 			configPath:          "/project/playwright.config.js",
 			expectedGlobalsMode: false,
+			expectedBaseDir:     "/project",
+		},
+		{
+			name: "testDirRoot variable (grafana pattern)",
+			configContent: `
+export const testDirRoot = 'e2e-playwright';
+
+export default defineConfig({
+  projects: [
+    { name: 'admin', testDir: path.join(testDirRoot, '/admin') },
+  ],
+});
+`,
+			configPath:          "/project/playwright.config.ts",
+			expectedGlobalsMode: false,
+			expectedBaseDir:     "/project/e2e-playwright",
 		},
 	}
 
@@ -84,6 +103,119 @@ export default defineConfig({
 			assert.Equal(t, "playwright", scope.Framework)
 			assert.Equal(t, tt.configPath, scope.ConfigPath)
 			assert.Equal(t, tt.expectedGlobalsMode, scope.GlobalsMode, "Playwright should never use globals mode")
+			assert.Equal(t, tt.expectedBaseDir, scope.BaseDir)
+		})
+	}
+}
+
+func TestPlaywrightConfigParser_Projects(t *testing.T) {
+	tests := []struct {
+		name             string
+		configContent    string
+		configPath       string
+		expectedProjects int
+		expectedNames    []string
+		expectedBaseDirs []string
+	}{
+		{
+			name: "projects with testDir string literal",
+			configContent: `
+export default defineConfig({
+  projects: [
+    {
+      name: 'admin',
+      testDir: './e2e/admin',
+    },
+    {
+      name: 'viewer',
+      testDir: './e2e/viewer',
+    },
+  ],
+});
+`,
+			configPath:       "/project/playwright.config.ts",
+			expectedProjects: 2,
+			expectedNames:    []string{"admin", "viewer"},
+			expectedBaseDirs: []string{"/project/e2e/admin", "/project/e2e/viewer"},
+		},
+		{
+			name: "projects with path.join testDir",
+			configContent: `
+const testDirRoot = 'e2e/plugin-e2e/';
+
+export default defineConfig({
+  projects: [
+    {
+      name: 'api-admin',
+      testDir: path.join(testDirRoot, '/api-tests/as-admin-user'),
+    },
+    {
+      name: 'api-viewer',
+      testDir: path.join(testDirRoot, '/api-tests/as-viewer-user'),
+    },
+  ],
+});
+`,
+			configPath:       "/project/playwright.config.ts",
+			expectedProjects: 2,
+			expectedNames:    []string{"api-admin", "api-viewer"},
+			expectedBaseDirs: []string{"/project/api-tests/as-admin-user", "/project/api-tests/as-viewer-user"},
+		},
+		{
+			name: "projects without testDir should be ignored",
+			configContent: `
+export default defineConfig({
+  projects: [
+    {
+      name: 'chromium',
+      use: { browserName: 'chromium' },
+    },
+    {
+      name: 'with-testdir',
+      testDir: './tests',
+    },
+  ],
+});
+`,
+			configPath:       "/project/playwright.config.ts",
+			expectedProjects: 1,
+			expectedNames:    []string{"with-testdir"},
+			expectedBaseDirs: []string{"/project/tests"},
+		},
+		{
+			name: "no projects array",
+			configContent: `
+export default defineConfig({
+  testDir: './tests',
+});
+`,
+			configPath:       "/project/playwright.config.ts",
+			expectedProjects: 0,
+			expectedNames:    nil,
+			expectedBaseDirs: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			parser := &PlaywrightConfigParser{}
+			ctx := context.Background()
+
+			scope, err := parser.Parse(ctx, tt.configPath, []byte(tt.configContent))
+
+			require.NoError(t, err)
+			assert.Len(t, scope.Projects, tt.expectedProjects)
+
+			if tt.expectedProjects > 0 {
+				for i, proj := range scope.Projects {
+					if i < len(tt.expectedNames) {
+						assert.Equal(t, tt.expectedNames[i], proj.Name)
+					}
+					if i < len(tt.expectedBaseDirs) {
+						assert.Equal(t, tt.expectedBaseDirs[i], proj.BaseDir)
+					}
+				}
+			}
 		})
 	}
 }

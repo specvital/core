@@ -127,7 +127,14 @@ func (s *ConfigScope) effectiveRoots() []string {
 	if len(s.Roots) > 0 {
 		return s.Roots
 	}
-	return []string{s.BaseDir}
+
+	roots := []string{s.BaseDir}
+	for _, p := range s.Projects {
+		if p.BaseDir != "" {
+			roots = append(roots, p.BaseDir)
+		}
+	}
+	return roots
 }
 
 // Depth returns the directory depth of BaseDir (used for selecting nearest config).
