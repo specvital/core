@@ -6,6 +6,7 @@ import (
 
 	"github.com/specvital/core/pkg/domain"
 	"github.com/specvital/core/pkg/parser/framework"
+	"github.com/specvital/core/pkg/parser/strategies/shared/javaast"
 )
 
 func TestNewDefinition(t *testing.T) {
@@ -28,8 +29,8 @@ func TestNewDefinition(t *testing.T) {
 	}
 }
 
-func TestJUnit5FileMatcher_Match(t *testing.T) {
-	matcher := &JUnit5FileMatcher{}
+func TestJavaTestFileMatcher_Match(t *testing.T) {
+	matcher := &javaast.JavaTestFileMatcher{}
 	ctx := context.Background()
 
 	tests := []struct {

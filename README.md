@@ -66,7 +66,7 @@ result, err := parser.Scan(ctx, rootPath,
 | JavaScript/TS | Jest, Vitest, Playwright, Cypress, Mocha |
 | Go            | go testing                               |
 | Python        | pytest, unittest                         |
-| Java          | JUnit 5, TestNG                          |
+| Java          | JUnit 4, JUnit 5, TestNG                 |
 | Kotlin        | Kotest                                   |
 | C#            | NUnit, xUnit, MSTest                     |
 | Ruby          | RSpec, Minitest                          |

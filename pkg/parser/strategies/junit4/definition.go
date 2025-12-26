@@ -1,11 +1,10 @@
-// Package junit5 implements JUnit 5 (Jupiter) test framework support for Java test files.
-package junit5
+// Package junit4 implements JUnit 4 test framework support for Java test files.
+package junit4
 
 import (
 	"context"
 	"fmt"
 	"regexp"
-	"strings"
 
 	sitter "github.com/smacker/go-tree-sitter"
 
@@ -22,41 +21,44 @@ func init() {
 
 func NewDefinition() *framework.Definition {
 	return &framework.Definition{
-		Name:      framework.FrameworkJUnit5,
+		Name:      framework.FrameworkJUnit4,
 		Languages: []domain.Language{domain.LanguageJava},
 		Matchers: []framework.Matcher{
 			matchers.NewImportMatcher(
-				"org.junit.jupiter.api.Test",
-				"org.junit.jupiter.api.",
-				"org.junit.jupiter.params.",
+				"org.junit.Test",
+				"org.junit.Before",
+				"org.junit.After",
+				"org.junit.BeforeClass",
+				"org.junit.AfterClass",
+				"org.junit.Ignore",
+				"org.junit.runner.",
 			),
 			&javaast.JavaTestFileMatcher{},
-			&JUnit5ContentMatcher{},
+			&JUnit4ContentMatcher{},
 		},
 		ConfigParser: nil,
-		Parser:       &JUnit5Parser{},
+		Parser:       &JUnit4Parser{},
 		Priority:     framework.PriorityGeneric,
 	}
 }
 
-// JUnit5ContentMatcher matches JUnit 5 specific patterns.
-type JUnit5ContentMatcher struct{}
+// JUnit4ContentMatcher matches JUnit 4 specific patterns.
+type JUnit4ContentMatcher struct{}
 
-var junit5Patterns = []struct {
+var junit4Patterns = []struct {
 	pattern *regexp.Regexp
 	desc    string
 }{
 	{regexp.MustCompile(`@Test\s*(?:\(|$|\n)`), "@Test annotation"},
-	{regexp.MustCompile(`@ParameterizedTest`), "@ParameterizedTest annotation"},
-	{regexp.MustCompile(`@RepeatedTest`), "@RepeatedTest annotation"},
-	{regexp.MustCompile(`@TestFactory`), "@TestFactory annotation"},
-	{regexp.MustCompile(`@TestTemplate`), "@TestTemplate annotation"},
-	{regexp.MustCompile(`@Nested`), "@Nested annotation"},
-	{regexp.MustCompile(`@DisplayName`), "@DisplayName annotation"},
-	{regexp.MustCompile(`import\s+org\.junit\.jupiter`), "JUnit Jupiter import"},
+	{regexp.MustCompile(`@Before\s*(?:\(|$|\n)`), "@Before annotation"},
+	{regexp.MustCompile(`@After\s*(?:\(|$|\n)`), "@After annotation"},
+	{regexp.MustCompile(`@BeforeClass`), "@BeforeClass annotation"},
+	{regexp.MustCompile(`@AfterClass`), "@AfterClass annotation"},
+	{regexp.MustCompile(`@Ignore`), "@Ignore annotation"},
+	{regexp.MustCompile(`@RunWith`), "@RunWith annotation"},
 }
 
-func (m *JUnit5ContentMatcher) Match(ctx context.Context, signal framework.Signal) framework.MatchResult {
+func (m *JUnit4ContentMatcher) Match(ctx context.Context, signal framework.Signal) framework.MatchResult {
 	if signal.Type != framework.SignalFileContent {
 		return framework.NoMatch()
 	}
@@ -66,27 +68,32 @@ func (m *JUnit5ContentMatcher) Match(ctx context.Context, signal framework.Signa
 		content = []byte(signal.Value)
 	}
 
-	// Exclude JUnit 4 files: has org.junit.* import but no org.junit.jupiter import
-	if javaast.JUnit4ImportPattern.Match(content) && !javaast.JUnit5ImportPattern.Match(content) {
+	// Exclude JUnit 5 files: has org.junit.jupiter import
+	if javaast.JUnit5ImportPattern.Match(content) {
 		return framework.NoMatch()
 	}
 
-	for _, p := range junit5Patterns {
+	// Must have JUnit 4 import to be considered JUnit 4
+	if !javaast.JUnit4ImportPattern.Match(content) {
+		return framework.NoMatch()
+	}
+
+	for _, p := range junit4Patterns {
 		if p.pattern.Match(content) {
-			return framework.PartialMatch(40, "Found JUnit 5 pattern: "+p.desc)
+			return framework.PartialMatch(40, "Found JUnit 4 pattern: "+p.desc)
 		}
 	}
 
 	return framework.NoMatch()
 }
 
-// JUnit5Parser extracts test definitions from Java JUnit 5 files.
-type JUnit5Parser struct{}
+// JUnit4Parser extracts test definitions from Java JUnit 4 files.
+type JUnit4Parser struct{}
 
-func (p *JUnit5Parser) Parse(ctx context.Context, source []byte, filename string) (*domain.TestFile, error) {
+func (p *JUnit4Parser) Parse(ctx context.Context, source []byte, filename string) (*domain.TestFile, error) {
 	tree, err := parser.ParseWithPool(ctx, domain.LanguageJava, source)
 	if err != nil {
-		return nil, fmt.Errorf("junit5 parser: failed to parse %s: %w", filename, err)
+		return nil, fmt.Errorf("junit4 parser: failed to parse %s: %w", filename, err)
 	}
 	defer tree.Close()
 
@@ -96,24 +103,20 @@ func (p *JUnit5Parser) Parse(ctx context.Context, source []byte, filename string
 	return &domain.TestFile{
 		Path:      filename,
 		Language:  domain.LanguageJava,
-		Framework: framework.FrameworkJUnit5,
+		Framework: framework.FrameworkJUnit4,
 		Suites:    suites,
 	}, nil
 }
-
-// maxNestedDepth limits recursion depth for @Nested class parsing.
-// JUnit 5 allows arbitrary nesting, but we limit to prevent stack overflow.
-const maxNestedDepth = 20
 
 func parseTestClasses(root *sitter.Node, source []byte, filename string) []domain.TestSuite {
 	var suites []domain.TestSuite
 
 	parser.WalkTree(root, func(node *sitter.Node) bool {
 		if node.Type() == javaast.NodeClassDeclaration {
-			if suite := parseTestClassWithDepth(node, source, filename, 0); suite != nil {
+			if suite := parseTestClass(node, source, filename); suite != nil {
 				suites = append(suites, *suite)
 			}
-			return false // Don't recurse into nested classes here
+			return false
 		}
 		return true
 	})
@@ -121,10 +124,7 @@ func parseTestClasses(root *sitter.Node, source []byte, filename string) []domai
 	return suites
 }
 
-func parseTestClassWithDepth(node *sitter.Node, source []byte, filename string, depth int) *domain.TestSuite {
-	if depth > maxNestedDepth {
-		return nil
-	}
+func parseTestClass(node *sitter.Node, source []byte, filename string) *domain.TestSuite {
 	className := javaast.GetClassName(node, source)
 	if className == "" {
 		return nil
@@ -132,6 +132,7 @@ func parseTestClassWithDepth(node *sitter.Node, source []byte, filename string, 
 
 	modifiers := javaast.GetModifiers(node)
 	classStatus, classModifier := getClassStatusAndModifier(modifiers, source)
+	runWith := getRunWithValue(modifiers, source)
 
 	body := javaast.GetClassBody(node)
 	if body == nil {
@@ -139,40 +140,34 @@ func parseTestClassWithDepth(node *sitter.Node, source []byte, filename string, 
 	}
 
 	var tests []domain.Test
-	var nestedSuites []domain.TestSuite
 
 	for i := 0; i < int(body.ChildCount()); i++ {
 		child := body.Child(i)
 
-		switch child.Type() {
-		case javaast.NodeMethodDeclaration:
+		if child.Type() == javaast.NodeMethodDeclaration {
 			if test := parseTestMethod(child, source, filename, classStatus, classModifier); test != nil {
 				tests = append(tests, *test)
-			}
-
-		case javaast.NodeClassDeclaration:
-			// Handle @Nested classes
-			nestedModifiers := javaast.GetModifiers(child)
-			if javaast.HasAnnotation(nestedModifiers, source, "Nested") {
-				if nested := parseTestClassWithDepth(child, source, filename, depth+1); nested != nil {
-					nestedSuites = append(nestedSuites, *nested)
-				}
 			}
 		}
 	}
 
-	if len(tests) == 0 && len(nestedSuites) == 0 {
+	if len(tests) == 0 {
 		return nil
 	}
 
-	return &domain.TestSuite{
+	suite := &domain.TestSuite{
 		Name:     className,
 		Status:   classStatus,
 		Modifier: classModifier,
 		Location: parser.GetLocation(node, filename),
 		Tests:    tests,
-		Suites:   nestedSuites,
 	}
+
+	if runWith != "" {
+		suite.Modifier = "@RunWith(" + runWith + ")"
+	}
+
+	return suite
 }
 
 func parseTestMethod(node *sitter.Node, source []byte, filename string, classStatus domain.TestStatus, classModifier string) *domain.Test {
@@ -183,7 +178,6 @@ func parseTestMethod(node *sitter.Node, source []byte, filename string, classSta
 
 	annotations := javaast.GetAnnotations(modifiers)
 	isTest := false
-	var displayName string
 	status := classStatus
 	modifier := classModifier
 
@@ -191,19 +185,11 @@ func parseTestMethod(node *sitter.Node, source []byte, filename string, classSta
 		name := javaast.GetAnnotationName(ann, source)
 
 		switch name {
-		case "Test", "ParameterizedTest", "RepeatedTest", "TestFactory", "TestTemplate":
+		case "Test":
 			isTest = true
-		case "Disabled":
+		case "Ignore":
 			status = domain.TestStatusSkipped
-			modifier = "@Disabled"
-		case "DisplayName":
-			displayName = javaast.GetAnnotationArgument(ann, source)
-		default:
-			// Detect custom @TestTemplate-based annotations (e.g., @CartesianProductTest)
-			// JUnit convention: custom test annotations typically end with "Test"
-			if strings.HasSuffix(name, "Test") {
-				isTest = true
-			}
+			modifier = "@Ignore"
 		}
 	}
 
@@ -216,13 +202,8 @@ func parseTestMethod(node *sitter.Node, source []byte, filename string, classSta
 		return nil
 	}
 
-	testName := methodName
-	if displayName != "" {
-		testName = displayName
-	}
-
 	return &domain.Test{
-		Name:     testName,
+		Name:     methodName,
 		Status:   status,
 		Modifier: modifier,
 		Location: parser.GetLocation(node, filename),
@@ -234,9 +215,25 @@ func getClassStatusAndModifier(modifiers *sitter.Node, source []byte) (domain.Te
 		return domain.TestStatusActive, ""
 	}
 
-	if javaast.HasAnnotation(modifiers, source, "Disabled") {
-		return domain.TestStatusSkipped, "@Disabled"
+	if javaast.HasAnnotation(modifiers, source, "Ignore") {
+		return domain.TestStatusSkipped, "@Ignore"
 	}
 
 	return domain.TestStatusActive, ""
+}
+
+func getRunWithValue(modifiers *sitter.Node, source []byte) string {
+	if modifiers == nil {
+		return ""
+	}
+
+	annotations := javaast.GetAnnotations(modifiers)
+	for _, ann := range annotations {
+		name := javaast.GetAnnotationName(ann, source)
+		if name == "RunWith" {
+			return javaast.GetAnnotationArgument(ann, source)
+		}
+	}
+
+	return ""
 }

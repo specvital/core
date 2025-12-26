@@ -47,6 +47,7 @@ repositories:
     url: https://github.com/microsoft/playwright
     ref: v1.49.0
     frameworks:
+      - junit4
       - playwright
 
   - name: gin
@@ -147,6 +148,7 @@ repositories:
     url: https://github.com/junit-team/junit5-samples
     ref: main
     frameworks:
+      - junit4
       - junit5
       - kotest
       - testng
@@ -155,6 +157,7 @@ repositories:
     url: https://github.com/testcontainers/testcontainers-java
     ref: 1.20.4
     frameworks:
+      - junit4
       - junit5
       - testng
     complex: true

@@ -16,6 +16,7 @@ import (
 	_ "github.com/specvital/core/pkg/parser/strategies/gotesting"
 	_ "github.com/specvital/core/pkg/parser/strategies/gtest"
 	_ "github.com/specvital/core/pkg/parser/strategies/jest"
+	_ "github.com/specvital/core/pkg/parser/strategies/junit4"
 	_ "github.com/specvital/core/pkg/parser/strategies/junit5"
 	_ "github.com/specvital/core/pkg/parser/strategies/kotest"
 	_ "github.com/specvital/core/pkg/parser/strategies/minitest"

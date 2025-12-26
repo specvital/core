@@ -28,6 +28,7 @@ const (
 	FrameworkGoTesting  = "go-testing"
 	FrameworkGTest      = "gtest"
 	FrameworkJest       = "jest"
+	FrameworkJUnit4     = "junit4"
 	FrameworkJUnit5     = "junit5"
 	FrameworkKotest     = "kotest"
 	FrameworkMinitest   = "minitest"
