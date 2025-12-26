@@ -42,12 +42,8 @@ func NewDefinition() *framework.Definition {
 		Languages: []domain.Language{domain.LanguageRuby},
 		Matchers: []framework.Matcher{
 			matchers.NewImportMatcher(
-				"require 'minitest'",
-				"require \"minitest\"",
-				"require 'minitest/autorun'",
-				"require \"minitest/autorun\"",
-				"require 'minitest/spec'",
-				"require \"minitest/spec\"",
+				"minitest",
+				"minitest/",
 			),
 			&MinitestFileMatcher{},
 			&MinitestContentMatcher{},
@@ -86,20 +82,30 @@ func (m *MinitestFileMatcher) Match(ctx context.Context, signal framework.Signal
 // MinitestContentMatcher matches Minitest-specific patterns.
 type MinitestContentMatcher struct{}
 
-var minitestPatterns = []struct {
+// minitestExclusivePatterns are patterns unique to Minitest (not shared with RSpec).
+// These get higher confidence scores.
+var minitestExclusivePatterns = []struct {
 	pattern *regexp.Regexp
 	desc    string
 }{
 	{regexp.MustCompile(`class\s+\w+\s*<\s*Minitest::Test`), "Minitest::Test class"},
 	{regexp.MustCompile(`class\s+\w+\s*<\s*Minitest::Spec`), "Minitest::Spec class"},
 	{regexp.MustCompile(`\bdef\s+test_\w+`), "def test_* method"},
-	{regexp.MustCompile(`\bdescribe\s+(?:'[^']*'|"[^"]*"|[\w:]+)\s+do\b`), "describe block"},
-	{regexp.MustCompile(`\bit\s+(?:'[^']*'|"[^"]*")\s+do\b`), "it block"},
 	{regexp.MustCompile(`\bassert\s*[\(\s]`), "assert assertion"},
 	{regexp.MustCompile(`\bassert_equal\s*[\(\s]`), "assert_equal assertion"},
 	{regexp.MustCompile(`\brefute\s*[\(\s]`), "refute assertion"},
 	{regexp.MustCompile(`\bmust_equal\s*[\(\s]`), "must_equal expectation"},
 	{regexp.MustCompile(`\bwont_be\s*[\(\s]`), "wont_be expectation"},
+}
+
+// minitestSharedPatterns are patterns shared with RSpec.
+// These get lower confidence scores.
+var minitestSharedPatterns = []struct {
+	pattern *regexp.Regexp
+	desc    string
+}{
+	{regexp.MustCompile(`\bdescribe\s+(?:'[^']*'|"[^"]*"|[\w:]+)\s+do\b`), "describe block"},
+	{regexp.MustCompile(`\bit\s+(?:'[^']*'|"[^"]*")\s+do\b`), "it block"},
 }
 
 func (m *MinitestContentMatcher) Match(ctx context.Context, signal framework.Signal) framework.MatchResult {
@@ -112,7 +118,15 @@ func (m *MinitestContentMatcher) Match(ctx context.Context, signal framework.Sig
 		content = []byte(signal.Value)
 	}
 
-	for _, p := range minitestPatterns {
+	// Check exclusive patterns first (higher confidence)
+	for _, p := range minitestExclusivePatterns {
+		if p.pattern.Match(content) {
+			return framework.PartialMatch(60, "Found Minitest-exclusive pattern: "+p.desc)
+		}
+	}
+
+	// Check shared patterns (lower confidence)
+	for _, p := range minitestSharedPatterns {
 		if p.pattern.Match(content) {
 			return framework.PartialMatch(40, "Found Minitest pattern: "+p.desc)
 		}

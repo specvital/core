@@ -186,7 +186,6 @@ repositories:
     url: https://github.com/rspec/rspec-core
     ref: v3.13.2
     frameworks:
-      - minitest
       - rspec
 
   - name: minitest

@@ -28,10 +28,8 @@ func NewDefinition() *framework.Definition {
 		Languages: []domain.Language{domain.LanguageRuby},
 		Matchers: []framework.Matcher{
 			matchers.NewImportMatcher(
-				"require 'rspec'",
-				"require \"rspec\"",
-				"require 'rspec/core'",
-				"require \"rspec/core\"",
+				"rspec",
+				"rspec/",
 			),
 			matchers.NewConfigMatcher(
 				".rspec",
@@ -43,7 +41,7 @@ func NewDefinition() *framework.Definition {
 		},
 		ConfigParser: nil,
 		Parser:       &RSpecParser{},
-		Priority:     framework.PriorityGeneric,
+		Priority:     framework.PrioritySpecialized,
 	}
 }
 
@@ -71,18 +69,32 @@ func (m *RSpecFileMatcher) Match(ctx context.Context, signal framework.Signal) f
 // RSpecContentMatcher matches RSpec-specific patterns.
 type RSpecContentMatcher struct{}
 
-var rspecPatterns = []struct {
+// rspecExclusivePatterns are patterns unique to RSpec (not shared with Minitest).
+// These get higher confidence scores.
+var rspecExclusivePatterns = []struct {
 	pattern *regexp.Regexp
 	desc    string
 }{
-	// ReDoS-safe patterns: use \s+ instead of .* to avoid catastrophic backtracking
-	{regexp.MustCompile(`RSpec\.describe\s*[\(\s]`), "RSpec.describe block"},
+	{regexp.MustCompile(`RSpec\.describe\b`), "RSpec.describe block"},
+	{regexp.MustCompile(`RSpec\.configure\b`), "RSpec.configure block"},
+	{regexp.MustCompile(`\bexpect\s*\([^)]*\)\s*\.to\b`), "expect().to assertion"},
+	{regexp.MustCompile(`\bsubject\s*[\(\{]`), "subject definition"},
+	{regexp.MustCompile(`\blet\s*[\(\:]`), "let definition"},
+	{regexp.MustCompile(`\bshared_examples\b`), "shared_examples"},
+	{regexp.MustCompile(`\bshared_context\b`), "shared_context"},
+	{regexp.MustCompile(`\binclude_examples\b`), "include_examples"},
+}
+
+// rspecSharedPatterns are patterns shared with Minitest.
+// These get lower confidence scores.
+var rspecSharedPatterns = []struct {
+	pattern *regexp.Regexp
+	desc    string
+}{
 	{regexp.MustCompile(`\bdescribe\s+(?:'[^']*'|"[^"]*")\s+do\b`), "describe block"},
 	{regexp.MustCompile(`\bcontext\s+(?:'[^']*'|"[^"]*")\s+do\b`), "context block"},
 	{regexp.MustCompile(`\bit\s+(?:'[^']*'|"[^"]*")\s+do\b`), "it block"},
 	{regexp.MustCompile(`\bspecify\s+(?:'[^']*'|"[^"]*")\s+do\b`), "specify block"},
-	{regexp.MustCompile(`\bsubject\s*[\(\{]`), "subject definition"},
-	{regexp.MustCompile(`\blet\s*[\(\:]`), "let definition"},
 	{regexp.MustCompile(`\bbefore\s*[\(\{:]`), "before hook"},
 	{regexp.MustCompile(`\bexpect\s*\(`), "expect assertion"},
 }
@@ -97,7 +109,15 @@ func (m *RSpecContentMatcher) Match(ctx context.Context, signal framework.Signal
 		content = []byte(signal.Value)
 	}
 
-	for _, p := range rspecPatterns {
+	// Check exclusive patterns first (higher confidence)
+	for _, p := range rspecExclusivePatterns {
+		if p.pattern.Match(content) {
+			return framework.PartialMatch(60, "Found RSpec-exclusive pattern: "+p.desc)
+		}
+	}
+
+	// Check shared patterns (lower confidence)
+	for _, p := range rspecSharedPatterns {
 		if p.pattern.Match(content) {
 			return framework.PartialMatch(40, "Found RSpec pattern: "+p.desc)
 		}
