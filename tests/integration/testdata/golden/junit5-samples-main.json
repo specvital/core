@@ -3,7 +3,7 @@
   "ref": "main",
   "expectedFrameworks": ["junit5", "kotest", "testng"],
   "fileCount": 26,
-  "testCount": 41,
+  "testCount": 43,
   "frameworkCounts": {
     "junit5": 24,
     "kotest": 1,
@@ -13,8 +13,8 @@
     {
       "path": "junit-jupiter-extensions/src/test/java/com/example/cartesian/CartesianProductTests.java",
       "framework": "junit5",
-      "suiteCount": 0,
-      "testCount": 0
+      "suiteCount": 1,
+      "testCount": 2
     },
     {
       "path": "junit-jupiter-extensions/src/test/java/com/example/random/RandomParametersExtensionTests.java",

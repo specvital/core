@@ -541,4 +541,75 @@ class TemplateTests {
 			t.Errorf("expected Name='templateTest', got '%s'", suite.Tests[0].Name)
 		}
 	})
+
+	t.Run("custom @TestTemplate-based annotation", func(t *testing.T) {
+		source := `
+package com.example;
+
+class CartesianProductTests {
+    @CartesianProductTest({"0", "1"})
+    void threeBits(String a, String b, String c) {}
+
+    @CartesianProductTest
+    void nFold(String string, Class<?> type) {}
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "CartesianProductTests.java")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite, got %d", len(testFile.Suites))
+		}
+
+		suite := testFile.Suites[0]
+		if len(suite.Tests) != 2 {
+			t.Fatalf("expected 2 Tests, got %d", len(suite.Tests))
+		}
+
+		if suite.Tests[0].Name != "threeBits" {
+			t.Errorf("expected Tests[0].Name='threeBits', got '%s'", suite.Tests[0].Name)
+		}
+		if suite.Tests[1].Name != "nFold" {
+			t.Errorf("expected Tests[1].Name='nFold', got '%s'", suite.Tests[1].Name)
+		}
+	})
+
+	t.Run("custom annotations ending with Test", func(t *testing.T) {
+		source := `
+package com.example;
+
+class CustomTests {
+    @CustomTest
+    void customTestMethod() {}
+
+    @MyFancyTest
+    void fancyTestMethod() {}
+
+    @NotATestAnnotation
+    void shouldNotBeDetected() {}
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "CustomTests.java")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite, got %d", len(testFile.Suites))
+		}
+
+		suite := testFile.Suites[0]
+		if len(suite.Tests) != 2 {
+			t.Fatalf("expected 2 Tests (only *Test annotations), got %d", len(suite.Tests))
+		}
+
+		if suite.Tests[0].Name != "customTestMethod" {
+			t.Errorf("expected Tests[0].Name='customTestMethod', got '%s'", suite.Tests[0].Name)
+		}
+		if suite.Tests[1].Name != "fancyTestMethod" {
+			t.Errorf("expected Tests[1].Name='fancyTestMethod', got '%s'", suite.Tests[1].Name)
+		}
+	})
 }

@@ -225,21 +225,19 @@ func parseTestMethod(node *sitter.Node, source []byte, filename string, classSta
 		name := javaast.GetAnnotationName(ann, source)
 
 		switch name {
-		case "Test":
-			isTest = true
-		case "ParameterizedTest":
-			isTest = true
-		case "RepeatedTest":
-			isTest = true
-		case "TestFactory":
-			isTest = true
-		case "TestTemplate":
+		case "Test", "ParameterizedTest", "RepeatedTest", "TestFactory", "TestTemplate":
 			isTest = true
 		case "Disabled":
 			status = domain.TestStatusSkipped
 			modifier = "@Disabled"
 		case "DisplayName":
 			displayName = javaast.GetAnnotationArgument(ann, source)
+		default:
+			// Detect custom @TestTemplate-based annotations (e.g., @CartesianProductTest)
+			// JUnit convention: custom test annotations typically end with "Test"
+			if strings.HasSuffix(name, "Test") {
+				isTest = true
+			}
 		}
 	}
 
