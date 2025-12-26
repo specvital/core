@@ -48,6 +48,18 @@ $ARGUMENTS
 
 ## Workflow
 
+### Phase 0: Review ADR Policies
+
+**Before starting validation**, read all ADR documents to understand current parser policies:
+
+```bash
+# List and read all core ADR documents
+ls /workspaces/specvital-core/docs/en/adr/core/
+# Read each .md file (excluding index.md)
+```
+
+**Why**: Parser behavior is defined by ADR policies. Discrepancies may be "working as designed" rather than bugs.
+
 ### Phase 1: Repository Selection
 
 **1.1 Classify request type**:
