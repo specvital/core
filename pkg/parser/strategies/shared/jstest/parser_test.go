@@ -1465,3 +1465,143 @@ func TestParse_CustomWrapperWithDescribeInside(t *testing.T) {
 		t.Errorf("len(file.Tests) = %d, want 1", len(file.Tests))
 	}
 }
+
+func TestParse_VariableDeclaration(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name       string
+		source     string
+		wantCount  int
+		wantFirst  string
+		wantStatus domain.TestStatus
+	}{
+		{
+			name:       "should parse it inside var declaration",
+			source:     `var runningTest = it("test name", function() {});`,
+			wantCount:  1,
+			wantFirst:  "test name",
+			wantStatus: domain.TestStatusActive,
+		},
+		{
+			name:       "should parse xit inside var declaration",
+			source:     `var skippedTest = xit("pending test", function() {});`,
+			wantCount:  1,
+			wantFirst:  "pending test",
+			wantStatus: domain.TestStatusSkipped,
+		},
+		{
+			name:       "should parse it with method chain inside var declaration",
+			source:     `var test = it("test", function() {}).timeout(1000);`,
+			wantCount:  1,
+			wantFirst:  "test",
+			wantStatus: domain.TestStatusActive,
+		},
+		{
+			name:       "should parse const declaration",
+			source:     `const myTest = it("const test", () => {});`,
+			wantCount:  1,
+			wantFirst:  "const test",
+			wantStatus: domain.TestStatusActive,
+		},
+		{
+			name:       "should parse let declaration",
+			source:     `let myTest = it("let test", () => {});`,
+			wantCount:  1,
+			wantFirst:  "let test",
+			wantStatus: domain.TestStatusActive,
+		},
+		{
+			name:       "should parse it.skip inside variable declaration",
+			source:     `const skipped = it.skip("skipped test", () => {});`,
+			wantCount:  1,
+			wantFirst:  "skipped test",
+			wantStatus: domain.TestStatusSkipped,
+		},
+		{
+			name:       "should parse multiple chained methods",
+			source:     `var test = it("chained", () => {}).timeout(1000).retries(3);`,
+			wantCount:  1,
+			wantFirst:  "chained",
+			wantStatus: domain.TestStatusActive,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			file, err := Parse(context.Background(), []byte(tt.source), "test.js", "mocha")
+
+			if err != nil {
+				t.Fatalf("Parse() error = %v", err)
+			}
+
+			if len(file.Tests) != tt.wantCount {
+				t.Fatalf("len(Tests) = %d, want %d", len(file.Tests), tt.wantCount)
+			}
+
+			if tt.wantCount > 0 {
+				if file.Tests[0].Name != tt.wantFirst {
+					t.Errorf("Tests[0].Name = %q, want %q", file.Tests[0].Name, tt.wantFirst)
+				}
+				if file.Tests[0].Status != tt.wantStatus {
+					t.Errorf("Tests[0].Status = %q, want %q", file.Tests[0].Status, tt.wantStatus)
+				}
+			}
+		})
+	}
+}
+
+func TestParse_VariableDeclarationInSuite(t *testing.T) {
+	t.Parallel()
+
+	source := `describe("setting timeout", function () {
+  var runningTest =
+    it("enables users to call timeout on active tests", function () {
+      expect(1 + 1, "to be", 2);
+    }).timeout(1003);
+
+  var skippedTest =
+    xit("enables users to call timeout on pending tests", function () {
+      expect(1 + 1, "to be", 3);
+    }).timeout(1002);
+
+  it("sets timeout on pending tests", function () {
+    expect(skippedTest._timeout, "to be", 1002);
+  });
+});`
+
+	file, err := Parse(context.Background(), []byte(source), "test.js", "mocha")
+
+	if err != nil {
+		t.Fatalf("Parse() error = %v", err)
+	}
+
+	if len(file.Suites) != 1 {
+		t.Fatalf("len(Suites) = %d, want 1", len(file.Suites))
+	}
+
+	suite := file.Suites[0]
+	if len(suite.Tests) != 3 {
+		t.Fatalf("len(suite.Tests) = %d, want 3", len(suite.Tests))
+	}
+
+	expectedTests := []struct {
+		name   string
+		status domain.TestStatus
+	}{
+		{"enables users to call timeout on active tests", domain.TestStatusActive},
+		{"enables users to call timeout on pending tests", domain.TestStatusSkipped},
+		{"sets timeout on pending tests", domain.TestStatusActive},
+	}
+
+	for i, expected := range expectedTests {
+		if suite.Tests[i].Name != expected.name {
+			t.Errorf("Tests[%d].Name = %q, want %q", i, suite.Tests[i].Name, expected.name)
+		}
+		if suite.Tests[i].Status != expected.status {
+			t.Errorf("Tests[%d].Status = %q, want %q", i, suite.Tests[i].Status, expected.status)
+		}
+	}
+}

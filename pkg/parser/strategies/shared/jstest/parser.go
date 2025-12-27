@@ -261,12 +261,61 @@ func parseNodeWithMode(node *sitter.Node, source []byte, filename string, file *
 			if expr := parser.FindChildByType(child, "call_expression"); expr != nil {
 				processCallExpressionWithMode(expr, source, filename, file, currentSuite, isDynamic)
 			}
+		case "variable_declaration", "lexical_declaration":
+			processVariableDeclaration(child, source, filename, file, currentSuite, isDynamic)
 		case "for_statement", "for_in_statement", "while_statement", "do_statement":
 			parseLoopBody(child, source, filename, file, currentSuite)
 		default:
 			parseNodeWithMode(child, source, filename, file, currentSuite, isDynamic)
 		}
 	}
+}
+
+// processVariableDeclaration extracts and processes call expressions from variable declarations.
+func processVariableDeclaration(node *sitter.Node, source []byte, filename string, file *domain.TestFile, currentSuite *domain.TestSuite, isDynamic bool) {
+	for i := 0; i < int(node.ChildCount()); i++ {
+		declarator := node.Child(i)
+		if declarator == nil || declarator.Type() != "variable_declarator" {
+			continue
+		}
+
+		valueNode := declarator.ChildByFieldName("value")
+		if valueNode == nil {
+			continue
+		}
+
+		callExpr := findInnerCallExpression(valueNode)
+		if callExpr != nil {
+			processCallExpressionWithMode(callExpr, source, filename, file, currentSuite, isDynamic)
+		} else {
+			parseNodeWithMode(valueNode, source, filename, file, currentSuite, isDynamic)
+		}
+	}
+}
+
+// findInnerCallExpression finds the innermost test call_expression in a node.
+func findInnerCallExpression(node *sitter.Node) *sitter.Node {
+	if node == nil {
+		return nil
+	}
+
+	if node.Type() != "call_expression" {
+		return nil
+	}
+
+	funcNode := node.ChildByFieldName("function")
+	if funcNode == nil {
+		return node
+	}
+
+	if funcNode.Type() == "member_expression" {
+		objectNode := funcNode.ChildByFieldName("object")
+		if inner := findInnerCallExpression(objectNode); inner != nil {
+			return inner
+		}
+	}
+
+	return node
 }
 
 // parseLoopBody parses test definitions inside loops (for, while, do-while) as dynamic tests.
