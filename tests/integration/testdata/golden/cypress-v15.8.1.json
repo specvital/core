@@ -1,0 +1,139 @@
+{
+  "repository": "cypress",
+  "ref": "v15.8.1",
+  "expectedFrameworks": ["cypress", "jest", "mocha", "vitest"],
+  "fileCount": 1560,
+  "testCount": 10873,
+  "frameworkCounts": {
+    "cypress": 1233,
+    "jest": 34,
+    "mocha": 8,
+    "vitest": 285
+  },
+  "sampleFiles": [
+    {
+      "path": "cli/test/lib/build.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "cli/test/lib/cli.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 69
+    },
+    {
+      "path": "cli/test/lib/cypress.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 20
+    },
+    {
+      "path": "cli/test/lib/errors.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 7
+    },
+    {
+      "path": "cli/test/lib/exec/info.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 5
+    },
+    {
+      "path": "cli/test/lib/exec/open.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 16
+    },
+    {
+      "path": "cli/test/lib/exec/run.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 33
+    },
+    {
+      "path": "cli/test/lib/exec/spawn.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 29
+    },
+    {
+      "path": "cli/test/lib/exec/versions.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "cli/test/lib/exec/xvfb-integration.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "cli/test/lib/exec/xvfb.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 6
+    },
+    {
+      "path": "cli/test/lib/logger.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
+      "path": "cli/test/lib/tasks/cache.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 13
+    },
+    {
+      "path": "cli/test/lib/tasks/dependency.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "cli/test/lib/tasks/download.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 3,
+      "testCount": 39
+    },
+    {
+      "path": "cli/test/lib/tasks/install.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 27
+    },
+    {
+      "path": "cli/test/lib/tasks/state.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 32
+    },
+    {
+      "path": "cli/test/lib/tasks/unzip.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 7
+    },
+    {
+      "path": "cli/test/lib/tasks/verify.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 38
+    },
+    {
+      "path": "cli/test/lib/util.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 1,
+      "testCount": 68
+    }
+  ],
+  "stats": {
+    "filesMatched": 1560,
+    "filesScanned": 1560
+  }
+}

@@ -216,10 +216,12 @@ repositories:
 
   - name: cypress
     url: https://github.com/cypress-io/cypress
-    ref: v13.17.0
+    ref: v15.8.1
     frameworks:
       - cypress
+      - jest
       - mocha
+      - vitest
     complex: true
 
   - name: mocha
