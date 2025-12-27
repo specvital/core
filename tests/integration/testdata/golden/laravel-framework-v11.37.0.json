@@ -3,7 +3,7 @@
   "ref": "v11.37.0",
   "expectedFrameworks": ["phpunit"],
   "fileCount": 797,
-  "testCount": 9234,
+  "testCount": 9236,
   "frameworkCounts": {
     "phpunit": 797
   },

@@ -146,14 +146,14 @@ func IsPHPTestFileName(filename string) bool {
 }
 
 // ExtendsTestCase checks if a class extends a TestCase base class.
-// Matches: TestCase, BaseTestCase, *TestCase (suffix match)
-// Does NOT match: TestCaseHelper, SomeTestCaseMixin (not suffix)
+// Matches: TestCase, BaseTestCase, *TestCase, *Test (suffix match for indirect inheritance)
+// Does NOT match: TestCaseHelper, TestHelper (not valid test base class suffix)
 func ExtendsTestCase(node *sitter.Node, source []byte) bool {
 	for i := 0; i < int(node.ChildCount()); i++ {
 		child := node.Child(i)
 		if child.Type() == NodeBaseClause {
 			baseName := extractBaseClassName(child, source)
-			return strings.HasSuffix(baseName, "TestCase")
+			return strings.HasSuffix(baseName, "TestCase") || strings.HasSuffix(baseName, "Test")
 		}
 	}
 	return false

@@ -49,6 +49,21 @@ func TestExtendsTestCase(t *testing.T) {
 			content:  `<?php class MyTest extends Controller {}`,
 			expected: false,
 		},
+		{
+			name:     "extends class ending with Test (indirect TestCase)",
+			content:  `<?php class MyTest extends SomeOtherTest {}`,
+			expected: true,
+		},
+		{
+			name:     "extends class ending with Test (integration base)",
+			content:  `<?php class ApiTest extends IntegrationTest {}`,
+			expected: true,
+		},
+		{
+			name:     "extends class ending with Test (Laravel testbench style)",
+			content:  `<?php class FeatureTest extends EloquentTransactionWithAfterCommitUsingRefreshDatabaseTest {}`,
+			expected: true,
+		},
 	}
 
 	parser := sitter.NewParser()
