@@ -30,9 +30,11 @@ const (
 
 // Google Test macros
 var gtestMacros = map[string]bool{
-	"TEST":   true,
-	"TEST_F": true,
-	"TEST_P": true,
+	"TEST":         true,
+	"TEST_F":       true,
+	"TEST_P":       true,
+	"TYPED_TEST":   true,
+	"TYPED_TEST_P": true,
 }
 
 func init() {
@@ -106,6 +108,8 @@ var gtestPatterns = []struct {
 	{regexp.MustCompile(`\bTEST\s*\(`), "TEST() macro"},
 	{regexp.MustCompile(`\bTEST_F\s*\(`), "TEST_F() macro"},
 	{regexp.MustCompile(`\bTEST_P\s*\(`), "TEST_P() macro"},
+	{regexp.MustCompile(`\bTYPED_TEST\s*\(`), "TYPED_TEST() macro"},
+	{regexp.MustCompile(`\bTYPED_TEST_P\s*\(`), "TYPED_TEST_P() macro"},
 	{regexp.MustCompile(`\bINSTANTIATE_TEST_SUITE_P\s*\(`), "INSTANTIATE_TEST_SUITE_P() macro"},
 	{regexp.MustCompile(`::testing::Test`), "::testing::Test base class"},
 }
@@ -189,7 +193,7 @@ func (p *GTestParser) Parse(ctx context.Context, source []byte, filename string)
 	return file, nil
 }
 
-// parseGTestMacro parses TEST(), TEST_F(), or TEST_P() macro.
+// parseGTestMacro parses TEST(), TEST_F(), TEST_P(), TYPED_TEST(), or TYPED_TEST_P() macro.
 // Returns test and suite name, or nil if not a gtest macro.
 func parseGTestMacro(node *sitter.Node, source []byte, filename string) (*domain.Test, string) {
 	declarator := parser.FindChildByType(node, nodeFunctionDeclarator)

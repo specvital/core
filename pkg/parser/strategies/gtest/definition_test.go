@@ -291,6 +291,162 @@ TEST(Suite, TestName) {
 				}
 			},
 		},
+		{
+			name: "TYPED_TEST macro",
+			source: `
+#include <gtest/gtest.h>
+
+template <typename T>
+class MyTypedTest : public ::testing::Test {};
+
+typedef ::testing::Types<int, float, double> MyTypes;
+TYPED_TEST_SUITE(MyTypedTest, MyTypes);
+
+TYPED_TEST(MyTypedTest, DoesWork) {
+    TypeParam value = 0;
+    EXPECT_EQ(value, TypeParam());
+}
+
+TYPED_TEST(MyTypedTest, AlsoWorks) {
+    EXPECT_TRUE(true);
+}
+`,
+			checkFunc: func(t *testing.T, file *domain.TestFile) {
+				if len(file.Suites) != 1 {
+					t.Errorf("expected 1 suite, got %d", len(file.Suites))
+					return
+				}
+				suite := file.Suites[0]
+				if suite.Name != "MyTypedTest" {
+					t.Errorf("expected suite name 'MyTypedTest', got %q", suite.Name)
+				}
+				if len(suite.Tests) != 2 {
+					t.Errorf("expected 2 tests, got %d", len(suite.Tests))
+					return
+				}
+				// Verify test names
+				testNames := make(map[string]bool)
+				for _, test := range suite.Tests {
+					testNames[test.Name] = true
+				}
+				if !testNames["DoesWork"] {
+					t.Error("expected to find test 'DoesWork'")
+				}
+				if !testNames["AlsoWorks"] {
+					t.Error("expected to find test 'AlsoWorks'")
+				}
+			},
+		},
+		{
+			name: "TYPED_TEST_P macro",
+			source: `
+#include <gtest/gtest.h>
+
+template <typename T>
+class MyTypedTestP : public ::testing::Test {};
+
+TYPED_TEST_SUITE_P(MyTypedTestP);
+
+TYPED_TEST_P(MyTypedTestP, CanBeDefaultConstructed) {
+    TypeParam container;
+}
+
+TYPED_TEST_P(MyTypedTestP, InitialSizeIsZero) {
+    TypeParam container;
+    EXPECT_EQ(0U, container.size());
+}
+
+TYPED_TEST_P(MyTypedTestP, CanGetNextPrime) {
+    EXPECT_TRUE(true);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(MyTypedTestP, CanBeDefaultConstructed, InitialSizeIsZero, CanGetNextPrime);
+`,
+			checkFunc: func(t *testing.T, file *domain.TestFile) {
+				if len(file.Suites) != 1 {
+					t.Errorf("expected 1 suite, got %d", len(file.Suites))
+					return
+				}
+				suite := file.Suites[0]
+				if suite.Name != "MyTypedTestP" {
+					t.Errorf("expected suite name 'MyTypedTestP', got %q", suite.Name)
+				}
+				if len(suite.Tests) != 3 {
+					t.Errorf("expected 3 tests, got %d", len(suite.Tests))
+					return
+				}
+				// Verify test names
+				testNames := make(map[string]bool)
+				for _, test := range suite.Tests {
+					testNames[test.Name] = true
+				}
+				if !testNames["CanBeDefaultConstructed"] {
+					t.Error("expected to find test 'CanBeDefaultConstructed'")
+				}
+				if !testNames["InitialSizeIsZero"] {
+					t.Error("expected to find test 'InitialSizeIsZero'")
+				}
+				if !testNames["CanGetNextPrime"] {
+					t.Error("expected to find test 'CanGetNextPrime'")
+				}
+			},
+		},
+		{
+			name: "TYPED_TEST with DISABLED_ prefix",
+			source: `
+#include <gtest/gtest.h>
+
+template <typename T>
+class DisabledTypedTest : public ::testing::Test {};
+
+TYPED_TEST_SUITE(DisabledTypedTest, ::testing::Types<int>);
+
+TYPED_TEST(DisabledTypedTest, DISABLED_SkippedTest) {
+    FAIL() << "Should not run";
+}
+
+TYPED_TEST(DisabledTypedTest, ActiveTest) {
+    EXPECT_TRUE(true);
+}
+`,
+			checkFunc: func(t *testing.T, file *domain.TestFile) {
+				if len(file.Suites) != 1 {
+					t.Errorf("expected 1 suite, got %d", len(file.Suites))
+					return
+				}
+				suite := file.Suites[0]
+				if len(suite.Tests) != 2 {
+					t.Errorf("expected 2 tests, got %d", len(suite.Tests))
+					return
+				}
+
+				// Find tests by name
+				var skipped, active *domain.Test
+				for i := range suite.Tests {
+					if suite.Tests[i].Name == "DISABLED_SkippedTest" {
+						skipped = &suite.Tests[i]
+					} else if suite.Tests[i].Name == "ActiveTest" {
+						active = &suite.Tests[i]
+					}
+				}
+
+				if skipped == nil {
+					t.Error("expected to find DISABLED_SkippedTest")
+					return
+				}
+				if skipped.Status != domain.TestStatusSkipped {
+					t.Errorf("expected skipped status, got %q", skipped.Status)
+				}
+
+				if active == nil {
+					t.Error("expected to find ActiveTest")
+					return
+				}
+				if active.Status != domain.TestStatusActive {
+					t.Errorf("expected active status, got %q", active.Status)
+				}
+			},
+		},
 	}
 
 	parser := &GTestParser{}
@@ -365,6 +521,8 @@ func TestGTestContentMatcher_Match(t *testing.T) {
 		{"TEST macro", "TEST(Suite, Test) {}", true},
 		{"TEST_F macro", "TEST_F(Fixture, Test) {}", true},
 		{"TEST_P macro", "TEST_P(ParamTest, Test) {}", true},
+		{"TYPED_TEST macro", "TYPED_TEST(TypedSuite, Test) {}", true},
+		{"TYPED_TEST_P macro", "TYPED_TEST_P(TypedSuiteP, Test) {}", true},
 		{"INSTANTIATE macro", "INSTANTIATE_TEST_SUITE_P(Instance, Suite, Values)", true},
 		{"testing::Test base", "class Foo : public ::testing::Test {}", true},
 		{"plain cpp code", "int main() { return 0; }", false},

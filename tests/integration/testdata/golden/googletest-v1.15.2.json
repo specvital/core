@@ -3,7 +3,7 @@
   "ref": "v1.15.2",
   "expectedFrameworks": ["gtest", "unittest"],
   "fileCount": 86,
-  "testCount": 2476,
+  "testCount": 2565,
   "frameworkCounts": {
     "gtest": 79,
     "unittest": 7
@@ -24,8 +24,8 @@
     {
       "path": "googlemock/test/gmock-function-mocker_test.cc",
       "framework": "gtest",
-      "suiteCount": 3,
-      "testCount": 13
+      "suiteCount": 8,
+      "testCount": 41
     },
     {
       "path": "googlemock/test/gmock-internal-utils_test.cc",
@@ -54,8 +54,8 @@
     {
       "path": "googlemock/test/gmock-matchers-misc_test.cc",
       "framework": "gtest",
-      "suiteCount": 27,
-      "testCount": 107
+      "suiteCount": 28,
+      "testCount": 112
     },
     {
       "path": "googlemock/test/gmock-more-actions_test.cc",
