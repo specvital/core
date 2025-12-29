@@ -476,6 +476,13 @@ func processSuite(callNode *sitter.Node, args *sitter.Node, source []byte, filen
 }
 
 func processTest(callNode *sitter.Node, args *sitter.Node, source []byte, filename string, file *domain.TestFile, parentSuite *domain.TestSuite, status domain.TestStatus, modifier string) {
+	// Skip conditional skip/fixme calls like `test.skip(condition, message)`.
+	// These are NOT test definitions, just runtime skip directives.
+	// Real test definitions have string as first argument: `test.skip('name', callback)`.
+	if modifier != "" && !jstest.IsFirstArgString(args) {
+		return
+	}
+
 	name := jstest.ExtractTestName(args, source)
 	if name == "" {
 		return

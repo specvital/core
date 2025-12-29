@@ -470,6 +470,92 @@ test("should be detected", async ({ page }) => {});
 	})
 }
 
+func TestPlaywrightParser_ConditionalSkip(t *testing.T) {
+	t.Run("conditional skip in describe should NOT be counted as test", func(t *testing.T) {
+		source := `
+import { test } from '@playwright/test';
+
+test.describe('Mobile', () => {
+  test.skip(templateName?.includes('ssv6') || false, 'Skip mobile UI tests for SSV6');
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('Navigate to story', async ({ page }) => {
+    await page.goto('https://example.com');
+  });
+});
+`
+		parser := &PlaywrightParser{}
+		ctx := context.Background()
+
+		testFile, err := parser.Parse(ctx, []byte(source), "manager.spec.ts")
+
+		require.NoError(t, err)
+		require.Len(t, testFile.Suites, 1, "Should have one suite")
+		assert.Equal(t, "Mobile", testFile.Suites[0].Name)
+		require.Len(t, testFile.Suites[0].Tests, 1, "Conditional skip should NOT be counted")
+		assert.Equal(t, "Navigate to story", testFile.Suites[0].Tests[0].Name)
+	})
+
+	t.Run("conditional skip inside test should NOT create extra test", func(t *testing.T) {
+		source := `
+import { test } from '@playwright/test';
+
+test('Story context menu actions', async ({ page }) => {
+  test.skip(type !== 'dev', 'These actions are only applicable in dev mode');
+  await page.goto('https://example.com');
+});
+`
+		parser := &PlaywrightParser{}
+		ctx := context.Background()
+
+		testFile, err := parser.Parse(ctx, []byte(source), "test.spec.ts")
+
+		require.NoError(t, err)
+		require.Len(t, testFile.Tests, 1, "Only one test should be detected")
+		assert.Equal(t, "Story context menu actions", testFile.Tests[0].Name)
+	})
+
+	t.Run("conditional fixme should NOT be counted as test", func(t *testing.T) {
+		source := `
+import { test } from '@playwright/test';
+
+test.describe('Suite', () => {
+  test.fixme(condition, 'This needs fixing later');
+
+  test('actual test', async ({ page }) => {});
+});
+`
+		parser := &PlaywrightParser{}
+		ctx := context.Background()
+
+		testFile, err := parser.Parse(ctx, []byte(source), "fixme.spec.ts")
+
+		require.NoError(t, err)
+		require.Len(t, testFile.Suites, 1)
+		require.Len(t, testFile.Suites[0].Tests, 1, "Conditional fixme should NOT be counted")
+		assert.Equal(t, "actual test", testFile.Suites[0].Tests[0].Name)
+	})
+
+	t.Run("test.skip with string name should still be detected", func(t *testing.T) {
+		source := `
+import { test } from '@playwright/test';
+
+test.skip('skipped test', async ({ page }) => {
+  await page.goto('https://example.com');
+});
+`
+		parser := &PlaywrightParser{}
+		ctx := context.Background()
+
+		testFile, err := parser.Parse(ctx, []byte(source), "skip.spec.ts")
+
+		require.NoError(t, err)
+		require.Len(t, testFile.Tests, 1, "test.skip with string name should be detected")
+		assert.Equal(t, "skipped test", testFile.Tests[0].Name)
+		assert.Equal(t, domain.TestStatusSkipped, testFile.Tests[0].Status)
+	})
+}
+
 func TestPlaywrightParser_IndirectImport(t *testing.T) {
 	t.Run("tests with indirect import from pageTest", func(t *testing.T) {
 		source := `

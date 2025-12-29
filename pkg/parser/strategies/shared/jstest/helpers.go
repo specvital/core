@@ -166,6 +166,24 @@ func ExtractTestName(args *sitter.Node, source []byte) string {
 	return ""
 }
 
+// IsFirstArgString checks if the first argument in arguments node is a string literal.
+// Returns false for expressions like `test.skip(condition, message)`.
+// Returns true for test definitions like `test.skip('name', callback)`.
+func IsFirstArgString(args *sitter.Node) bool {
+	for i := 0; i < int(args.ChildCount()); i++ {
+		child := args.Child(i)
+		switch child.Type() {
+		case "string", "template_string":
+			return true
+		case "(", ")", ",":
+			continue
+		default:
+			return false
+		}
+	}
+	return false
+}
+
 func ParseSimpleMemberExpression(obj, prop *sitter.Node, source []byte) (string, domain.TestStatus, string) {
 	objName := parser.GetNodeText(obj, source)
 	propName := parser.GetNodeText(prop, source)
