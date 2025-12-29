@@ -1605,3 +1605,115 @@ func TestParse_VariableDeclarationInSuite(t *testing.T) {
 		}
 	}
 }
+
+func TestParse_RuleTester(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		source    string
+		wantCount int
+		wantFirst string
+	}{
+		{
+			name: "should parse ruleTester.run as single dynamic test (ADR-02)",
+			source: `const ruleTester = new RuleTester();
+ruleTester.run('no-unused-vars', rule, {
+  valid: [{ code: 'var x = 1; console.log(x);' }],
+  invalid: [{ code: 'var x = 1;', errors: 1 }],
+});`,
+			wantCount: 1,
+			wantFirst: "no-unused-vars (dynamic cases)",
+		},
+		{
+			name: "should parse tester.run as single dynamic test",
+			source: `const tester = new RuleTester({ parser: '@typescript-eslint/parser' });
+tester.run('rule-name', rule, {
+  valid: [],
+  invalid: [],
+});`,
+			wantCount: 1,
+			wantFirst: "rule-name (dynamic cases)",
+		},
+		{
+			name: "should parse stylelintTester.run",
+			source: `const stylelintTester = getTestRule();
+stylelintTester.run('block-no-empty', rule, {
+  accept: [{ code: 'a { color: red; }' }],
+  reject: [{ code: 'a {}' }],
+});`,
+			wantCount: 1,
+			wantFirst: "block-no-empty (dynamic cases)",
+		},
+		{
+			name: "should parse multiple ruleTester.run calls",
+			source: `const ruleTester = new RuleTester();
+ruleTester.run('rule-a', ruleA, { valid: [], invalid: [] });
+ruleTester.run('rule-b', ruleB, { valid: [], invalid: [] });`,
+			wantCount: 2,
+			wantFirst: "rule-a (dynamic cases)",
+		},
+		{
+			name:      "should not match non-tester .run() calls",
+			source:    `server.run('start', config, {});`,
+			wantCount: 0,
+		},
+		{
+			name:      "should not match tester.run without string first arg",
+			source:    `tester.run(ruleName, rule, {});`,
+			wantCount: 0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			file, err := Parse(context.Background(), []byte(tt.source), "test.ts", "jest")
+
+			if err != nil {
+				t.Fatalf("Parse() error = %v", err)
+			}
+
+			if len(file.Tests) != tt.wantCount {
+				t.Fatalf("len(Tests) = %d, want %d", len(file.Tests), tt.wantCount)
+			}
+
+			if tt.wantCount > 0 && file.Tests[0].Name != tt.wantFirst {
+				t.Errorf("Tests[0].Name = %q, want %q", file.Tests[0].Name, tt.wantFirst)
+			}
+		})
+	}
+}
+
+func TestParse_RuleTesterInsideDescribe(t *testing.T) {
+	t.Parallel()
+
+	source := `describe('ESLint Rules', () => {
+  const ruleTester = new RuleTester();
+
+  ruleTester.run('no-console', rule, {
+    valid: [{ code: 'var x = 1;' }],
+    invalid: [{ code: 'console.log(1);', errors: 1 }],
+  });
+});`
+
+	file, err := Parse(context.Background(), []byte(source), "test.ts", "jest")
+
+	if err != nil {
+		t.Fatalf("Parse() error = %v", err)
+	}
+
+	if len(file.Suites) != 1 {
+		t.Fatalf("len(Suites) = %d, want 1", len(file.Suites))
+	}
+
+	suite := file.Suites[0]
+	if len(suite.Tests) != 1 {
+		t.Fatalf("len(suite.Tests) = %d, want 1", len(suite.Tests))
+	}
+
+	if suite.Tests[0].Name != "no-console (dynamic cases)" {
+		t.Errorf("Tests[0].Name = %q, want %q", suite.Tests[0].Name, "no-console (dynamic cases)")
+	}
+}

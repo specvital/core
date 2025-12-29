@@ -314,3 +314,64 @@ func parseConditionalFunction(node *sitter.Node, source []byte) (string, domain.
 
 	return "", domain.TestStatusActive, ""
 }
+
+// IsRuleTesterRun checks if a call expression is a RuleTester.run() pattern.
+// RuleTester is used by ESLint/Stylelint for testing lint rules.
+// Pattern: tester.run(ruleName, rule, { valid: [...], invalid: [...] })
+func IsRuleTesterRun(funcNode, args *sitter.Node, source []byte) bool {
+	if funcNode == nil || funcNode.Type() != "member_expression" {
+		return false
+	}
+
+	prop := funcNode.ChildByFieldName("property")
+	if prop == nil || parser.GetNodeText(prop, source) != MethodRun {
+		return false
+	}
+
+	// Check if caller looks like a tester (e.g., ruleTester, tester, stylelintTester)
+	obj := funcNode.ChildByFieldName("object")
+	if obj == nil {
+		return false
+	}
+
+	objName := parser.GetNodeText(obj, source)
+	if !strings.Contains(strings.ToLower(objName), "tester") {
+		return false
+	}
+
+	// Verify arguments: run(ruleName, rule, testCases)
+	// At minimum, we need 3 arguments where first is a string
+	argCount := 0
+	hasStringFirst := false
+
+	for i := 0; i < int(args.ChildCount()); i++ {
+		child := args.Child(i)
+		switch child.Type() {
+		case "(", ")", ",":
+			continue
+		default:
+			argCount++
+			if argCount == 1 {
+				hasStringFirst = child.Type() == "string" || child.Type() == "template_string"
+			}
+		}
+	}
+
+	return argCount >= 3 && hasStringFirst
+}
+
+// ExtractRuleTesterName extracts the rule name from RuleTester.run() call.
+func ExtractRuleTesterName(args *sitter.Node, source []byte) string {
+	for i := 0; i < int(args.ChildCount()); i++ {
+		child := args.Child(i)
+		switch child.Type() {
+		case "string", "template_string":
+			return UnquoteString(parser.GetNodeText(child, source))
+		case "(", ")", ",":
+			continue
+		default:
+			return ""
+		}
+	}
+	return ""
+}

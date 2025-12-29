@@ -20,6 +20,9 @@ const (
 	// jscodeshift test utility
 	FuncDefineTest = "defineTest"
 
+	// ESLint RuleTester method
+	MethodRun = "run"
+
 	ModifierConcurrent = "concurrent"
 	ModifierEach       = "each"
 	ModifierOnly       = "only"

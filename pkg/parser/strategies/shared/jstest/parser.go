@@ -180,6 +180,12 @@ func processCallExpressionWithMode(node *sitter.Node, source []byte, filename st
 		return
 	}
 
+	// Handle ESLint/Stylelint RuleTester.run() pattern.
+	if IsRuleTesterRun(funcNode, args, source) {
+		processRuleTesterRun(node, args, source, filename, file, currentSuite)
+		return
+	}
+
 	funcName, status, modifier := ParseFunctionName(funcNode, source)
 	if funcName == "" {
 		return
@@ -249,6 +255,24 @@ func processTestSuite(callNode *sitter.Node, args *sitter.Node, source []byte, f
 	}
 
 	AddSuiteToTarget(suite, parentSuite, file)
+}
+
+// processRuleTesterRun handles ESLint/Stylelint RuleTester.run() calls.
+// RuleTester.run() internally generates multiple tests from valid/invalid cases.
+// Per ADR-02, linter test utilities are counted as 1 dynamic test.
+func processRuleTesterRun(callNode *sitter.Node, args *sitter.Node, source []byte, filename string, file *domain.TestFile, parentSuite *domain.TestSuite) {
+	name := ExtractRuleTesterName(args, source)
+	if name == "" {
+		name = DynamicNamePlaceholder
+	}
+
+	test := domain.Test{
+		Name:     name + DynamicCasesSuffix,
+		Status:   domain.TestStatusActive,
+		Location: parser.GetLocation(callNode, filename),
+	}
+
+	AddTestToTarget(test, parentSuite, file)
 }
 
 // processDefineTest handles jscodeshift's defineTest() function calls.
