@@ -63,6 +63,21 @@ func FormatEachName(template, data string) string {
 	return result
 }
 
+// ExtractStringValue extracts a string value from a node if it's a string literal.
+// Returns empty string for non-string nodes (identifiers, expressions, etc.).
+func ExtractStringValue(node *sitter.Node, source []byte) string {
+	if node == nil {
+		return ""
+	}
+
+	switch node.Type() {
+	case "string", "template_string":
+		return UnquoteString(parser.GetNodeText(node, source))
+	default:
+		return ""
+	}
+}
+
 func ExtractArrayContent(node *sitter.Node, source []byte) string {
 	var parts []string
 

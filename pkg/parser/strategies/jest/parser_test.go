@@ -137,6 +137,77 @@ func TestParse(t *testing.T) {
 	}
 }
 
+func TestParseDefineTest(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		source    string
+		wantTests int
+		wantName  string
+	}{
+		{
+			name: "should detect defineTest as dynamic test (ADR-02)",
+			source: `const defineTest = require('jscodeshift/dist/testUtils').defineTest
+defineTest(__dirname, 'add-missing-import', null, 'add-missing-import/fixture1')`,
+			wantTests: 1,
+			wantName:  "add-missing-import/fixture1 (dynamic cases)",
+		},
+		{
+			name: "should detect defineTest without prefix argument",
+			source: `const defineTest = require('jscodeshift/dist/testUtils').defineTest
+defineTest(__dirname, 'my-transform', null)`,
+			wantTests: 1,
+			wantName:  "my-transform (dynamic cases)",
+		},
+		{
+			name: "should detect multiple defineTest calls",
+			source: `jest.autoMockOff()
+const defineTest = require('jscodeshift/dist/testUtils').defineTest
+defineTest(__dirname, 'transform-a', null, 'prefix-a')
+defineTest(__dirname, 'transform-b', null, 'prefix-b')`,
+			wantTests: 2,
+		},
+		{
+			name: "should detect defineTest in for loop as dynamic test",
+			source: `const fixtures = ['a', 'b', 'c']
+for (const fixture of fixtures) {
+	defineTest(__dirname, 'transform', null, fixture)
+}`,
+			wantTests: 1,
+			wantName:  "transform (dynamic cases)",
+		},
+		{
+			name: "should fallback to dynamic placeholder when both args are variables",
+			source: `const transform = getTransformName()
+defineTest(__dirname, transform, null, prefix)`,
+			wantTests: 1,
+			wantName:  "(dynamic) (dynamic cases)",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			file, err := parse(context.Background(), []byte(tt.source), "test.js")
+			if err != nil {
+				t.Fatalf("parse() error = %v", err)
+			}
+
+			if len(file.Tests) != tt.wantTests {
+				t.Errorf("len(Tests) = %d, want %d", len(file.Tests), tt.wantTests)
+			}
+
+			if tt.wantName != "" && len(file.Tests) > 0 {
+				if file.Tests[0].Name != tt.wantName {
+					t.Errorf("Tests[0].Name = %q, want %q", file.Tests[0].Name, tt.wantName)
+				}
+			}
+		})
+	}
+}
+
 func TestParseJestNode(t *testing.T) {
 	t.Parallel()
 

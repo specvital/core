@@ -194,6 +194,10 @@ func processCallExpressionWithMode(node *sitter.Node, source []byte, filename st
 		processTestSuite(node, args, source, filename, file, currentSuite, status, modifier, isDynamic)
 	case FuncIt, FuncTest, FuncSpecify:
 		processTestCase(node, args, source, filename, file, currentSuite, status, modifier, isDynamic)
+	case FuncDefineTest:
+		// jscodeshift test utility - calls it() internally.
+		// Per ADR-02, dynamic test patterns are counted as 1 test.
+		processDefineTest(node, args, source, filename, file, currentSuite)
 	default:
 		// Traverse callbacks of unrecognized functions (e.g., describeMatrix, describeIf).
 		// This allows detecting tests inside custom wrapper functions.
@@ -245,6 +249,65 @@ func processTestSuite(callNode *sitter.Node, args *sitter.Node, source []byte, f
 	}
 
 	AddSuiteToTarget(suite, parentSuite, file)
+}
+
+// processDefineTest handles jscodeshift's defineTest() function calls.
+// defineTest internally creates Jest tests using it().
+// Per ADR-02, each defineTest call is counted as 1 dynamic test.
+func processDefineTest(callNode *sitter.Node, args *sitter.Node, source []byte, filename string, file *domain.TestFile, parentSuite *domain.TestSuite) {
+	name := extractDefineTestName(args, source)
+	if name == "" {
+		name = DynamicNamePlaceholder
+	}
+
+	test := domain.Test{
+		Name:     name + DynamicCasesSuffix,
+		Status:   domain.TestStatusActive,
+		Location: parser.GetLocation(callNode, filename),
+	}
+
+	AddTestToTarget(test, parentSuite, file)
+}
+
+// extractDefineTestName extracts a meaningful test name from defineTest arguments.
+// defineTest signature: defineTest(__dirname, transformName, options, prefix)
+// We use the transformName (2nd arg) or prefix (4th arg) if available.
+func extractDefineTestName(args *sitter.Node, source []byte) string {
+	if args == nil {
+		return ""
+	}
+
+	argCount := 0
+	var secondArg, fourthArg *sitter.Node
+
+	for i := 0; i < int(args.ChildCount()); i++ {
+		child := args.Child(i)
+		if child.Type() == "," || child.Type() == "(" || child.Type() == ")" {
+			continue
+		}
+		argCount++
+		if argCount == 2 {
+			secondArg = child
+		} else if argCount == 4 {
+			fourthArg = child
+			break
+		}
+	}
+
+	// Prefer prefix (4th arg) if available, otherwise use transformName (2nd arg)
+	if fourthArg != nil {
+		if name := ExtractStringValue(fourthArg, source); name != "" {
+			return name
+		}
+	}
+
+	if secondArg != nil {
+		if name := ExtractStringValue(secondArg, source); name != "" {
+			return name
+		}
+	}
+
+	return ""
 }
 
 // ParseNode recursively traverses the AST to find and process test definitions.

@@ -17,6 +17,9 @@ const (
 	FuncSpecify = "specify"
 	FuncSuite   = "suite"
 
+	// jscodeshift test utility
+	FuncDefineTest = "defineTest"
+
 	ModifierConcurrent = "concurrent"
 	ModifierEach       = "each"
 	ModifierOnly       = "only"
