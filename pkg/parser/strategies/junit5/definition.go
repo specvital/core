@@ -23,7 +23,7 @@ func init() {
 func NewDefinition() *framework.Definition {
 	return &framework.Definition{
 		Name:      framework.FrameworkJUnit5,
-		Languages: []domain.Language{domain.LanguageJava},
+		Languages: []domain.Language{domain.LanguageJava, domain.LanguageKotlin},
 		Matchers: []framework.Matcher{
 			matchers.NewImportMatcher(
 				"org.junit.jupiter.api.Test",
@@ -31,6 +31,7 @@ func NewDefinition() *framework.Definition {
 				"org.junit.jupiter.params.",
 			),
 			&javaast.JavaTestFileMatcher{},
+			&KotlinTestFileMatcher{},
 			&JUnit5ContentMatcher{},
 		},
 		ConfigParser: nil,
@@ -84,6 +85,11 @@ func (m *JUnit5ContentMatcher) Match(ctx context.Context, signal framework.Signa
 type JUnit5Parser struct{}
 
 func (p *JUnit5Parser) Parse(ctx context.Context, source []byte, filename string) (*domain.TestFile, error) {
+	// Route to Kotlin parser for .kt files
+	if strings.HasSuffix(filename, ".kt") {
+		return parseKotlinTestFile(ctx, source, filename)
+	}
+
 	tree, err := parser.ParseWithPool(ctx, domain.LanguageJava, source)
 	if err != nil {
 		return nil, fmt.Errorf("junit5 parser: failed to parse %s: %w", filename, err)

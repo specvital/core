@@ -18,14 +18,17 @@ func TestNewDefinition(t *testing.T) {
 	if def.Priority != framework.PriorityGeneric {
 		t.Errorf("expected Priority=%d, got %d", framework.PriorityGeneric, def.Priority)
 	}
-	if len(def.Languages) != 1 || def.Languages[0] != domain.LanguageJava {
-		t.Errorf("expected Languages=[java], got %v", def.Languages)
+	if len(def.Languages) != 2 {
+		t.Errorf("expected Languages=[java, kotlin], got %v", def.Languages)
+	}
+	if def.Languages[0] != domain.LanguageJava || def.Languages[1] != domain.LanguageKotlin {
+		t.Errorf("expected Languages=[java, kotlin], got %v", def.Languages)
 	}
 	if def.Parser == nil {
 		t.Error("expected Parser to be non-nil")
 	}
-	if len(def.Matchers) != 3 {
-		t.Errorf("expected 3 Matchers, got %d", len(def.Matchers))
+	if len(def.Matchers) != 4 {
+		t.Errorf("expected 4 Matchers, got %d", len(def.Matchers))
 	}
 }
 
@@ -681,6 +684,232 @@ class CustomTests {
 		}
 		if suite.Tests[1].Name != "fancyTestMethod" {
 			t.Errorf("expected Tests[1].Name='fancyTestMethod', got '%s'", suite.Tests[1].Name)
+		}
+	})
+}
+
+func TestKotlinTestFileMatcher_Match(t *testing.T) {
+	matcher := &KotlinTestFileMatcher{}
+	ctx := context.Background()
+
+	tests := []struct {
+		name               string
+		filename           string
+		expectedConfidence int
+	}{
+		{"Test suffix", "CalculatorTest.kt", 20},
+		{"Tests suffix", "CalculatorTests.kt", 20},
+		{"Test prefix", "TestCalculator.kt", 20},
+		{"Test suffix with path", "src/test/kotlin/com/example/UserServiceTest.kt", 20},
+		{"regular kotlin file", "Calculator.kt", 0},
+		{"non-kotlin file", "CalculatorTest.java", 0},
+		{"src/main should be excluded", "src/main/kotlin/com/example/TestFactory.kt", 0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			signal := framework.Signal{
+				Type:  framework.SignalFileName,
+				Value: tt.filename,
+			}
+
+			result := matcher.Match(ctx, signal)
+
+			if result.Confidence != tt.expectedConfidence {
+				t.Errorf("expected Confidence=%d, got %d", tt.expectedConfidence, result.Confidence)
+			}
+		})
+	}
+}
+
+func TestJUnit5KotlinParser_Parse(t *testing.T) {
+	p := &JUnit5Parser{}
+	ctx := context.Background()
+
+	t.Run("basic Kotlin test methods", func(t *testing.T) {
+		source := `
+package com.example.project
+
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+class CalculatorTests {
+    @Test
+    fun addsTwoNumbers() {
+        val calculator = Calculator()
+        assertEquals(2, calculator.add(1, 1), "1 + 1 should equal 2")
+    }
+
+    @Test
+    fun subtractsTwoNumbers() {
+        val calculator = Calculator()
+        assertEquals(1, calculator.subtract(3, 2))
+    }
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "CalculatorTests.kt")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if testFile.Path != "CalculatorTests.kt" {
+			t.Errorf("expected Path='CalculatorTests.kt', got '%s'", testFile.Path)
+		}
+		if testFile.Framework != "junit5" {
+			t.Errorf("expected Framework='junit5', got '%s'", testFile.Framework)
+		}
+		if testFile.Language != domain.LanguageKotlin {
+			t.Errorf("expected Language=kotlin, got '%s'", testFile.Language)
+		}
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite, got %d", len(testFile.Suites))
+		}
+
+		suite := testFile.Suites[0]
+		if suite.Name != "CalculatorTests" {
+			t.Errorf("expected Suite.Name='CalculatorTests', got '%s'", suite.Name)
+		}
+		if len(suite.Tests) != 2 {
+			t.Fatalf("expected 2 Tests in suite, got %d", len(suite.Tests))
+		}
+		if suite.Tests[0].Name != "addsTwoNumbers" {
+			t.Errorf("expected Tests[0].Name='addsTwoNumbers', got '%s'", suite.Tests[0].Name)
+		}
+		if suite.Tests[1].Name != "subtractsTwoNumbers" {
+			t.Errorf("expected Tests[1].Name='subtractsTwoNumbers', got '%s'", suite.Tests[1].Name)
+		}
+	})
+
+	t.Run("Kotlin @Disabled annotation", func(t *testing.T) {
+		source := `
+package com.example.project
+
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Disabled
+
+class SkippedTest {
+    @Test
+    @Disabled("not implemented")
+    fun testSkipped() {}
+
+    @Test
+    fun testNormal() {}
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "SkippedTest.kt")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite, got %d", len(testFile.Suites))
+		}
+
+		suite := testFile.Suites[0]
+		if len(suite.Tests) != 2 {
+			t.Fatalf("expected 2 Tests, got %d", len(suite.Tests))
+		}
+
+		if suite.Tests[0].Status != domain.TestStatusSkipped {
+			t.Errorf("expected Tests[0].Status='skipped', got '%s'", suite.Tests[0].Status)
+		}
+		if suite.Tests[1].Status != domain.TestStatusActive {
+			t.Errorf("expected Tests[1].Status='active', got '%s'", suite.Tests[1].Status)
+		}
+	})
+
+	t.Run("Kotlin @ParameterizedTest annotation", func(t *testing.T) {
+		source := `
+package com.example.project
+
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+
+class ParameterizedTests {
+    @ParameterizedTest(name = "{0} + {1} = {2}")
+    @CsvSource(
+        "0, 1, 1",
+        "1, 2, 3"
+    )
+    fun add(first: Int, second: Int, expectedResult: Int) {
+        val calculator = Calculator()
+        assertEquals(expectedResult, calculator.add(first, second))
+    }
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "ParameterizedTests.kt")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite, got %d", len(testFile.Suites))
+		}
+
+		suite := testFile.Suites[0]
+		if len(suite.Tests) != 1 {
+			t.Fatalf("expected 1 Test, got %d", len(suite.Tests))
+		}
+
+		if suite.Tests[0].Name != "add" {
+			t.Errorf("expected Name='add', got '%s'", suite.Tests[0].Name)
+		}
+	})
+
+	t.Run("Kotlin backtick function names", func(t *testing.T) {
+		source := `
+package com.example.project
+
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+class CalculatorTests {
+    @Test
+    fun ` + "`" + `1 + 1 = 2` + "`" + `() {
+        assertEquals(2, Calculator().add(1, 1))
+    }
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "CalculatorTests.kt")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite, got %d", len(testFile.Suites))
+		}
+
+		suite := testFile.Suites[0]
+		if len(suite.Tests) != 1 {
+			t.Fatalf("expected 1 Test, got %d", len(suite.Tests))
+		}
+
+		if suite.Tests[0].Name != "1 + 1 = 2" {
+			t.Errorf("expected Name='1 + 1 = 2', got '%s'", suite.Tests[0].Name)
+		}
+	})
+
+	t.Run("Kotlin Kotest file should be skipped", func(t *testing.T) {
+		source := `
+package kotest
+
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
+
+class KotestSpec : StringSpec({
+  "1 + 2 should be 3" {
+    1 + 2 shouldBe 3
+  }
+})
+`
+		testFile, err := p.Parse(ctx, []byte(source), "KotestSpec.kt")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		// Should have no suites because Kotest specs are skipped
+		if len(testFile.Suites) != 0 {
+			t.Errorf("expected 0 Suites for Kotest file, got %d", len(testFile.Suites))
 		}
 	})
 }

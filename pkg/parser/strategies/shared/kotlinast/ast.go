@@ -255,6 +255,7 @@ func HasAnnotation(modifiers *sitter.Node, source []byte, annotationName string)
 }
 
 // GetAnnotationName extracts the annotation name from an annotation node.
+// Handles both simple annotations (@Test) and annotations with arguments (@Disabled("reason")).
 func GetAnnotationName(annotation *sitter.Node, source []byte) string {
 	for i := 0; i < int(annotation.ChildCount()); i++ {
 		child := annotation.Child(i)
@@ -263,6 +264,10 @@ func GetAnnotationName(annotation *sitter.Node, source []byte) string {
 		}
 		if child.Type() == NodeIdentifier || child.Type() == NodeTypeIdentifier {
 			return child.Content(source)
+		}
+		// Handle annotations with arguments: @Disabled("reason") has constructor_invocation
+		if child.Type() == NodeConstructorInvocation {
+			return extractTypeFromConstructorInvocation(child, source)
 		}
 	}
 	return ""
