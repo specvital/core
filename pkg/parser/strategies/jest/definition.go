@@ -95,6 +95,23 @@ func (p *JestConfigParser) Parse(ctx context.Context, configPath string, content
 		scope.Roots = roots
 	}
 
+	// Parse test match patterns as include patterns
+	if testMatch := parseTestMatch(content); len(testMatch) > 0 {
+		scope.Include = testMatch
+	}
+
+	// Parse ignore patterns as exclude patterns
+	var excludePatterns []string
+	if testPathIgnore := parseTestPathIgnorePatterns(content); len(testPathIgnore) > 0 {
+		excludePatterns = append(excludePatterns, testPathIgnore...)
+	}
+	if modulePathIgnore := parseModulePathIgnorePatterns(content); len(modulePathIgnore) > 0 {
+		excludePatterns = append(excludePatterns, modulePathIgnore...)
+	}
+	if len(excludePatterns) > 0 {
+		scope.Exclude = excludePatterns
+	}
+
 	return scope, nil
 }
 
@@ -105,10 +122,13 @@ func (p *JestParser) Parse(ctx context.Context, source []byte, filename string) 
 }
 
 var (
-	configRootDirPattern      = regexp.MustCompile(`rootDir\s*:\s*['"]([^'"]+)['"]`)
-	configRootsPattern        = regexp.MustCompile(`roots\s*:\s*\[([^\]]+)\]`)
-	configRootItemPattern     = regexp.MustCompile(`['"]([^'"]+)['"]`)
-	injectGlobalsFalsePattern = regexp.MustCompile(`injectGlobals\s*:\s*false`)
+	configRootDirPattern           = regexp.MustCompile(`rootDir\s*:\s*['"]([^'"]+)['"]`)
+	configRootsPattern             = regexp.MustCompile(`roots\s*:\s*\[([^\]]+)\]`)
+	configRootItemPattern          = regexp.MustCompile(`['"]([^'"]+)['"]`)
+	injectGlobalsFalsePattern      = regexp.MustCompile(`injectGlobals\s*:\s*false`)
+	configTestMatchPattern         = regexp.MustCompile(`testMatch\s*:\s*\[([^\]]+)\]`)
+	configTestPathIgnorePattern    = regexp.MustCompile(`testPathIgnorePatterns\s*:\s*\[([^\]]+)\]`)
+	configModulePathIgnorePattern  = regexp.MustCompile(`modulePathIgnorePatterns\s*:\s*\[([^\]]+)\]`)
 )
 
 func parseRootDir(content []byte) string {
@@ -154,4 +174,40 @@ func parseRoots(content []byte, configDir string, rootDir string) []string {
 
 func parseInjectGlobalsFalse(content []byte) bool {
 	return injectGlobalsFalsePattern.Match(content)
+}
+
+func parseTestMatch(content []byte) []string {
+	match := configTestMatchPattern.FindSubmatch(content)
+	if match == nil {
+		return nil
+	}
+	return extractJestPatterns(match[1])
+}
+
+func parseTestPathIgnorePatterns(content []byte) []string {
+	match := configTestPathIgnorePattern.FindSubmatch(content)
+	if match == nil {
+		return nil
+	}
+	return extractJestPatterns(match[1])
+}
+
+func parseModulePathIgnorePatterns(content []byte) []string {
+	match := configModulePathIgnorePattern.FindSubmatch(content)
+	if match == nil {
+		return nil
+	}
+	return extractJestPatterns(match[1])
+}
+
+func extractJestPatterns(content []byte) []string {
+	items := configRootItemPattern.FindAllSubmatch(content, -1)
+	if len(items) == 0 {
+		return nil
+	}
+	var patterns []string
+	for _, item := range items {
+		patterns = append(patterns, string(item[1]))
+	}
+	return patterns
 }

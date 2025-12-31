@@ -44,6 +44,8 @@ func (p *VitestConfigParser) Parse(ctx context.Context, configPath string, conte
 	scope := framework.NewConfigScope(configPath, root)
 	scope.Framework = frameworkName
 	scope.GlobalsMode = parseGlobals(ctx, content)
+	scope.Include = parseInclude(content)
+	scope.Exclude = parseExclude(content)
 	return scope, nil
 }
 
@@ -56,6 +58,11 @@ func (p *VitestParser) Parse(ctx context.Context, source []byte, filename string
 var (
 	configRootPattern    = regexp.MustCompile(`root\s*:\s*['"]([^'"]+)['"]`)
 	configGlobalsPattern = regexp.MustCompile(`globals\s*:\s*true`)
+	// Pattern to remove coverage block (which has its own include/exclude)
+	configCoveragePattern = regexp.MustCompile(`(?s)coverage\s*:\s*\{[^}]*(?:\{[^}]*\}[^}]*)*\}`)
+	configIncludePattern  = regexp.MustCompile(`(?:^|[,\s])include\s*:\s*\[([^\]]+)\]`)
+	configExcludePattern  = regexp.MustCompile(`(?:^|[,\s])exclude\s*:\s*\[([^\]]+)\]`)
+	configItemPattern     = regexp.MustCompile(`['"]([^'"]+)['"]`)
 )
 
 func parseRoot(content []byte) string {
@@ -67,6 +74,38 @@ func parseRoot(content []byte) string {
 
 func parseGlobals(ctx context.Context, content []byte) bool {
 	return extraction.MatchPatternExcludingComments(ctx, content, configGlobalsPattern)
+}
+
+func parseInclude(content []byte) []string {
+	// Remove coverage block first to avoid matching coverage.include
+	cleaned := configCoveragePattern.ReplaceAll(content, []byte{})
+	match := configIncludePattern.FindSubmatch(cleaned)
+	if match == nil {
+		return nil
+	}
+	return extractPatterns(match[1])
+}
+
+func parseExclude(content []byte) []string {
+	// Remove coverage block first to avoid matching coverage.exclude
+	cleaned := configCoveragePattern.ReplaceAll(content, []byte{})
+	match := configExcludePattern.FindSubmatch(cleaned)
+	if match == nil {
+		return nil
+	}
+	return extractPatterns(match[1])
+}
+
+func extractPatterns(content []byte) []string {
+	items := configItemPattern.FindAllSubmatch(content, -1)
+	if len(items) == 0 {
+		return nil
+	}
+	var patterns []string
+	for _, item := range items {
+		patterns = append(patterns, string(item[1]))
+	}
+	return patterns
 }
 
 // VitestContentMatcher matches vitest-specific patterns (vi.fn, vi.mock, etc.).

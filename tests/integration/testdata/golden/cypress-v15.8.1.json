@@ -2,13 +2,13 @@
   "repository": "cypress",
   "ref": "v15.8.1",
   "expectedFrameworks": ["cypress", "jest", "mocha", "vitest"],
-  "fileCount": 1560,
-  "testCount": 10873,
+  "fileCount": 1475,
+  "testCount": 10780,
   "frameworkCounts": {
-    "cypress": 1233,
-    "jest": 34,
-    "mocha": 8,
-    "vitest": 285
+    "cypress": 1273,
+    "jest": 31,
+    "mocha": 14,
+    "vitest": 157
   },
   "sampleFiles": [
     {
@@ -133,7 +133,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 1560,
+    "filesMatched": 1475,
     "filesScanned": 1560
   }
 }

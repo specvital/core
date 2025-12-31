@@ -2,11 +2,11 @@
   "repository": "trpc",
   "ref": "v10.45.2",
   "expectedFrameworks": ["playwright", "vitest"],
-  "fileCount": 172,
-  "testCount": 793,
+  "fileCount": 171,
+  "testCount": 792,
   "frameworkCounts": {
     "playwright": 9,
-    "vitest": 163
+    "vitest": 162
   },
   "sampleFiles": [
     {
@@ -131,7 +131,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 172,
+    "filesMatched": 171,
     "filesScanned": 172
   }
 }

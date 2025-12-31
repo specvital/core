@@ -2,11 +2,11 @@
   "repository": "specvital-web",
   "ref": "v1.1.2",
   "expectedFrameworks": ["go-testing", "vitest"],
-  "fileCount": 22,
+  "fileCount": 21,
   "testCount": 146,
   "frameworkCounts": {
     "go-testing": 16,
-    "vitest": 6
+    "vitest": 5
   },
   "sampleFiles": [
     {
@@ -131,7 +131,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 22,
+    "filesMatched": 21,
     "filesScanned": 22
   }
 }
