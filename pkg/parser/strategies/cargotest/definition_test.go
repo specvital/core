@@ -463,6 +463,121 @@ mod tests {
 				}
 			},
 		},
+		{
+			name: "same-file macro_rules with test attribute detected",
+			source: `
+macro_rules! syntax {
+    ($name:ident, $pat:expr, $tokens:expr) => {
+        #[test]
+        fn $name() {
+            let pat = Glob::new($pat).unwrap();
+            assert_eq!($tokens, pat.tokens.0);
+        }
+    };
+}
+
+syntax!(literal1, "a", vec![Literal('a')]);
+syntax!(literal2, "ab", vec![Literal('a'), Literal('b')]);
+`,
+			checkFunc: func(t *testing.T, file *domain.TestFile) {
+				if len(file.Tests) != 2 {
+					t.Errorf("expected 2 tests from macro invocations, got %d", len(file.Tests))
+					return
+				}
+				if file.Tests[0].Name != "literal1" {
+					t.Errorf("expected first test name 'literal1', got %q", file.Tests[0].Name)
+				}
+				if file.Tests[0].Modifier != "syntax!" {
+					t.Errorf("expected modifier 'syntax!', got %q", file.Tests[0].Modifier)
+				}
+				if file.Tests[1].Name != "literal2" {
+					t.Errorf("expected second test name 'literal2', got %q", file.Tests[1].Name)
+				}
+			},
+		},
+		{
+			name: "macro without test attribute not detected",
+			source: `
+macro_rules! helper {
+    ($name:ident) => {
+        fn $name() {
+            println!("helper function");
+        }
+    };
+}
+
+helper!(my_helper);
+`,
+			checkFunc: func(t *testing.T, file *domain.TestFile) {
+				if len(file.Tests) != 0 {
+					t.Errorf("expected 0 tests (macro has no #[test]), got %d", len(file.Tests))
+				}
+			},
+		},
+		{
+			name: "multi-arm macro with test in second arm",
+			source: `
+macro_rules! matches {
+    ($name:ident, $pat:expr, $path:expr) => {
+        matches!($name, $pat, $path, Options::default());
+    };
+    ($name:ident, $pat:expr, $path:expr, $options:expr) => {
+        #[test]
+        fn $name() {
+            let matcher = create_matcher($pat, $options);
+            assert!(matcher.is_match($path));
+        }
+    };
+}
+
+matches!(match1, "*.txt", "foo.txt");
+matches!(match2, "*.rs", "lib.rs", Options::new());
+`,
+			checkFunc: func(t *testing.T, file *domain.TestFile) {
+				if len(file.Tests) != 2 {
+					t.Errorf("expected 2 tests from multi-arm macro, got %d", len(file.Tests))
+					return
+				}
+				if file.Tests[0].Name != "match1" {
+					t.Errorf("expected first test name 'match1', got %q", file.Tests[0].Name)
+				}
+				if file.Tests[1].Name != "match2" {
+					t.Errorf("expected second test name 'match2', got %q", file.Tests[1].Name)
+				}
+			},
+		},
+		{
+			name: "mixed same-file macro and name-based macro",
+			source: `
+macro_rules! syntax {
+    ($name:ident, $pat:expr) => {
+        #[test]
+        fn $name() {
+            assert_eq!($pat, $pat);
+        }
+    };
+}
+
+syntax!(test_syntax, "pattern");
+rgtest!(test_rg, |dir, cmd| { assert!(true); });
+`,
+			checkFunc: func(t *testing.T, file *domain.TestFile) {
+				if len(file.Tests) != 2 {
+					t.Errorf("expected 2 tests (one from same-file macro, one from name-based), got %d", len(file.Tests))
+					return
+				}
+				names := make(map[string]bool)
+				for _, test := range file.Tests {
+					names[test.Name] = true
+				}
+				if !names["test_syntax"] {
+					t.Errorf("expected test 'test_syntax' from same-file macro")
+				}
+				if !names["test_rg"] {
+					t.Errorf("expected test 'test_rg' from name-based heuristic")
+				}
+			},
+		},
 	}
 
 	parser := &CargoTestParser{}

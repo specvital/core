@@ -3,7 +3,7 @@
   "ref": "14.1.1",
   "expectedFrameworks": ["cargo-test"],
   "fileCount": 53,
-  "testCount": 727,
+  "testCount": 1053,
   "frameworkCounts": {
     "cargo-test": 53
   },
@@ -59,8 +59,8 @@
     {
       "path": "crates/globset/src/glob.rs",
       "framework": "cargo-test",
-      "suiteCount": 0,
-      "testCount": 0
+      "suiteCount": 1,
+      "testCount": 202
     },
     {
       "path": "crates/globset/src/lib.rs",
@@ -71,8 +71,8 @@
     {
       "path": "crates/globset/src/pathutil.rs",
       "framework": "cargo-test",
-      "suiteCount": 0,
-      "testCount": 0
+      "suiteCount": 1,
+      "testCount": 11
     },
     {
       "path": "crates/globset/src/serde_impl.rs",
@@ -96,7 +96,7 @@
       "path": "crates/ignore/src/gitignore.rs",
       "framework": "cargo-test",
       "suiteCount": 1,
-      "testCount": 7
+      "testCount": 74
     },
     {
       "path": "crates/ignore/src/lib.rs",
@@ -114,7 +114,7 @@
       "path": "crates/ignore/src/types.rs",
       "framework": "cargo-test",
       "suiteCount": 1,
-      "testCount": 1
+      "testCount": 20
     },
     {
       "path": "crates/ignore/src/walk.rs",

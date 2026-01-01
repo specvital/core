@@ -22,12 +22,14 @@ const (
 	nodeAttributeItem    = "attribute_item"
 	nodeAttribute        = "attribute"
 	nodeFunctionItem     = "function_item"
+	nodeMacroDefinition  = "macro_definition"
+	nodeMacroInvocation  = "macro_invocation"
+	nodeMacroRule        = "macro_rule"
+	nodeMetaItem         = "meta_item"
 	nodeModItem          = "mod_item"
 	nodeIdentifier       = "identifier"
-	nodeMetaItem         = "meta_item"
-	nodeMacroInvocation  = "macro_invocation"
-	nodeTokenTree        = "token_tree"
 	nodeScopedIdentifier = "scoped_identifier"
+	nodeTokenTree        = "token_tree"
 )
 
 func init() {
@@ -129,10 +131,15 @@ func (p *CargoTestParser) Parse(ctx context.Context, source []byte, filename str
 
 // parseRustAST traverses the AST using depth-protected WalkTree.
 // It handles test modules and test functions at the top level and within #[cfg(test)] modules.
+// Uses 2-pass approach: first collects test-generating macro definitions, then processes tests.
 func parseRustAST(root *sitter.Node, source []byte, filename string, file *domain.TestFile) {
 	// Track test modules by node start byte position to associate tests with their parent suite
 	testModules := make(map[uint32]*domain.TestSuite)
 
+	// First pass: collect macro definitions that generate #[test] functions
+	testMacros := collectTestMacroDefinitions(root, source)
+
+	// Second pass: detect tests using both macro registry and name heuristic
 	parser.WalkTree(root, func(node *sitter.Node) bool {
 		switch node.Type() {
 		case nodeModItem:
@@ -178,7 +185,7 @@ func parseRustAST(root *sitter.Node, source []byte, filename string, file *domai
 				return true // Continue traversal
 			}
 
-			if !isTestMacro(macroName) {
+			if !isTestMacro(macroName, testMacros) {
 				return true // Not a test macro, continue
 			}
 
@@ -208,6 +215,114 @@ func parseRustAST(root *sitter.Node, source []byte, filename string, file *domai
 			file.Suites = append(file.Suites, *suite)
 		}
 	}
+}
+
+// collectTestMacroDefinitions finds macro_rules! definitions that generate #[test] functions.
+// Returns a map of macro names that should be treated as test macros.
+func collectTestMacroDefinitions(root *sitter.Node, source []byte) map[string]bool {
+	testMacros := make(map[string]bool)
+
+	parser.WalkTree(root, func(node *sitter.Node) bool {
+		if node.Type() == nodeMacroDefinition {
+			name, generatesTest := analyzeMacroDefinition(node, source)
+			if name != "" && generatesTest {
+				testMacros[name] = true
+			}
+		}
+		return true
+	})
+
+	return testMacros
+}
+
+// analyzeMacroDefinition checks if a macro_definition generates #[test] functions.
+// Returns the macro name and whether it generates tests.
+func analyzeMacroDefinition(node *sitter.Node, source []byte) (macroName string, generatesTest bool) {
+	if node.Type() != nodeMacroDefinition {
+		return "", false
+	}
+
+	// Find macro name (identifier after "macro_rules!")
+	for i := 0; i < int(node.ChildCount()); i++ {
+		child := node.Child(i)
+		if child.Type() == nodeIdentifier {
+			macroName = parser.GetNodeText(child, source)
+			break
+		}
+	}
+
+	if macroName == "" {
+		return "", false
+	}
+
+	// Check each macro_rule for #[test] in expansion body
+	for i := 0; i < int(node.ChildCount()); i++ {
+		child := node.Child(i)
+		if child.Type() == nodeMacroRule {
+			if macroRuleHasTestAttribute(child, source) {
+				return macroName, true
+			}
+		}
+	}
+
+	return macroName, false
+}
+
+// macroRuleHasTestAttribute checks if a macro_rule's expansion contains #[test].
+func macroRuleHasTestAttribute(rule *sitter.Node, source []byte) bool {
+	// macro_rule structure: token_tree_pattern => token_tree
+	// We need to find the expansion token_tree (after =>)
+	foundArrow := false
+	for i := 0; i < int(rule.ChildCount()); i++ {
+		child := rule.Child(i)
+
+		// Look for => token
+		if parser.GetNodeText(child, source) == "=>" {
+			foundArrow = true
+			continue
+		}
+
+		// After =>, check token_tree for #[test]
+		if foundArrow && child.Type() == nodeTokenTree {
+			return tokenTreeHasTestAttribute(child, source)
+		}
+	}
+	return false
+}
+
+// tokenTreeHasTestAttribute recursively checks if a token_tree contains #[test] pattern.
+// Pattern: # followed by token_tree containing identifier "test"
+func tokenTreeHasTestAttribute(tokenTree *sitter.Node, source []byte) bool {
+	for i := 0; i < int(tokenTree.ChildCount()); i++ {
+		child := tokenTree.Child(i)
+
+		// Look for # token
+		if parser.GetNodeText(child, source) == "#" {
+			// Next sibling should be token_tree with [test]
+			if i+1 < int(tokenTree.ChildCount()) {
+				nextChild := tokenTree.Child(i + 1)
+				if nextChild.Type() == nodeTokenTree {
+					// Check for identifier "test" inside
+					for j := 0; j < int(nextChild.ChildCount()); j++ {
+						inner := nextChild.Child(j)
+						if inner.Type() == nodeIdentifier {
+							if parser.GetNodeText(inner, source) == "test" {
+								return true
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Recurse into nested token_tree
+		if child.Type() == nodeTokenTree {
+			if tokenTreeHasTestAttribute(child, source) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // findParentTestSuite finds the nearest ancestor test module for a node.
@@ -417,7 +532,13 @@ func extractMacroName(node *sitter.Node, source []byte) string {
 }
 
 // isTestMacro checks if a macro name indicates a test macro.
-// Returns true for names containing "test" (case-insensitive).
-func isTestMacro(macroName string) bool {
+// First checks the local registry (macros defined in the same file with #[test]),
+// then falls back to name-based heuristic (names containing "test").
+func isTestMacro(macroName string, localRegistry map[string]bool) bool {
+	// Check local registry first (macros defined in same file)
+	if localRegistry[macroName] {
+		return true
+	}
+	// Fallback to name-based heuristic for external macros
 	return strings.Contains(strings.ToLower(macroName), "test")
 }
