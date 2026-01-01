@@ -471,4 +471,74 @@ public class NoTestsClass {
 			t.Errorf("expected 0 Suites, got %d", len(testFile.Suites))
 		}
 	})
+
+	t.Run("nested static classes with tests", func(t *testing.T) {
+		source := `
+package com.example;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+    StartupCheckStrategyTest.OneShotStrategyTest.class,
+    StartupCheckStrategyTest.IndefiniteOneShotStrategyTest.class,
+    StartupCheckStrategyTest.MinimumDurationStrategyTest.class,
+})
+public class StartupCheckStrategyTest {
+
+    public static class OneShotStrategyTest {
+        @Test
+        public void testCommandIsExecuted() {}
+    }
+
+    public static class IndefiniteOneShotStrategyTest {
+        @Test
+        public void testCommandIsExecuted() {}
+    }
+
+    public static class MinimumDurationStrategyTest {
+        @Test
+        public void testCommandIsExecuted() {}
+    }
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "StartupCheckStrategyTest.java")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		// Should detect 3 suites (one for each nested class with tests)
+		// The outer class has no direct tests, so it's not included
+		if len(testFile.Suites) != 3 {
+			t.Fatalf("expected 3 Suites for nested classes, got %d", len(testFile.Suites))
+		}
+
+		expectedNames := map[string]bool{
+			"OneShotStrategyTest":           false,
+			"IndefiniteOneShotStrategyTest": false,
+			"MinimumDurationStrategyTest":   false,
+		}
+
+		for _, suite := range testFile.Suites {
+			if _, exists := expectedNames[suite.Name]; !exists {
+				t.Errorf("unexpected suite name: %s", suite.Name)
+			}
+			expectedNames[suite.Name] = true
+
+			if len(suite.Tests) != 1 {
+				t.Errorf("expected 1 test in suite %s, got %d", suite.Name, len(suite.Tests))
+			}
+			if suite.Tests[0].Name != "testCommandIsExecuted" {
+				t.Errorf("expected test name 'testCommandIsExecuted' in suite %s, got '%s'", suite.Name, suite.Tests[0].Name)
+			}
+		}
+
+		for name, found := range expectedNames {
+			if !found {
+				t.Errorf("expected suite %s not found", name)
+			}
+		}
+	})
 }

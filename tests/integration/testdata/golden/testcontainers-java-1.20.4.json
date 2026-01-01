@@ -3,7 +3,7 @@
   "ref": "1.20.4",
   "expectedFrameworks": ["junit4", "junit5", "testng"],
   "fileCount": 302,
-  "testCount": 921,
+  "testCount": 978,
   "frameworkCounts": {
     "junit4": 241,
     "junit5": 60,
@@ -121,8 +121,8 @@
     {
       "path": "core/src/test/java/org/testcontainers/containers/NetworkTest.java",
       "framework": "junit4",
-      "suiteCount": 0,
-      "testCount": 0
+      "suiteCount": 2,
+      "testCount": 5
     },
     {
       "path": "core/src/test/java/org/testcontainers/containers/ParsedDockerComposeFileValidationTest.java",

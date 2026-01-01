@@ -116,7 +116,7 @@ func parseTestClasses(root *sitter.Node, source []byte, filename string) []domai
 			if suite := parseTestClass(node, source, filename); suite != nil {
 				suites = append(suites, *suite)
 			}
-			return false
+			return true // Continue traversal into nested classes
 		}
 		return true
 	})
