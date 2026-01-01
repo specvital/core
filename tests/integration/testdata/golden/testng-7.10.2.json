@@ -1,10 +1,11 @@
 {
   "repository": "testng",
   "ref": "7.10.2",
-  "expectedFrameworks": ["testng"],
-  "fileCount": 1710,
-  "testCount": 3136,
+  "expectedFrameworks": ["junit5", "testng"],
+  "fileCount": 1720,
+  "testCount": 3152,
   "frameworkCounts": {
+    "junit5": 10,
     "testng": 1710
   },
   "sampleFiles": [
@@ -130,7 +131,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 1710,
+    "filesMatched": 1720,
     "filesScanned": 1829
   }
 }

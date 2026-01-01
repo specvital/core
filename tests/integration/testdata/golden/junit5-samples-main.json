@@ -2,11 +2,11 @@
   "repository": "junit5-samples",
   "ref": "main",
   "expectedFrameworks": ["junit4", "junit5", "kotest", "testng"],
-  "fileCount": 26,
-  "testCount": 43,
+  "fileCount": 28,
+  "testCount": 48,
   "frameworkCounts": {
     "junit4": 4,
-    "junit5": 20,
+    "junit5": 22,
     "kotest": 1,
     "testng": 1
   },
@@ -36,7 +36,19 @@
       "testCount": 2
     },
     {
+      "path": "junit-jupiter-starter-gradle-kotlin/src/test/kotlin/com/example/project/CalculatorTests.kt",
+      "framework": "junit5",
+      "suiteCount": 1,
+      "testCount": 3
+    },
+    {
       "path": "junit-jupiter-starter-gradle/src/test/java/com/example/project/CalculatorTests.java",
+      "framework": "junit5",
+      "suiteCount": 1,
+      "testCount": 2
+    },
+    {
+      "path": "junit-jupiter-starter-maven-kotlin/src/test/kotlin/com/example/project/CalculatorTests.kt",
       "framework": "junit5",
       "suiteCount": 1,
       "testCount": 2
@@ -118,22 +130,10 @@
       "framework": "junit5",
       "suiteCount": 1,
       "testCount": 3
-    },
-    {
-      "path": "junit-modular-world/src/test/extra.modular/extra/modular/GoodOldTest.java",
-      "framework": "junit4",
-      "suiteCount": 1,
-      "testCount": 1
-    },
-    {
-      "path": "junit-modular-world/src/test/ice.cream/ice/cream/FlavorTests.java",
-      "framework": "junit5",
-      "suiteCount": 1,
-      "testCount": 1
     }
   ],
   "stats": {
-    "filesMatched": 26,
+    "filesMatched": 28,
     "filesScanned": 38
   }
 }

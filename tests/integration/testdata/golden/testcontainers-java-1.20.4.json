@@ -2,11 +2,11 @@
   "repository": "testcontainers-java",
   "ref": "1.20.4",
   "expectedFrameworks": ["junit4", "junit5", "testng"],
-  "fileCount": 299,
-  "testCount": 919,
+  "fileCount": 302,
+  "testCount": 921,
   "frameworkCounts": {
     "junit4": 241,
-    "junit5": 57,
+    "junit5": 60,
     "testng": 1
   },
   "sampleFiles": [
@@ -132,7 +132,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 299,
+    "filesMatched": 302,
     "filesScanned": 392
   }
 }

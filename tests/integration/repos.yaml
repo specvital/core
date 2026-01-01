@@ -241,6 +241,7 @@ repositories:
     url: https://github.com/kotest/kotest
     ref: v6.0.7
     frameworks:
+      - junit5
       - kotest
     complex: true
 
@@ -248,6 +249,7 @@ repositories:
     url: https://github.com/testng-team/testng
     ref: 7.10.2
     frameworks:
+      - junit5
       - testng
     complex: true
 

@@ -1,11 +1,12 @@
 {
   "repository": "kotest",
   "ref": "v6.0.7",
-  "expectedFrameworks": ["kotest"],
+  "expectedFrameworks": ["junit5", "kotest"],
   "fileCount": 982,
-  "testCount": 2050,
+  "testCount": 2022,
   "frameworkCounts": {
-    "kotest": 982
+    "junit5": 12,
+    "kotest": 970
   },
   "sampleFiles": [
     {
