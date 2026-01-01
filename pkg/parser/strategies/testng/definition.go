@@ -141,14 +141,16 @@ func (m *TestNGContentMatcher) Match(ctx context.Context, signal framework.Signa
 type TestNGParser struct{}
 
 func (p *TestNGParser) Parse(ctx context.Context, source []byte, filename string) (*domain.TestFile, error) {
-	tree, err := parser.ParseWithPool(ctx, domain.LanguageJava, source)
+	cleanSource := javaast.SanitizeSource(source)
+
+	tree, err := parser.ParseWithPool(ctx, domain.LanguageJava, cleanSource)
 	if err != nil {
 		return nil, fmt.Errorf("testng parser: failed to parse %s: %w", filename, err)
 	}
 	defer tree.Close()
 
 	root := tree.RootNode()
-	suites := parseTestClasses(root, source, filename)
+	suites := parseTestClasses(root, cleanSource, filename)
 
 	return &domain.TestFile{
 		Path:      filename,

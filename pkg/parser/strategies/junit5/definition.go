@@ -90,14 +90,17 @@ func (p *JUnit5Parser) Parse(ctx context.Context, source []byte, filename string
 		return parseKotlinTestFile(ctx, source, filename)
 	}
 
-	tree, err := parser.ParseWithPool(ctx, domain.LanguageJava, source)
+	// Sanitize source to handle NULL bytes that would cause tree-sitter parsing failures
+	cleanSource := javaast.SanitizeSource(source)
+
+	tree, err := parser.ParseWithPool(ctx, domain.LanguageJava, cleanSource)
 	if err != nil {
 		return nil, fmt.Errorf("junit5 parser: failed to parse %s: %w", filename, err)
 	}
 	defer tree.Close()
 
 	root := tree.RootNode()
-	suites := parseTestClasses(root, source, filename)
+	suites := parseTestClasses(root, cleanSource, filename)
 
 	return &domain.TestFile{
 		Path:      filename,

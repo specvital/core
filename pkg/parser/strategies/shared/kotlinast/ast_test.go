@@ -367,3 +367,60 @@ func TestGetCallExpressionName(t *testing.T) {
 		})
 	}
 }
+
+func TestSanitizeSource(t *testing.T) {
+	t.Run("returns original if no NULL bytes", func(t *testing.T) {
+		source := []byte("class MyTest : FunSpec({ test(\"hello\") {} })")
+		result := SanitizeSource(source)
+
+		if &result[0] != &source[0] {
+			t.Error("expected same slice when no NULL bytes")
+		}
+	})
+
+	t.Run("replaces NULL bytes with spaces", func(t *testing.T) {
+		source := []byte("val s = \"hello\x00world\"")
+		result := SanitizeSource(source)
+
+		expected := []byte("val s = \"hello world\"")
+		if string(result) != string(expected) {
+			t.Errorf("expected %q, got %q", expected, result)
+		}
+	})
+
+	t.Run("handles multiple NULL bytes", func(t *testing.T) {
+		source := []byte("a\x00b\x00c\x00d")
+		result := SanitizeSource(source)
+
+		expected := []byte("a b c d")
+		if string(result) != string(expected) {
+			t.Errorf("expected %q, got %q", expected, result)
+		}
+	})
+
+	t.Run("enables tree-sitter parsing of files with NULL bytes", func(t *testing.T) {
+		source := []byte(`class OssFuzzTest : FunSpec({
+    test("test with null") {
+        val data = "test` + "\x00\x00\x00" + `data"
+    }
+})`)
+		cleanSource := SanitizeSource(source)
+
+		parser := sitter.NewParser()
+		parser.SetLanguage(kotlin.GetLanguage())
+		tree, err := parser.ParseCtx(context.Background(), nil, cleanSource)
+		if err != nil {
+			t.Fatalf("parse error: %v", err)
+		}
+
+		root := tree.RootNode()
+		if root.Type() != "source_file" {
+			t.Errorf("expected root type 'source_file', got %q", root.Type())
+		}
+
+		classNode := findClassDeclaration(root)
+		if classNode == nil {
+			t.Error("expected to find class_declaration after sanitization")
+		}
+	})
+}

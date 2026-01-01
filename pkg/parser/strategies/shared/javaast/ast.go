@@ -2,6 +2,7 @@
 package javaast
 
 import (
+	"bytes"
 	"strings"
 
 	sitter "github.com/smacker/go-tree-sitter"
@@ -127,4 +128,14 @@ func GetAnnotationArgument(annotation *sitter.Node, source []byte) string {
 		}
 	}
 	return ""
+}
+
+// SanitizeSource removes NULL bytes from source code that would cause tree-sitter parsing failures.
+// Some files (e.g., OSS-Fuzz test data) contain NULL bytes in string literals which cause
+// tree-sitter to produce ERROR nodes instead of valid AST.
+func SanitizeSource(source []byte) []byte {
+	if !bytes.Contains(source, []byte{0}) {
+		return source
+	}
+	return bytes.ReplaceAll(source, []byte{0}, []byte{' '})
 }

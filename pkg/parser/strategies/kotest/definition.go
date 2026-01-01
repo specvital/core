@@ -108,14 +108,16 @@ func (m *KotestContentMatcher) Match(ctx context.Context, signal framework.Signa
 type KotestParser struct{}
 
 func (p *KotestParser) Parse(ctx context.Context, source []byte, filename string) (*domain.TestFile, error) {
-	tree, err := parser.ParseWithPool(ctx, domain.LanguageKotlin, source)
+	cleanSource := kotlinast.SanitizeSource(source)
+
+	tree, err := parser.ParseWithPool(ctx, domain.LanguageKotlin, cleanSource)
 	if err != nil {
 		return nil, fmt.Errorf("kotest parser: failed to parse %s: %w", filename, err)
 	}
 	defer tree.Close()
 
 	root := tree.RootNode()
-	suites := parseTestClasses(root, source, filename)
+	suites := parseTestClasses(root, cleanSource, filename)
 
 	return &domain.TestFile{
 		Path:      filename,

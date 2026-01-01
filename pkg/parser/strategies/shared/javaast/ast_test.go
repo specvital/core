@@ -258,3 +258,66 @@ func findNodeByType(node *sitter.Node, nodeType string) *sitter.Node {
 	}
 	return nil
 }
+
+func TestSanitizeSource(t *testing.T) {
+	t.Run("returns original if no NULL bytes", func(t *testing.T) {
+		source := []byte("public class Test { void test() {} }")
+		result := SanitizeSource(source)
+
+		// Should return same slice (no copy)
+		if &result[0] != &source[0] {
+			t.Error("expected same slice when no NULL bytes")
+		}
+	})
+
+	t.Run("replaces NULL bytes with spaces", func(t *testing.T) {
+		source := []byte("class Test { String s = \"hello\x00world\"; }")
+		result := SanitizeSource(source)
+
+		expected := []byte("class Test { String s = \"hello world\"; }")
+		if string(result) != string(expected) {
+			t.Errorf("expected %q, got %q", expected, result)
+		}
+	})
+
+	t.Run("handles multiple NULL bytes", func(t *testing.T) {
+		source := []byte("a\x00b\x00c\x00d")
+		result := SanitizeSource(source)
+
+		expected := []byte("a b c d")
+		if string(result) != string(expected) {
+			t.Errorf("expected %q, got %q", expected, result)
+		}
+	})
+
+	t.Run("enables tree-sitter parsing of files with NULL bytes", func(t *testing.T) {
+		// Simulate OSS-Fuzz test file with NULL bytes in string literal
+		source := []byte(`
+public class OssFuzzTest {
+    @Test
+    public void testMethod() {
+        String data = "test` + "\x00\x00\x00" + `data";
+    }
+}
+`)
+		// Without sanitization, tree-sitter would produce ERROR root
+		cleanSource := SanitizeSource(source)
+
+		tree, err := tspool.Parse(context.Background(), domain.LanguageJava, cleanSource)
+		if err != nil {
+			t.Fatalf("parse error: %v", err)
+		}
+		defer tree.Close()
+
+		root := tree.RootNode()
+		if root.Type() != "program" {
+			t.Errorf("expected root type 'program', got %q", root.Type())
+		}
+
+		// Should find class_declaration
+		classNode := findNodeByType(root, NodeClassDeclaration)
+		if classNode == nil {
+			t.Error("expected to find class_declaration after sanitization")
+		}
+	})
+}

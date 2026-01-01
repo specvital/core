@@ -51,14 +51,17 @@ func (m *KotlinTestFileMatcher) Match(ctx context.Context, signal framework.Sign
 
 // parseKotlinTestFile parses a Kotlin JUnit5 test file.
 func parseKotlinTestFile(ctx context.Context, source []byte, filename string) (*domain.TestFile, error) {
-	tree, err := parser.ParseWithPool(ctx, domain.LanguageKotlin, source)
+	// Sanitize source to handle NULL bytes that would cause tree-sitter parsing failures
+	cleanSource := kotlinast.SanitizeSource(source)
+
+	tree, err := parser.ParseWithPool(ctx, domain.LanguageKotlin, cleanSource)
 	if err != nil {
 		return nil, err
 	}
 	defer tree.Close()
 
 	root := tree.RootNode()
-	suites := parseKotlinTestClasses(root, source, filename)
+	suites := parseKotlinTestClasses(root, cleanSource, filename)
 
 	return &domain.TestFile{
 		Path:      filename,
