@@ -213,6 +213,10 @@ func extractTestAliases(root *sitter.Node, source []byte) map[string]bool {
 }
 
 func isPlaywrightImport(node *sitter.Node, source []byte) bool {
+	if isTypeOnlyImport(node, source) {
+		return false
+	}
+
 	sourceNode := node.ChildByFieldName("source")
 	if sourceNode == nil {
 		return false
@@ -220,6 +224,17 @@ func isPlaywrightImport(node *sitter.Node, source []byte) bool {
 
 	importPath := jstest.UnquoteString(parser.GetNodeText(sourceNode, source))
 	return importPath == playwrightImportPath
+}
+
+func isTypeOnlyImport(node *sitter.Node, source []byte) bool {
+	if node.ChildCount() < 2 {
+		return false
+	}
+	secondChild := node.Child(1)
+	if secondChild == nil {
+		return false
+	}
+	return parser.GetNodeText(secondChild, source) == "type"
 }
 
 func extractAliasesFromVariableDeclaration(node *sitter.Node, source []byte, aliases map[string]bool) {

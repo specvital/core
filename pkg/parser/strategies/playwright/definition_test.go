@@ -642,4 +642,49 @@ it('it without import', async ({ page }) => {
 		assert.Equal(t, "test without import", testFile.Tests[0].Name)
 		assert.Equal(t, "it without import", testFile.Tests[1].Name)
 	})
+
+	t.Run("tests with import type should still detect it", func(t *testing.T) {
+		source := `
+import type { Cookie } from '@playwright/test';
+import { contextTest as it, expect } from '../config/browserTest';
+
+it('should work with type import', async ({ context, page }) => {
+  await page.goto('https://example.com');
+});
+
+it('another test', async ({ context }) => {
+  await context.addCookies([{ name: 'test', value: '123' }]);
+});
+`
+		parser := &PlaywrightParser{}
+		ctx := context.Background()
+
+		testFile, err := parser.Parse(ctx, []byte(source), "cookies.spec.ts")
+
+		require.NoError(t, err)
+		assert.Equal(t, "playwright", testFile.Framework)
+		require.Len(t, testFile.Tests, 2, "Both tests should be detected even with import type")
+		assert.Equal(t, "should work with type import", testFile.Tests[0].Name)
+		assert.Equal(t, "another test", testFile.Tests[1].Name)
+	})
+
+	t.Run("import type does not affect value import detection", func(t *testing.T) {
+		source := `
+import type { Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+
+test('should work normally', async ({ page }) => {
+  await page.goto('https://example.com');
+});
+`
+		parser := &PlaywrightParser{}
+		ctx := context.Background()
+
+		testFile, err := parser.Parse(ctx, []byte(source), "mixed-import.spec.ts")
+
+		require.NoError(t, err)
+		assert.Equal(t, "playwright", testFile.Framework)
+		require.Len(t, testFile.Tests, 1, "Test should be detected with mixed imports")
+		assert.Equal(t, "should work normally", testFile.Tests[0].Name)
+	})
 }

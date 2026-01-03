@@ -3,7 +3,7 @@
   "ref": "v1.49.0",
   "expectedFrameworks": ["junit4", "playwright"],
   "fileCount": 473,
-  "testCount": 5332,
+  "testCount": 5758,
   "frameworkCounts": {
     "junit4": 1,
     "playwright": 472
