@@ -2,10 +2,10 @@
   "repository": "testfx",
   "ref": "v4.0.2",
   "expectedFrameworks": ["mstest"],
-  "fileCount": 264,
-  "testCount": 1668,
+  "fileCount": 320,
+  "testCount": 1813,
   "frameworkCounts": {
-    "mstest": 264
+    "mstest": 320
   },
   "sampleFiles": [
     {
@@ -130,7 +130,7 @@
     }
   ],
   "stats": {
-    "filesMatched": 264,
-    "filesScanned": 509
+    "filesMatched": 320,
+    "filesScanned": 675
   }
 }

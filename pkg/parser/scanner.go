@@ -809,9 +809,9 @@ func isCSharpTestFile(path string) bool {
 	if strings.Contains(normalizedPath, ".Specs/") || strings.Contains(normalizedPath, ".Spec/") {
 		return true
 	}
-	// "Tests/" as project folder pattern (both capitalized and lowercase)
-	if strings.HasPrefix(normalizedPath, "Tests/") || strings.Contains(normalizedPath, "/Tests/") ||
-		strings.HasPrefix(normalizedPath, "tests/") {
+	// "test/", "tests/", "Tests/" as project folder patterns
+	if strings.HasPrefix(normalizedPath, "test/") || strings.HasPrefix(normalizedPath, "tests/") ||
+		strings.HasPrefix(normalizedPath, "Tests/") || strings.Contains(normalizedPath, "/Tests/") {
 		return true
 	}
 

@@ -18,6 +18,7 @@ import (
 	_ "github.com/specvital/core/pkg/parser/strategies/cargotest"
 	_ "github.com/specvital/core/pkg/parser/strategies/gtest"
 	_ "github.com/specvital/core/pkg/parser/strategies/jest"
+	_ "github.com/specvital/core/pkg/parser/strategies/mstest"
 	_ "github.com/specvital/core/pkg/parser/strategies/phpunit"
 )
 
@@ -1093,6 +1094,58 @@ fn integration_test() {
 		file := result.Inventory.Files[0]
 		if file.Framework != "cargo-test" {
 			t.Errorf("expected framework 'cargo-test', got %q", file.Framework)
+		}
+	})
+}
+
+func TestScan_CSharpTestDirectory(t *testing.T) {
+	t.Run("should discover C# files in test/ directory", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		// Create test/SomeProject/ directory structure
+		testDir := filepath.Join(tmpDir, "test", "SomeProject")
+		if err := os.MkdirAll(testDir, 0755); err != nil {
+			t.Fatalf("failed to create test dir: %v", err)
+		}
+
+		// Create a C# MSTest file with non-standard naming (like DataRowTests_Regular.cs)
+		testContent := []byte(`using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace SomeProject;
+
+[TestClass]
+public class DataRowTests_Regular
+{
+    [TestMethod]
+    public void Test1() => Assert.IsTrue(true);
+}
+`)
+		testFile := filepath.Join(testDir, "DataRowTests_Regular.cs")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(result.Inventory.Files) != 1 {
+			t.Fatalf("expected 1 file, got %d", len(result.Inventory.Files))
+		}
+
+		file := result.Inventory.Files[0]
+		if file.Framework != "mstest" {
+			t.Errorf("expected framework 'mstest', got %q", file.Framework)
+		}
+		if file.Language != "csharp" {
+			t.Errorf("expected language 'csharp', got %q", file.Language)
 		}
 	})
 }
