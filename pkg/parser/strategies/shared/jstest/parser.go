@@ -128,7 +128,7 @@ func ProcessEachSuites(callNode *sitter.Node, _ []string, nameTemplate string, c
 	AddSuiteToTarget(suite, parentSuite, file)
 }
 
-// ProcessEachCall handles .each() call patterns for both describe and test/it.
+// ProcessEachCall handles .each() and .for() call patterns for both describe and test/it.
 func ProcessEachCall(outerCall, innerCall, outerArgs *sitter.Node, source []byte, filename string, file *domain.TestFile, currentSuite *domain.TestSuite) {
 	innerFunc := innerCall.ChildByFieldName("function")
 	innerArgs := innerCall.ChildByFieldName("arguments")
@@ -147,9 +147,11 @@ func ProcessEachCall(outerCall, innerCall, outerArgs *sitter.Node, source []byte
 	callback := FindCallback(outerArgs)
 
 	switch funcName {
-	case FuncDescribe + "." + ModifierEach, FuncContext + "." + ModifierEach, FuncSuite + "." + ModifierEach:
+	case FuncDescribe + "." + ModifierEach, FuncContext + "." + ModifierEach, FuncSuite + "." + ModifierEach,
+		FuncDescribe + "." + ModifierFor, FuncContext + "." + ModifierFor, FuncSuite + "." + ModifierFor:
 		ProcessEachSuites(outerCall, testCases, nameTemplate, callback, source, filename, file, currentSuite, status, modifier)
-	case FuncIt + "." + ModifierEach, FuncTest + "." + ModifierEach, FuncSpecify + "." + ModifierEach:
+	case FuncIt + "." + ModifierEach, FuncTest + "." + ModifierEach, FuncSpecify + "." + ModifierEach,
+		FuncIt + "." + ModifierFor, FuncTest + "." + ModifierFor, FuncSpecify + "." + ModifierFor:
 		ProcessEachTests(outerCall, testCases, nameTemplate, filename, file, currentSuite, status, modifier)
 	}
 }

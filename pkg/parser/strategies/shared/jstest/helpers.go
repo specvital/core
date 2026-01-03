@@ -193,6 +193,8 @@ func ParseSimpleMemberExpression(obj, prop *sitter.Node, source []byte) (string,
 		return objName, domain.TestStatusActive, ""
 	case ModifierEach:
 		return objName + "." + ModifierEach, domain.TestStatusActive, ""
+	case ModifierFor:
+		return objName + "." + ModifierFor, domain.TestStatusActive, ""
 	case ModifierOnly:
 		return objName, domain.TestStatusFocused, ModifierOnly
 	case ModifierSkip:
@@ -226,6 +228,9 @@ func ParseNestedMemberExpression(obj, prop *sitter.Node, source []byte) (string,
 		if propName == ModifierEach {
 			return objName + "." + ModifierEach, domain.TestStatusActive, ""
 		}
+		if propName == ModifierFor {
+			return objName + "." + ModifierFor, domain.TestStatusActive, ""
+		}
 		return objName, status, modifier
 	}
 
@@ -237,6 +242,9 @@ func ParseNestedMemberExpression(obj, prop *sitter.Node, source []byte) (string,
 
 	if propName == ModifierEach {
 		return objName + "." + ModifierEach, status, modifier
+	}
+	if propName == ModifierFor {
+		return objName + "." + ModifierFor, status, modifier
 	}
 
 	return "", status, modifier

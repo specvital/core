@@ -25,6 +25,7 @@ const (
 
 	ModifierConcurrent = "concurrent"
 	ModifierEach       = "each"
+	ModifierFor        = "for"
 	ModifierOnly       = "only"
 	ModifierSkip       = "skip"
 	ModifierTodo       = "todo"

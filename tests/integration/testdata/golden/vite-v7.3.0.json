@@ -1,18 +1,18 @@
 {
   "repository": "vite",
-  "ref": "v6.0.0",
+  "ref": "v7.3.0",
   "expectedFrameworks": ["vitest"],
-  "fileCount": 232,
-  "testCount": 1061,
+  "fileCount": 322,
+  "testCount": 1290,
   "frameworkCounts": {
-    "vitest": 232
+    "vitest": 322
   },
   "sampleFiles": [
     {
       "path": "packages/create-vite/__tests__/cli.spec.ts",
       "framework": "vitest",
       "suiteCount": 0,
-      "testCount": 14
+      "testCount": 20
     },
     {
       "path": "packages/plugin-legacy/src/__tests__/readme.spec.ts",
@@ -35,26 +35,32 @@
     {
       "path": "packages/vite/src/node/__tests__/build.spec.ts",
       "framework": "vitest",
-      "suiteCount": 4,
-      "testCount": 35
+      "suiteCount": 5,
+      "testCount": 46
     },
     {
       "path": "packages/vite/src/node/__tests__/config.spec.ts",
       "framework": "vitest",
-      "suiteCount": 4,
-      "testCount": 18
+      "suiteCount": 5,
+      "testCount": 31
+    },
+    {
+      "path": "packages/vite/src/node/__tests__/constants.spec.ts",
+      "framework": "vitest",
+      "suiteCount": 0,
+      "testCount": 1
     },
     {
       "path": "packages/vite/src/node/__tests__/dev.spec.ts",
       "framework": "vitest",
-      "suiteCount": 1,
-      "testCount": 1
+      "suiteCount": 2,
+      "testCount": 2
     },
     {
       "path": "packages/vite/src/node/__tests__/env.spec.ts",
       "framework": "vitest",
       "suiteCount": 1,
-      "testCount": 7
+      "testCount": 8
     },
     {
       "path": "packages/vite/src/node/__tests__/environment.spec.ts",
@@ -75,62 +81,56 @@
       "testCount": 0
     },
     {
-      "path": "packages/vite/src/node/__tests__/fixtures/dynamic-import/dep.mjs",
+      "path": "packages/vite/src/node/__tests__/fixtures/config/entry/imports-field.ts",
       "framework": "vitest",
       "suiteCount": 0,
       "testCount": 0
     },
     {
-      "path": "packages/vite/src/node/__tests__/fixtures/dynamic-import/entry.mjs",
+      "path": "packages/vite/src/node/__tests__/fixtures/config/entry/vite.config.import-attributes.ts",
       "framework": "vitest",
       "suiteCount": 0,
       "testCount": 0
     },
     {
-      "path": "packages/vite/src/node/__tests__/fixtures/emit-assets/entry.mjs",
+      "path": "packages/vite/src/node/__tests__/fixtures/config/entry/vite.config.ts",
       "framework": "vitest",
       "suiteCount": 0,
       "testCount": 0
     },
     {
-      "path": "packages/vite/src/node/__tests__/fixtures/environment-alias/test.client.js",
+      "path": "packages/vite/src/node/__tests__/fixtures/config/import-meta/vite.config.ts",
       "framework": "vitest",
       "suiteCount": 0,
       "testCount": 0
     },
     {
-      "path": "packages/vite/src/node/__tests__/fixtures/environment-alias/test.rsc.js",
+      "path": "packages/vite/src/node/__tests__/fixtures/config/native-import/basic.js",
       "framework": "vitest",
       "suiteCount": 0,
       "testCount": 0
     },
     {
-      "path": "packages/vite/src/node/__tests__/fixtures/environment-alias/test.ssr.js",
+      "path": "packages/vite/src/node/__tests__/fixtures/config/plugin-module-condition/index.cjs",
       "framework": "vitest",
       "suiteCount": 0,
       "testCount": 0
     },
     {
-      "path": "packages/vite/src/node/__tests__/fixtures/file-url/entry.js",
+      "path": "packages/vite/src/node/__tests__/fixtures/config/plugin-module-condition/index.d.ts",
       "framework": "vitest",
       "suiteCount": 0,
       "testCount": 0
     },
     {
-      "path": "packages/vite/src/node/__tests__/fixtures/test-dep-conditions-app/entry-with-module.js",
-      "framework": "vitest",
-      "suiteCount": 0,
-      "testCount": 0
-    },
-    {
-      "path": "packages/vite/src/node/__tests__/fixtures/test-dep-conditions-app/entry.js",
+      "path": "packages/vite/src/node/__tests__/fixtures/config/plugin-module-condition/index.mjs",
       "framework": "vitest",
       "suiteCount": 0,
       "testCount": 0
     }
   ],
   "stats": {
-    "filesMatched": 232,
-    "filesScanned": 232
+    "filesMatched": 322,
+    "filesScanned": 322
   }
 }

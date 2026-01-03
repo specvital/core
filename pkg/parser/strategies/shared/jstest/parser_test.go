@@ -301,6 +301,27 @@ func TestParse_Each(t *testing.T) {
 			wantFirst: "test %s (dynamic cases)",
 			isSuite:   false,
 		},
+		{
+			name:      "should parse test.for as single dynamic test (ADR-02, Vitest 4.0+)",
+			source:    `test.for([[1], [2], [3]])('test %d', () => {});`,
+			wantCount: 1,
+			wantFirst: "test %d (dynamic cases)",
+			isSuite:   false,
+		},
+		{
+			name:      "should parse it.for as single dynamic test (ADR-02, Vitest 4.0+)",
+			source:    `it.for([['a'], ['b']])('test %s', () => {});`,
+			wantCount: 1,
+			wantFirst: "test %s (dynamic cases)",
+			isSuite:   false,
+		},
+		{
+			name:      "should parse describe.for as single dynamic suite (ADR-02, Vitest 4.0+)",
+			source:    `describe.for([['x'], ['y']])('suite %s', () => {});`,
+			wantCount: 1,
+			wantFirst: "suite %s (dynamic cases)",
+			isSuite:   true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -662,6 +683,27 @@ func TestParse_ConcurrentEach(t *testing.T) {
 		{
 			name:      "should parse describe.concurrent.each as single dynamic suite (ADR-02)",
 			source:    `describe.concurrent.each([['x'], ['y']])('suite %s', () => {});`,
+			wantCount: 1,
+			wantFirst: "suite %s (dynamic cases)",
+			isSuite:   true,
+		},
+		{
+			name:      "should parse test.concurrent.for as single dynamic test (ADR-02, Vitest 4.0+)",
+			source:    `test.concurrent.for([[1], [2], [3]])('test %d', async () => {});`,
+			wantCount: 1,
+			wantFirst: "test %d (dynamic cases)",
+			isSuite:   false,
+		},
+		{
+			name:      "should parse it.concurrent.for as single dynamic test (ADR-02, Vitest 4.0+)",
+			source:    `it.concurrent.for([['a'], ['b']])('test %s', async () => {});`,
+			wantCount: 1,
+			wantFirst: "test %s (dynamic cases)",
+			isSuite:   false,
+		},
+		{
+			name:      "should parse describe.concurrent.for as single dynamic suite (ADR-02, Vitest 4.0+)",
+			source:    `describe.concurrent.for([['x'], ['y']])('suite %s', () => {});`,
 			wantCount: 1,
 			wantFirst: "suite %s (dynamic cases)",
 			isSuite:   true,
