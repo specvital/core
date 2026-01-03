@@ -262,8 +262,9 @@ repositories:
 
   - name: alamofire
     url: https://github.com/Alamofire/Alamofire
-    ref: 5.10.2
+    ref: master
     frameworks:
+      - swift-testing
       - xctest
 
   - name: quick-command-buttons

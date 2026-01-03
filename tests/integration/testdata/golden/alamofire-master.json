@@ -1,11 +1,12 @@
 {
   "repository": "alamofire",
-  "ref": "5.10.2",
-  "expectedFrameworks": ["xctest"],
-  "fileCount": 32,
-  "testCount": 803,
+  "ref": "master",
+  "expectedFrameworks": ["swift-testing", "xctest"],
+  "fileCount": 33,
+  "testCount": 750,
   "frameworkCounts": {
-    "xctest": 32
+    "swift-testing": 4,
+    "xctest": 29
   },
   "sampleFiles": [
     {
@@ -76,7 +77,7 @@
     },
     {
       "path": "Tests/LeaksTests.swift",
-      "framework": "xctest",
+      "framework": "swift-testing",
       "suiteCount": 1,
       "testCount": 1
     },
@@ -91,6 +92,12 @@
       "framework": "xctest",
       "suiteCount": 1,
       "testCount": 19
+    },
+    {
+      "path": "Tests/OfflineRetrierTests.swift",
+      "framework": "swift-testing",
+      "suiteCount": 1,
+      "testCount": 7
     },
     {
       "path": "Tests/ParameterEncoderTests.swift",
@@ -108,7 +115,7 @@
       "path": "Tests/ProtectedTests.swift",
       "framework": "xctest",
       "suiteCount": 3,
-      "testCount": 5
+      "testCount": 4
     },
     {
       "path": "Tests/RedirectHandlerTests.swift",
@@ -118,19 +125,13 @@
     },
     {
       "path": "Tests/RequestInterceptorTests.swift",
-      "framework": "xctest",
+      "framework": "swift-testing",
       "suiteCount": 6,
       "testCount": 32
-    },
-    {
-      "path": "Tests/RequestModifierTests.swift",
-      "framework": "xctest",
-      "suiteCount": 1,
-      "testCount": 8
     }
   ],
   "stats": {
-    "filesMatched": 32,
-    "filesScanned": 40
+    "filesMatched": 33,
+    "filesScanned": 43
   }
 }
