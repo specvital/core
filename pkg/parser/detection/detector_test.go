@@ -617,3 +617,190 @@ func TestDetector_TieBreakingSameDepthPaths(t *testing.T) {
 		}
 	}
 }
+
+// TestDetector_StrongFilename_CypressOverridesPlaywrightScope tests that .cy.tsx files
+// are detected as Cypress even when they exist within a Playwright config scope.
+// This is the key bug fix - strong filename patterns should override scope detection.
+func TestDetector_StrongFilename_CypressOverridesPlaywrightScope(t *testing.T) {
+	registry := framework.NewRegistry()
+
+	// Register Cypress with filename matcher that returns DefiniteMatch(100)
+	registry.Register(&framework.Definition{
+		Name:      "cypress",
+		Languages: []domain.Language{domain.LanguageTypeScript, domain.LanguageJavaScript},
+		Matchers: []framework.Matcher{
+			&cypressFilenameMatcher{},
+		},
+	})
+
+	// Register Playwright with scope detection
+	registry.Register(&framework.Definition{
+		Name:      "playwright",
+		Languages: []domain.Language{domain.LanguageTypeScript, domain.LanguageJavaScript},
+		Matchers: []framework.Matcher{
+			matchers.NewImportMatcher("@playwright/test", "@playwright/test/"),
+		},
+	})
+
+	detector := NewDetector(registry)
+
+	// Setup Playwright scope that covers the entire project
+	projectScope := framework.NewProjectScope()
+	playwrightScope := &framework.ConfigScope{
+		ConfigPath:  "/project/playwright.config.ts",
+		BaseDir:     "/project",
+		Framework:   "playwright",
+		GlobalsMode: false,
+	}
+	projectScope.AddConfig("/project/playwright.config.ts", playwrightScope)
+	detector.SetProjectScope(projectScope)
+
+	// Cypress test file with Cypress-specific content (but no explicit import)
+	content := []byte(`
+describe('Button', () => {
+  it('renders primary button', async () => {
+    cy.mount(<CSF3Primary />);
+    cy.get('button').should('contain.text', 'foo');
+  });
+});
+`)
+
+	// Test .cy.tsx file - should be detected as Cypress despite Playwright scope
+	result := detector.Detect(context.Background(), "/project/stories/Button.cy.tsx", content)
+
+	if result.Framework != "cypress" {
+		t.Errorf("expected framework 'cypress', got '%s'", result.Framework)
+	}
+
+	if result.Source != SourceStrongFilename {
+		t.Errorf("expected source 'strong-filename', got '%s'", result.Source)
+	}
+}
+
+// TestDetector_StrongFilename_RegularSpecFileUsesScope tests that regular .spec.ts files
+// still use scope detection when no strong filename pattern matches.
+func TestDetector_StrongFilename_RegularSpecFileUsesScope(t *testing.T) {
+	registry := framework.NewRegistry()
+
+	// Register Cypress with filename matcher
+	registry.Register(&framework.Definition{
+		Name:      "cypress",
+		Languages: []domain.Language{domain.LanguageTypeScript, domain.LanguageJavaScript},
+		Matchers: []framework.Matcher{
+			&cypressFilenameMatcher{},
+		},
+	})
+
+	// Register Playwright
+	registry.Register(&framework.Definition{
+		Name:      "playwright",
+		Languages: []domain.Language{domain.LanguageTypeScript, domain.LanguageJavaScript},
+		Matchers: []framework.Matcher{
+			matchers.NewImportMatcher("@playwright/test", "@playwright/test/"),
+		},
+	})
+
+	detector := NewDetector(registry)
+
+	// Setup Playwright scope
+	projectScope := framework.NewProjectScope()
+	playwrightScope := &framework.ConfigScope{
+		ConfigPath:  "/project/playwright.config.ts",
+		BaseDir:     "/project",
+		Framework:   "playwright",
+		GlobalsMode: true,
+	}
+	projectScope.AddConfig("/project/playwright.config.ts", playwrightScope)
+	detector.SetProjectScope(projectScope)
+
+	// Regular test file (not .cy.ts) with no explicit import
+	content := []byte(`
+test('should work', async ({ page }) => {
+  await page.goto('/');
+});
+`)
+
+	// Regular .spec.ts file - should use Playwright scope
+	result := detector.Detect(context.Background(), "/project/e2e/login.spec.ts", content)
+
+	if result.Framework != "playwright" {
+		t.Errorf("expected framework 'playwright', got '%s'", result.Framework)
+	}
+
+	if result.Source != SourceConfigScope {
+		t.Errorf("expected source 'config-scope', got '%s'", result.Source)
+	}
+}
+
+// TestDetector_StrongFilename_ImportStillWins tests that import detection still
+// takes priority over strong filename detection.
+func TestDetector_StrongFilename_ImportStillWins(t *testing.T) {
+	registry := framework.NewRegistry()
+
+	// Register Cypress with filename matcher
+	registry.Register(&framework.Definition{
+		Name:      "cypress",
+		Languages: []domain.Language{domain.LanguageTypeScript, domain.LanguageJavaScript},
+		Matchers: []framework.Matcher{
+			&cypressFilenameMatcher{},
+		},
+	})
+
+	// Register Vitest with import matcher
+	registry.Register(&framework.Definition{
+		Name:      "vitest",
+		Languages: []domain.Language{domain.LanguageTypeScript, domain.LanguageJavaScript},
+		Matchers: []framework.Matcher{
+			matchers.NewImportMatcher("vitest", "vitest/"),
+		},
+	})
+
+	detector := NewDetector(registry)
+
+	// File named .cy.tsx but with vitest import - import should win
+	content := []byte(`
+import { describe, it, expect } from 'vitest';
+
+describe('test', () => {
+  it('works', () => {
+    expect(true).toBe(true);
+  });
+});
+`)
+
+	result := detector.Detect(context.Background(), "/project/test.cy.tsx", content)
+
+	if result.Framework != "vitest" {
+		t.Errorf("expected framework 'vitest' (import wins), got '%s'", result.Framework)
+	}
+
+	if result.Source != SourceImport {
+		t.Errorf("expected source 'import', got '%s'", result.Source)
+	}
+}
+
+// cypressFilenameMatcher is a test double that mimics the real Cypress filename matcher.
+type cypressFilenameMatcher struct{}
+
+func (m *cypressFilenameMatcher) Match(_ context.Context, signal framework.Signal) framework.MatchResult {
+	if signal.Type != framework.SignalFileName {
+		return framework.NoMatch()
+	}
+
+	// Match *.cy.{js,ts,jsx,tsx} pattern
+	filename := signal.Value
+	if len(filename) > 6 {
+		suffix := filename[len(filename)-6:]
+		if suffix == ".cy.ts" || suffix == ".cy.js" {
+			return framework.DefiniteMatch("filename: *.cy.{js,ts}")
+		}
+	}
+	if len(filename) > 7 {
+		suffix := filename[len(filename)-7:]
+		if suffix == ".cy.tsx" || suffix == ".cy.jsx" {
+			return framework.DefiniteMatch("filename: *.cy.{jsx,tsx}")
+		}
+	}
+
+	return framework.NoMatch()
+}

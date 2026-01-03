@@ -14,8 +14,9 @@ import (
 // Detector performs framework detection using early-return approach.
 // Detection priority (highest to lowest):
 // 1. Import statements - explicit developer intent (immediate return)
-// 2. Config scope - project-level configuration
-// 3. Content patterns - framework-specific code patterns
+// 2. Strong filename patterns - explicit file naming conventions (e.g., *.cy.ts)
+// 3. Config scope - project-level configuration
+// 4. Content patterns - framework-specific code patterns
 //
 // The first successful match at any level immediately returns.
 type Detector struct {
@@ -59,6 +60,10 @@ func (d *Detector) Detect(ctx context.Context, filePath string, content []byte) 
 
 	if fw := d.detectFromImport(ctx, lang, content, frameworks); fw != "" {
 		return Confirmed(fw, SourceImport)
+	}
+
+	if fw := d.detectFromStrongFilename(ctx, filePath, frameworks); fw != "" {
+		return Confirmed(fw, SourceStrongFilename)
 	}
 
 	if result := d.detectFromScope(filePath, lang); result.Framework != "" {
@@ -118,6 +123,33 @@ func (d *Detector) detectFromImport(ctx context.Context, lang domain.Language, c
 				if mr.Confidence > 0 && !mr.Negative {
 					return fw.Name
 				}
+			}
+		}
+	}
+
+	return ""
+}
+
+// detectFromStrongFilename checks for framework-specific strong filename patterns.
+// Strong patterns are those with DefiniteMatch (Confidence=100), like *.cy.{js,ts,jsx,tsx} for Cypress.
+// These patterns represent explicit developer intent and should override config scope detection.
+// Returns framework name if found, empty string otherwise.
+func (d *Detector) detectFromStrongFilename(ctx context.Context, filePath string, frameworks []*framework.Definition) string {
+	filename := filepath.Base(filePath)
+
+	for _, fw := range frameworks {
+		for _, matcher := range fw.Matchers {
+			signal := framework.Signal{
+				Type:  framework.SignalFileName,
+				Value: filename,
+			}
+
+			mr := matcher.Match(ctx, signal)
+			// Only consider definite matches (Confidence=100) for strong filename detection.
+			// This ensures only explicit patterns like *.cy.ts override scope detection,
+			// while weaker patterns (e.g., test_*.py with Confidence=20) fall through.
+			if mr.Confidence == 100 && !mr.Negative {
+				return fw.Name
 			}
 		}
 	}

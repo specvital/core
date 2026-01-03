@@ -9,6 +9,11 @@ const (
 	// SourceImport indicates detection via explicit import statement (highest confidence).
 	SourceImport DetectionSource = "import"
 
+	// SourceStrongFilename indicates detection via strong filename pattern (e.g., *.cy.ts).
+	// This takes precedence over config scope because explicit filename patterns
+	// represent clear developer intent.
+	SourceStrongFilename DetectionSource = "strong-filename"
+
 	// SourceConfigScope indicates detection via config file scope.
 	SourceConfigScope DetectionSource = "config-scope"
 

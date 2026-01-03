@@ -3,11 +3,11 @@
   "ref": "v8.4.5",
   "expectedFrameworks": ["cypress", "jest", "playwright", "vitest"],
   "fileCount": 309,
-  "testCount": 2912,
+  "testCount": 2917,
   "frameworkCounts": {
-    "cypress": 3,
+    "cypress": 5,
     "jest": 2,
-    "playwright": 22,
+    "playwright": 20,
     "vitest": 282
   },
   "sampleFiles": [
