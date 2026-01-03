@@ -3,7 +3,7 @@
   "ref": "7.10.2",
   "expectedFrameworks": ["junit5", "testng"],
   "fileCount": 1720,
-  "testCount": 3152,
+  "testCount": 3239,
   "frameworkCounts": {
     "junit5": 10,
     "testng": 1710
@@ -91,7 +91,7 @@
       "path": "testng-core/src/test/java/org/testng/TestRunnerTest.java",
       "framework": "testng",
       "suiteCount": 1,
-      "testCount": 3
+      "testCount": 6
     },
     {
       "path": "testng-core/src/test/java/org/testng/internal/ConsoleReporter.java",

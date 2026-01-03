@@ -18,6 +18,10 @@ import (
 
 const frameworkName = framework.FrameworkTestNG
 
+// maxNestedDepth limits recursion depth for nested class parsing.
+// TestNG allows arbitrary nesting, but we limit to prevent stack overflow.
+const maxNestedDepth = 20
+
 func init() {
 	framework.Register(NewDefinition())
 }
@@ -165,10 +169,10 @@ func parseTestClasses(root *sitter.Node, source []byte, filename string) []domai
 
 	parser.WalkTree(root, func(node *sitter.Node) bool {
 		if node.Type() == javaast.NodeClassDeclaration {
-			if suite := parseTestClass(node, source, filename); suite != nil {
+			if suite := parseTestClassWithDepth(node, source, filename, 0); suite != nil {
 				suites = append(suites, *suite)
 			}
-			return false
+			return false // Don't recurse into nested classes here; handled by parseTestClassWithDepth
 		}
 		return true
 	})
@@ -176,7 +180,11 @@ func parseTestClasses(root *sitter.Node, source []byte, filename string) []domai
 	return suites
 }
 
-func parseTestClass(node *sitter.Node, source []byte, filename string) *domain.TestSuite {
+func parseTestClassWithDepth(node *sitter.Node, source []byte, filename string, depth int) *domain.TestSuite {
+	if depth > maxNestedDepth {
+		return nil
+	}
+
 	className := javaast.GetClassName(node, source)
 	if className == "" {
 		return nil
@@ -192,18 +200,26 @@ func parseTestClass(node *sitter.Node, source []byte, filename string) *domain.T
 	}
 
 	var tests []domain.Test
+	var nestedSuites []domain.TestSuite
 
 	for i := 0; i < int(body.ChildCount()); i++ {
 		child := body.Child(i)
 
-		if child.Type() == javaast.NodeMethodDeclaration {
+		switch child.Type() {
+		case javaast.NodeMethodDeclaration:
 			if test := parseTestMethod(child, source, filename, classStatus, classModifier, hasClassLevelTest); test != nil {
 				tests = append(tests, *test)
+			}
+
+		case javaast.NodeClassDeclaration:
+			// Handle nested classes (TestNG doesn't require @Nested annotation unlike JUnit5)
+			if nested := parseTestClassWithDepth(child, source, filename, depth+1); nested != nil {
+				nestedSuites = append(nestedSuites, *nested)
 			}
 		}
 	}
 
-	if len(tests) == 0 {
+	if len(tests) == 0 && len(nestedSuites) == 0 {
 		return nil
 	}
 
@@ -213,6 +229,7 @@ func parseTestClass(node *sitter.Node, source []byte, filename string) *domain.T
 		Modifier: classModifier,
 		Location: parser.GetLocation(node, filename),
 		Tests:    tests,
+		Suites:   nestedSuites,
 	}
 }
 

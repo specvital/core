@@ -588,4 +588,184 @@ class NoTests {
 			t.Errorf("expected 0 Suites, got %d", len(testFile.Suites))
 		}
 	})
+
+	t.Run("nested class with @Test method", func(t *testing.T) {
+		source := `
+package com.example;
+
+import org.testng.annotations.Test;
+
+public class OuterClass {
+    public static class InnerTestClass {
+        @Test
+        public void testInner() {}
+    }
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "OuterClass.java")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite (outer), got %d", len(testFile.Suites))
+		}
+
+		outerSuite := testFile.Suites[0]
+		if outerSuite.Name != "OuterClass" {
+			t.Errorf("expected outer Suite.Name='OuterClass', got '%s'", outerSuite.Name)
+		}
+		if len(outerSuite.Tests) != 0 {
+			t.Errorf("expected 0 Tests in outer suite, got %d", len(outerSuite.Tests))
+		}
+		if len(outerSuite.Suites) != 1 {
+			t.Fatalf("expected 1 nested Suite, got %d", len(outerSuite.Suites))
+		}
+
+		nestedSuite := outerSuite.Suites[0]
+		if nestedSuite.Name != "InnerTestClass" {
+			t.Errorf("expected nested Suite.Name='InnerTestClass', got '%s'", nestedSuite.Name)
+		}
+		if len(nestedSuite.Tests) != 1 {
+			t.Fatalf("expected 1 Test in nested suite, got %d", len(nestedSuite.Tests))
+		}
+		if nestedSuite.Tests[0].Name != "testInner" {
+			t.Errorf("expected Test.Name='testInner', got '%s'", nestedSuite.Tests[0].Name)
+		}
+	})
+
+	t.Run("multiple nested classes with @Test methods", func(t *testing.T) {
+		source := `
+package com.example;
+
+import org.testng.annotations.Test;
+
+public class TestClassContainer {
+    public static class FirstTestClass {
+        @Test
+        public void testMethod() {}
+    }
+
+    public static class SecondTestClass {
+        @Test
+        public void testMethod() {}
+    }
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "TestClassContainer.java")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite (outer), got %d", len(testFile.Suites))
+		}
+
+		outerSuite := testFile.Suites[0]
+		if len(outerSuite.Suites) != 2 {
+			t.Fatalf("expected 2 nested Suites, got %d", len(outerSuite.Suites))
+		}
+
+		if outerSuite.Suites[0].Name != "FirstTestClass" {
+			t.Errorf("expected Suites[0].Name='FirstTestClass', got '%s'", outerSuite.Suites[0].Name)
+		}
+		if outerSuite.Suites[1].Name != "SecondTestClass" {
+			t.Errorf("expected Suites[1].Name='SecondTestClass', got '%s'", outerSuite.Suites[1].Name)
+		}
+
+		totalTests := len(outerSuite.Suites[0].Tests) + len(outerSuite.Suites[1].Tests)
+		if totalTests != 2 {
+			t.Errorf("expected 2 total Tests in nested suites, got %d", totalTests)
+		}
+	})
+
+	t.Run("outer and nested class both have @Test methods", func(t *testing.T) {
+		source := `
+package com.example;
+
+import org.testng.annotations.Test;
+
+public class NestedStaticSampleTest {
+    @Test
+    public void outerTest() {}
+
+    public static class Nested {
+        @Test
+        public void nestedTest() {}
+    }
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "NestedStaticSampleTest.java")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite (outer), got %d", len(testFile.Suites))
+		}
+
+		outerSuite := testFile.Suites[0]
+		if outerSuite.Name != "NestedStaticSampleTest" {
+			t.Errorf("expected outer Suite.Name='NestedStaticSampleTest', got '%s'", outerSuite.Name)
+		}
+		if len(outerSuite.Tests) != 1 {
+			t.Fatalf("expected 1 Test in outer suite, got %d", len(outerSuite.Tests))
+		}
+		if outerSuite.Tests[0].Name != "outerTest" {
+			t.Errorf("expected outer Test.Name='outerTest', got '%s'", outerSuite.Tests[0].Name)
+		}
+
+		if len(outerSuite.Suites) != 1 {
+			t.Fatalf("expected 1 nested Suite, got %d", len(outerSuite.Suites))
+		}
+
+		nestedSuite := outerSuite.Suites[0]
+		if nestedSuite.Name != "Nested" {
+			t.Errorf("expected nested Suite.Name='Nested', got '%s'", nestedSuite.Name)
+		}
+		if len(nestedSuite.Tests) != 1 {
+			t.Fatalf("expected 1 Test in nested suite, got %d", len(nestedSuite.Tests))
+		}
+		if nestedSuite.Tests[0].Name != "nestedTest" {
+			t.Errorf("expected nested Test.Name='nestedTest', got '%s'", nestedSuite.Tests[0].Name)
+		}
+	})
+
+	t.Run("nested class with class-level @Test", func(t *testing.T) {
+		source := `
+package com.example;
+
+import org.testng.annotations.Test;
+
+public class ClassContainer {
+    @Test
+    public static class NonGroupClass {
+        public void step1() {}
+        public void step2() {}
+    }
+}
+`
+		testFile, err := p.Parse(ctx, []byte(source), "ClassContainer.java")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(testFile.Suites) != 1 {
+			t.Fatalf("expected 1 Suite (outer), got %d", len(testFile.Suites))
+		}
+
+		outerSuite := testFile.Suites[0]
+		if len(outerSuite.Suites) != 1 {
+			t.Fatalf("expected 1 nested Suite, got %d", len(outerSuite.Suites))
+		}
+
+		nestedSuite := outerSuite.Suites[0]
+		if nestedSuite.Name != "NonGroupClass" {
+			t.Errorf("expected nested Suite.Name='NonGroupClass', got '%s'", nestedSuite.Name)
+		}
+		// Class-level @Test makes all public methods tests
+		if len(nestedSuite.Tests) != 2 {
+			t.Fatalf("expected 2 Tests in nested suite (from class-level @Test), got %d", len(nestedSuite.Tests))
+		}
+	})
 }
