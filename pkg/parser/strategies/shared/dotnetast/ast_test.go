@@ -279,3 +279,73 @@ func TestIsPreprocessorDirective(t *testing.T) {
 		})
 	}
 }
+
+func TestGetAttributeLists_PreprocessorLimitation(t *testing.T) {
+	// This test documents the tree-sitter-c-sharp limitation where
+	// preprocessor directives between attributes are parsed as ERROR nodes.
+	// See GetAttributeLists function comment for details.
+
+	t.Run("attributes without preprocessor work correctly", func(t *testing.T) {
+		source := `public class C {
+    [Fact]
+    [Theory]
+    [InlineData(1)]
+    public void Test() { }
+}`
+		root := parseCS(t, source)
+
+		var attrLists []*sitter.Node
+		walkTree(root, func(n *sitter.Node) bool {
+			if n.Type() == NodeMethodDeclaration {
+				attrLists = GetAttributeLists(n)
+				return false
+			}
+			return true
+		})
+
+		if len(attrLists) != 3 {
+			t.Errorf("expected 3 attribute lists, got %d", len(attrLists))
+		}
+	})
+
+	t.Run("preprocessor between attributes causes ERROR node (known limitation)", func(t *testing.T) {
+		source := `public class C {
+    [Theory]
+    [InlineData(1)]
+#if NET6_0
+    [InlineData(2)]
+#endif
+    public void Test(int x) { }
+}`
+		root := parseCS(t, source)
+
+		// Verify that tree-sitter parses this with an ERROR node
+		hasError := false
+		walkTree(root, func(n *sitter.Node) bool {
+			if n.Type() == "ERROR" {
+				hasError = true
+				return false
+			}
+			return true
+		})
+
+		if !hasError {
+			t.Error("expected ERROR node in AST due to preprocessor between attributes")
+		}
+
+		// GetAttributeLists will only return attributes before the ERROR
+		var attrLists []*sitter.Node
+		walkTree(root, func(n *sitter.Node) bool {
+			if n.Type() == NodeMethodDeclaration {
+				attrLists = GetAttributeLists(n)
+				return false
+			}
+			return true
+		})
+
+		// Due to the limitation, we only get 2 attributes (before #if)
+		if len(attrLists) != 2 {
+			t.Errorf("expected 2 attribute lists (limitation), got %d", len(attrLists))
+		}
+	})
+}

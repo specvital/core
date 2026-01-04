@@ -66,6 +66,20 @@ func GetDeclarationList(node *sitter.Node) *sitter.Node {
 }
 
 // GetAttributeLists returns all attribute_list nodes preceding a declaration.
+//
+// KNOWN LIMITATION: tree-sitter-c-sharp parses preprocessor directives (#if, #else, #elif)
+// between attributes as ERROR nodes instead of preproc_if. This means attributes inside
+// conditional compilation blocks like:
+//
+//	[Theory]
+//	[InlineData(1)]
+//	#if NET6_0_OR_GREATER
+//	[InlineData(2)]  // ← Not detected (parsed as ERROR)
+//	#endif
+//	public void Test(int x) { }
+//
+// will not be fully detected. This is a tree-sitter grammar limitation, not a parser bug.
+// See: https://github.com/tree-sitter/tree-sitter-c-sharp/issues
 func GetAttributeLists(node *sitter.Node) []*sitter.Node {
 	if node == nil {
 		return nil
