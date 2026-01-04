@@ -1,5 +1,102 @@
 # Changelog
 
+## [1.5.0](https://github.com/specvital/core/compare/v1.4.0...v1.5.0) (2026-01-04)
+
+### 🎯 Highlights
+
+#### ✨ Features
+
+- **cargotest:** detect test macros by analyzing same-file macro_rules! definitions ([4f3d697](https://github.com/specvital/core/commit/4f3d6975418aa9b381d8ebbdb59d429c119cbbcb))
+- **junit4:** add JUnit 4 framework support ([7b96c63](https://github.com/specvital/core/commit/7b96c631594e7170273ff83358c4e32c16426854))
+- **junit5:** add Java 21+ implicit class test detection ([d7c1218](https://github.com/specvital/core/commit/d7c1218c4fa8d8e6828b7940f4d6ed2507483d3a))
+- **kotest:** detect tests defined in init blocks ([4a5a2d8](https://github.com/specvital/core/commit/4a5a2d81f294332cbf6b2dc30566923d8c338a11))
+- **source:** add commit timestamp retrieval to GitSource ([afbe437](https://github.com/specvital/core/commit/afbe4372532ffeaff10c9a6f0622c2df70a881bc))
+- **swift-testing:** add Apple Swift Testing framework support ([161b650](https://github.com/specvital/core/commit/161b650a186bdf2fc6a7e85d8b4303d7c3f84fc4))
+- **vitest:** add test.for/it.for API support (Vitest 4.0+) ([5c7c8fa](https://github.com/specvital/core/commit/5c7c8fa6df22d18dda3257171617f68d1792a17d))
+
+#### 🐛 Bug Fixes
+
+- **cargo-test:** add macro-based test detection for Rust ([caa4d1b](https://github.com/specvital/core/commit/caa4d1bd76f2d42bfee1a48a3b01bbc21155ee83))
+- **detection:** detect .cy.ts files as Cypress even within Playwright scope ([8ee2526](https://github.com/specvital/core/commit/8ee2526c4b1af920ff61410dbb5d9e31dbc0f96f))
+- **dotnet:** detect tests inside C# preprocessor directives ([295f836](https://github.com/specvital/core/commit/295f836a750e4b1c8fb7813da03de58d9a1dc0e7))
+- **dotnet:** support individual counting for parameterized test attributes ([e1d0d5f](https://github.com/specvital/core/commit/e1d0d5fff3b46490d4feec3b76498fdffeaa03b9))
+- **gotesting:** support Test_xxx pattern test function detection ([fb7aeaf](https://github.com/specvital/core/commit/fb7aeafcbb5458cdef8ded2d2dba92a80d985c8a))
+- **gtest:** add missing TYPED_TEST and TYPED_TEST_P macro detection ([cbb3914](https://github.com/specvital/core/commit/cbb391430c34fcd1117b7e263088eb553c068066))
+- **gtest:** detect nested tests within tree-sitter ERROR nodes ([0ade3c7](https://github.com/specvital/core/commit/0ade3c7d443947918fa73861cc2910d0f998a5ea))
+- **integration:** fix missing validation for multi-framework repositories ([5abc0a4](https://github.com/specvital/core/commit/5abc0a4c18bbc633d95a9c968c62a97e5eee7e3e))
+- **jest:** support multiple root directories via Jest config roots array ([7e5bfea](https://github.com/specvital/core/commit/7e5bfeaee7940477d41f06265ee27a6400cd9347))
+- **jstest:** add missing test detection in variable declarations ([d17f77d](https://github.com/specvital/core/commit/d17f77df86463b35c20ee13a5fbe4c6cbe22d5f8))
+- **jstest:** count it.each/describe.each as single test ([fdbd484](https://github.com/specvital/core/commit/fdbd484070a159f24e988185cb3265358f75d5bb))
+- **jstest:** detect jscodeshift defineTest calls as dynamic tests ([92bfb56](https://github.com/specvital/core/commit/92bfb5674afff7e89c3161fe1dc09f815b943c6e))
+- **jstest:** detect tests inside IIFE conditional describe/it patterns ([1635945](https://github.com/specvital/core/commit/1635945c34026b2fadf4687f031cdb1f46790e6b))
+- **jstest:** detect tests inside loop statements ([6c5b066](https://github.com/specvital/core/commit/6c5b066793971629fb7ed35f999b71e54c4833ec))
+- **jstest:** detect tests using member expression as test name ([1570397](https://github.com/specvital/core/commit/157039798be41f72f258386c0026e642f4b53747))
+- **jstest:** detect tests with variable names inside forEach callbacks ([efe2ec5](https://github.com/specvital/core/commit/efe2ec5b7dd9d2c3366519a24a6e698498770353))
+- **jstest:** filter out Vitest conditional skip API from test detection ([3280998](https://github.com/specvital/core/commit/3280998a3fad6e900f2e2a3a0c85c95be07bb2ee))
+- **jstest:** fix test detection failure in TSX files ([3d57940](https://github.com/specvital/core/commit/3d57940f70c76a3ed53904ae656088a2887950ff))
+- **jstest:** fix test detection inside custom wrapper functions ([9c91958](https://github.com/specvital/core/commit/9c919581e4b8a3894a886f43737b7c0c32c7a572))
+- **jstest:** support dynamic test detection in forEach/map callbacks and object arrays ([bc51894](https://github.com/specvital/core/commit/bc51894086b4d2730ea7f1dd78203e9e64f83ef9))
+- **jstest:** support ESLint RuleTester.run() pattern detection ([b5e18f9](https://github.com/specvital/core/commit/b5e18f9f5dc975b25b12f11f1970ee3eb0f40903))
+- **jstest:** support include/exclude pattern parsing in Jest/Vitest configs ([801e455](https://github.com/specvital/core/commit/801e45595aa0ec8d1a920bc396efc36a2aa9b716))
+- **junit4:** detect tests inside nested static classes ([5673d83](https://github.com/specvital/core/commit/5673d83cee6c18c758adc5149b49bf411ea2ed83))
+- **junit5:** add @TestFactory and @TestTemplate annotation support ([e868ef5](https://github.com/specvital/core/commit/e868ef56ddabd0ac85af83046c6e6b6c969c6eed))
+- **junit5:** add custom @TestTemplate-based annotation detection ([242e320](https://github.com/specvital/core/commit/242e320505a7dfa7db664187babcc2e22f6d2b6f))
+- **junit5:** detect Kotlin test files ([9090b51](https://github.com/specvital/core/commit/9090b51147cdd6ee4947ae8c02ed46fb666293a6))
+- **junit5:** exclude JUnit4 test files from JUnit5 detection ([02aaed1](https://github.com/specvital/core/commit/02aaed191af6b47097f501f35d0db9421d53d79d))
+- **junit5:** exclude src/main path from test file detection ([7e5ce26](https://github.com/specvital/core/commit/7e5ce26df4fdd5976c3874dd37130e6f4363497e))
+- **kotest:** add missing WordSpec, FreeSpec, ShouldSpec style parsing ([424ab3a](https://github.com/specvital/core/commit/424ab3aa159fe13b9c132fa9117324cd0e5050d1))
+- **kotest:** detect tests inside forEach/map chained calls ([cbd1fb1](https://github.com/specvital/core/commit/cbd1fb1bd85d39a1c0447a59dea58c05fb2624f5))
+- **minitest:** resolve Minitest files being misdetected as RSpec ([93305d9](https://github.com/specvital/core/commit/93305d997c3cfdbd9dc945b59e022f9d611a682b))
+- **mstest:** support C# file discovery under test/ directory ([95bcc31](https://github.com/specvital/core/commit/95bcc31e4f11aeee70b7bf00f52a91775f696618))
+- **parser:** handle NULL bytes in source files that caused test detection failure ([d9f959c](https://github.com/specvital/core/commit/d9f959cf101cef4bdd11603650a5018a34894217))
+- **phpunit:** add missing indirect inheritance detection for \*Test suffix ([106b73d](https://github.com/specvital/core/commit/106b73d5aa1c8cc4354d915d6bbe481044f655c8))
+- **playwright:** detect conditional skip API calls as non-test ([129f0c0](https://github.com/specvital/core/commit/129f0c09ad8bc63c6b942c67ba8154874884aa3f))
+- **playwright:** detect indirect import tests even with import type present ([e353cac](https://github.com/specvital/core/commit/e353cac3091a344f452e797c507a9cfd7483adfc))
+- **playwright:** detect indirect imports and test.extend() patterns ([aa22e18](https://github.com/specvital/core/commit/aa22e18b15173d801805856dd4364bbdca55bbcb))
+- **playwright:** fix config scope-based framework detection bug ([4983492](https://github.com/specvital/core/commit/4983492e1e4ac0908892f9764c8efde5f49e8d61))
+- **playwright:** support test function detection with import aliases ([4ba46b7](https://github.com/specvital/core/commit/4ba46b752406b8439e15ea2aba2f04d07841c60f))
+- **pytest:** fix unittest.mock imports being misclassified as unittest ([4ad41ed](https://github.com/specvital/core/commit/4ad41ed450747445ed3928619d6a2a9bf90e2352))
+- **rspec:** detect tests inside loop blocks (times, each, etc.) ([a68b270](https://github.com/specvital/core/commit/a68b2705d793f145bfd4fff88419f464e5ad615a))
+- **rspec:** resolve RSpec files being misdetected as Minitest ([b21dda9](https://github.com/specvital/core/commit/b21dda9a43b7d3bf5d70c221543c832bc3373aab))
+- **scanner:** exclude **fixtures**, **mocks** directories from scan ([881f360](https://github.com/specvital/core/commit/881f36037d25cb6583b2e1fa30d3e715435801a6))
+- **scanner:** fix symlink duplicate counting and coverage pattern bug ([aba78d1](https://github.com/specvital/core/commit/aba78d169a1f7909307687c67c45d67c19a84b99))
+- **scanner:** use relative path instead of absolute path for test file detection ([e1937d2](https://github.com/specvital/core/commit/e1937d281ab27136b0df8847b8fec84a8de4baa3))
+- **testng:** add missing class-level @Test annotation detection ([7912275](https://github.com/specvital/core/commit/79122754e9a3d413ebb69836434f9bad7bc5ab78))
+- **testng:** detect @Test inside nested classes ([aaad38e](https://github.com/specvital/core/commit/aaad38ed4ff83d1f48e130935acea6f9bc934282))
+- **xunit:** support custom xUnit test attributes (*Fact, *Theory) ([4845628](https://github.com/specvital/core/commit/48456284a5d5df720a05a1b7debfaaa22e1d977c))
+
+### 🔧 Maintenance
+
+#### 📚 Documentation
+
+- **dotnetast:** document tree-sitter-c-sharp preprocessor limitation ([104ec57](https://github.com/specvital/core/commit/104ec5728101e4fed8fcb3593b61dbfc245bcbae))
+- **validate-parser:** add ADR policy review step ([06e46ec](https://github.com/specvital/core/commit/06e46ec548e4c320f303cc004cade92e14261472))
+- **validate-parser:** allow repos.yaml repos on explicit request and enforce Korean report ([a9c1852](https://github.com/specvital/core/commit/a9c18529a9e1f5a396cef46a0bae3622357219b1))
+
+#### ✅ Tests
+
+- add integration test case - kubrickcode/baedal ([b81e4ac](https://github.com/specvital/core/commit/b81e4ac432735abc4afeb1dcba1e7ee84b77b038))
+- add integration test case - specvital/collector ([ba5e703](https://github.com/specvital/core/commit/ba5e703d7087fe3502e5368317ff054658087176))
+- add integration test case - specvital/core ([8523567](https://github.com/specvital/core/commit/85235670ae9407086433b056c83226e23a05c7bb))
+- add integration test case - specvital/web ([17b455f](https://github.com/specvital/core/commit/17b455fc05076c1e1e18ce080ca57156680c5a90))
+- add test case - kubrickcode/quick-command-buttons ([14c93c6](https://github.com/specvital/core/commit/14c93c680b85b581e9d987d43313da2a4b908c01))
+- **junit5:** update integration snapshots for Kotlin support ([3e9aa54](https://github.com/specvital/core/commit/3e9aa548ae730819731dbecebba1bf2b982fbfe9))
+
+#### 🔨 Chore
+
+- add custom commands for parser validation ([c8bd024](https://github.com/specvital/core/commit/c8bd0246c1b466000b1049805254e9954212b6c4))
+- add flask as integration test ([cf63e7c](https://github.com/specvital/core/commit/cf63e7c879c01440f458fcf0876da7d7b62d7690))
+- fix vscode import area not automatically collapsing ([218fb9e](https://github.com/specvital/core/commit/218fb9e5f9e93ceef583237b10854ac3fb6d546e))
+- **integration:** update cypress test repository to v15.8.1 ([36d6040](https://github.com/specvital/core/commit/36d60408103d0310c74a62d85dc7c473e2275a18))
+- setting up devcontainers for testing various languages ​​and frameworks ([0f3b08e](https://github.com/specvital/core/commit/0f3b08ec5ddb18655b70ccdf56f081cdddc71a5f))
+- snapshot update ([601530e](https://github.com/specvital/core/commit/601530e22796d92101eeb7deada55c351108dc2b))
+- sync docs ([d8ec48c](https://github.com/specvital/core/commit/d8ec48c4b2757bda51c8637d1afb420390541577))
+- sync docs ([4716fb2](https://github.com/specvital/core/commit/4716fb2f67a5ce77d87caa71734054dabee57070))
+- sync docs ([bd09a40](https://github.com/specvital/core/commit/bd09a40a6b72689e7b3579f10467c85f35d163b1))
+- sync docs ([ba18e47](https://github.com/specvital/core/commit/ba18e4780f7ca7c1da8370d6f43f98b6e4c8bd97))
+- sync docs ([ae6a331](https://github.com/specvital/core/commit/ae6a331bbf8cf291acab6c6b6ba44960766c2367))
+- sync docs ([4f00b6c](https://github.com/specvital/core/commit/4f00b6c4004d7fb23cbbd5e75b0f507a1294c4a1))
+
 ## [1.4.0](https://github.com/specvital/core/compare/v1.3.0...v1.4.0) (2025-12-20)
 
 ### 🎯 Highlights
