@@ -55,6 +55,8 @@ paths:
 
 ### init() Functions
 
+**AI abuses init() for convenience. Enforce strict prohibition.**
+
 - Avoid unless necessary for registration patterns (database drivers, plugins)
 - Prefer explicit initialization functions for business logic
 - Acceptable uses:
@@ -65,6 +67,7 @@ paths:
   - External I/O (database, file, network)
   - Global state mutation
   - Error-prone initialization (use constructors that return errors)
+  - **Any convenience initialization that AI suggests** - always question init() in code review
 
 ## Package Structure
 
