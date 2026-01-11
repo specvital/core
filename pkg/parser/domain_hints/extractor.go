@@ -29,6 +29,10 @@ func GetExtractor(lang domain.Language) Extractor {
 		return &KotlinExtractor{}
 	case domain.LanguageCSharp:
 		return &CSharpExtractor{}
+	case domain.LanguageRuby:
+		return &RubyExtractor{}
+	case domain.LanguagePHP:
+		return &PHPExtractor{}
 	default:
 		return nil
 	}
