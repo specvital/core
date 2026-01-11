@@ -140,6 +140,22 @@ SpecVital Core 파서는 정적 AST 분석 기반 테스트 카운트 수행. �
 - ❌ 미지원: 1로 카운트
 - ❌ 버그: 감지해야 하지만 현재 안됨
 
+### Linter 테스트 유틸리티
+
+린터 테스트 유틸리티(ESLint RuleTester, Stylelint 등)는 표준 테스트 프레임워크 API(it, test)를 호출하지 않고 내부적으로 테스트를 생성함. 동적 테스트로 처리.
+
+| 유틸리티          | 패턴                                                    | 정책                |
+| ----------------- | ------------------------------------------------------- | ------------------- |
+| ESLint RuleTester | `ruleTester.run('rule', rule, { valid, invalid })`      | `.run()` 호출당 1개 |
+| Stylelint         | `stylelintTester.run('rule', rule, { accept, reject })` | `.run()` 호출당 1개 |
+
+**감지 기준**:
+
+- 호출자 변수명에 "tester" 포함 (대소문자 무관)
+- 메서드명이 `run`
+- 첫 번째 인자가 문자열 리터럴 (규칙 이름)
+- 최소 3개 인자
+
 ## Consequences
 
 ### Positive
@@ -173,3 +189,10 @@ SpecVital Core 파서는 정적 AST 분석 기반 테스트 카운트 수행. �
 
 - C#의 `[TestCase(...)]` × N
 - 리터럴 배열이 있는 `@pytest.mark.parametrize("x", [1,2,3])`
+
+### Phase 3: Linter 테스트 유틸리티 (완료 ✅)
+
+표준 테스트 API를 우회하는 린터 테스트 유틸리티 지원:
+
+1. ~~**JS/TS**: `ruleTester.run()` ESLint 패턴~~ → **수정 완료 (2025-12-29)**
+2. ~~**JS/TS**: `stylelintTester.run()` Stylelint 패턴~~ → **수정 완료 (2025-12-29)**

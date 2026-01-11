@@ -140,6 +140,22 @@ Execute tests to get exact counts.
 - ❌ Not supported: Counts as 1
 - ❌ Bug: Should detect but currently doesn't
 
+### Linter Test Utilities
+
+Linter testing utilities (ESLint RuleTester, Stylelint, etc.) generate tests internally without calling standard test framework APIs (it, test). These are treated as dynamic tests.
+
+| Utility           | Pattern                                                 | Policy              |
+| ----------------- | ------------------------------------------------------- | ------------------- |
+| ESLint RuleTester | `ruleTester.run('rule', rule, { valid, invalid })`      | 1 per `.run()` call |
+| Stylelint         | `stylelintTester.run('rule', rule, { accept, reject })` | 1 per `.run()` call |
+
+**Detection criteria**:
+
+- Caller variable name contains "tester" (case-insensitive)
+- Method name is `run`
+- First argument is a string literal (rule name)
+- At least 3 arguments
+
 ## Consequences
 
 ### Positive
@@ -173,3 +189,10 @@ Consider counting attribute-based parametrized tests where count is statically d
 
 - `[TestCase(...)]` × N in C#
 - `@pytest.mark.parametrize("x", [1,2,3])` with literal array
+
+### Phase 3: Linter Test Utilities (Completed ✅)
+
+Support for linter testing utilities that bypass standard test APIs:
+
+1. ~~**JS/TS**: `ruleTester.run()` ESLint pattern~~ → **Fixed (2025-12-29)**
+2. ~~**JS/TS**: `stylelintTester.run()` Stylelint pattern~~ → **Fixed (2025-12-29)**
