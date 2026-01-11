@@ -62,8 +62,8 @@ repositories:
     frameworks:
       - go-testing
 
-  - name: specvital-collector
-    url: https://github.com/specvital/collector
+  - name: specvital-worker
+    url: https://github.com/specvital/worker
     ref: v1.0.6
     subdir: src
     frameworks:

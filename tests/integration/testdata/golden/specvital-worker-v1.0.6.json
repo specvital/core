@@ -1,5 +1,5 @@
 {
-  "repository": "specvital-collector",
+  "repository": "specvital-worker",
   "ref": "v1.0.6",
   "expectedFrameworks": ["go-testing"],
   "fileCount": 11,
