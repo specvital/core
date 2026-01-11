@@ -231,11 +231,19 @@ func TestGetParser_ReturnsValidParser(t *testing.T) {
 }
 
 func TestClearQueryCache(t *testing.T) {
+	source := []byte(`package main`)
 	queryStr := `(package_clause)`
 	lang := domain.LanguageGo
+	ctx := context.Background()
 
-	// Add query to cache
-	_, err := getCachedQuery(lang, queryStr)
+	tree, err := tspool.Parse(ctx, lang, source)
+	if err != nil {
+		t.Fatalf("parse failed: %v", err)
+	}
+	defer tree.Close()
+
+	// Add query to cache via QueryWithCache
+	_, err = QueryWithCache(tree.RootNode(), source, lang, queryStr)
 	if err != nil {
 		t.Fatalf("failed to cache query: %v", err)
 	}
@@ -244,7 +252,7 @@ func TestClearQueryCache(t *testing.T) {
 	ClearQueryCache()
 
 	// Query should be recompiled (no error expected, just testing it works)
-	_, err = getCachedQuery(lang, queryStr)
+	_, err = QueryWithCache(tree.RootNode(), source, lang, queryStr)
 	if err != nil {
 		t.Fatalf("failed to recompile query after clear: %v", err)
 	}

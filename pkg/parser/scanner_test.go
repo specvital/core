@@ -16,6 +16,7 @@ import (
 
 	// Import frameworks to register them via init()
 	_ "github.com/specvital/core/pkg/parser/strategies/cargotest"
+	_ "github.com/specvital/core/pkg/parser/strategies/gotesting"
 	_ "github.com/specvital/core/pkg/parser/strategies/gtest"
 	_ "github.com/specvital/core/pkg/parser/strategies/jest"
 	_ "github.com/specvital/core/pkg/parser/strategies/mstest"
@@ -1146,6 +1147,116 @@ public class DataRowTests_Regular
 		}
 		if file.Language != "csharp" {
 			t.Errorf("expected language 'csharp', got %q", file.Language)
+		}
+	})
+}
+
+func TestScan_DomainHints(t *testing.T) {
+	t.Run("should extract domain hints from Go test files", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		testContent := []byte(`package order
+
+import (
+	"testing"
+	"github.com/stretchr/testify/assert"
+	"myapp/services/inventory"
+)
+
+func TestCreateOrder(t *testing.T) {
+	mockCart := Cart{Items: []Item{{ID: 1, Qty: 2}}}
+	result, err := orderService.CreateFromCart(mockCart)
+	assert.NoError(t, err)
+}
+`)
+		testFile := filepath.Join(tmpDir, "order_test.go")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(result.Inventory.Files) != 1 {
+			t.Fatalf("expected 1 file, got %d", len(result.Inventory.Files))
+		}
+
+		file := result.Inventory.Files[0]
+		if file.DomainHints == nil {
+			t.Fatal("expected DomainHints, got nil")
+		}
+
+		expectedImports := map[string]bool{
+			"testing":                          true,
+			"github.com/stretchr/testify/assert": true,
+			"myapp/services/inventory":         true,
+		}
+		for _, imp := range file.DomainHints.Imports {
+			delete(expectedImports, imp)
+		}
+		if len(expectedImports) > 0 {
+			t.Errorf("missing imports: %v", expectedImports)
+		}
+
+		foundMockCart := false
+		for _, v := range file.DomainHints.Variables {
+			if v == "mockCart" {
+				foundMockCart = true
+				break
+			}
+		}
+		if !foundMockCart {
+			t.Errorf("expected mockCart in variables, got %v", file.DomainHints.Variables)
+		}
+
+		if len(file.DomainHints.Calls) == 0 {
+			t.Error("expected at least one call hint")
+		}
+	})
+
+	t.Run("should respect WithDomainHints(false) option", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		testContent := []byte(`package test
+
+import "testing"
+
+func TestSomething(t *testing.T) {
+	mockValue := 42
+	_ = mockValue
+}
+`)
+		testFile := filepath.Join(tmpDir, "sample_test.go")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src, parser.WithDomainHints(false))
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(result.Inventory.Files) != 1 {
+			t.Fatalf("expected 1 file, got %d", len(result.Inventory.Files))
+		}
+
+		file := result.Inventory.Files[0]
+		if file.DomainHints != nil {
+			t.Errorf("expected nil DomainHints when disabled, got %+v", file.DomainHints)
 		}
 	})
 }

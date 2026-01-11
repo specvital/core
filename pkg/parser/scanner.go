@@ -17,6 +17,7 @@ import (
 	"github.com/bmatcuk/doublestar/v4"
 	"github.com/specvital/core/pkg/domain"
 	"github.com/specvital/core/pkg/parser/detection"
+	domain_hints "github.com/specvital/core/pkg/parser/domain_hints"
 	"github.com/specvital/core/pkg/parser/framework"
 	"github.com/specvital/core/pkg/parser/strategies/shared/dotnetast"
 	"github.com/specvital/core/pkg/parser/strategies/shared/kotlinast"
@@ -605,6 +606,12 @@ func (s *Scanner) parseFile(ctx context.Context, src source.Source, path string)
 			Path:  path,
 			Phase: "parsing",
 		}, string(detectionResult.Source)
+	}
+
+	if s.options.ExtractDomainHints {
+		if extractor := domain_hints.GetExtractor(testFile.Language); extractor != nil {
+			testFile.DomainHints = extractor.Extract(ctx, content)
+		}
 	}
 
 	return testFile, nil, string(detectionResult.Source)
