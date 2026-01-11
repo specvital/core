@@ -125,11 +125,11 @@ type ScanStats struct {
 
 // NewScanner creates a new scanner with the given options.
 func NewScanner(opts ...ScanOption) *Scanner {
-	options := &ScanOptions{}
+	options := newDefaultOptions()
 	for _, opt := range opts {
-		opt(options)
+		opt(&options)
 	}
-	applyDefaults(options)
+	applyDefaults(&options)
 
 	detector := detection.NewDetector(options.Registry)
 
@@ -137,7 +137,7 @@ func NewScanner(opts ...ScanOption) *Scanner {
 		registry:     options.Registry,
 		detector:     detector,
 		projectScope: nil,
-		options:      options,
+		options:      &options,
 	}
 }
 

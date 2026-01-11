@@ -1,7 +1,20 @@
 package domain
 
+// DomainHints contains metadata useful for AI-based domain classification.
+// Extracted from imports, function calls, and variable names in test files.
+type DomainHints struct {
+	// Calls contains top-level function/method calls (e.g., "authService.validateToken").
+	Calls []string `json:"calls,omitempty"`
+	// Imports contains import paths/modules (e.g., "@nestjs/jwt", "github.com/stretchr/testify").
+	Imports []string `json:"imports,omitempty"`
+	// Variables contains domain-relevant variable names (mock/test/fixture patterns).
+	Variables []string `json:"variables,omitempty"`
+}
+
 // TestFile represents a parsed test file.
 type TestFile struct {
+	// DomainHints contains metadata for AI-based domain classification.
+	DomainHints *DomainHints `json:"domainHints,omitempty"`
 	// Framework is the detected test framework (e.g., "jest", "vitest").
 	Framework string `json:"framework"`
 	// Language is the programming language of this file.

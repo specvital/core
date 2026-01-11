@@ -8,17 +8,14 @@ import (
 
 // ScanOptions configures scanner behavior.
 type ScanOptions struct {
-	// Workers specifies the number of concurrent file parsers.
-	// Zero or negative values use runtime.GOMAXPROCS(0).
-	Workers int
-
-	// Timeout is the maximum duration for the entire scan operation.
-	// Zero or negative values use DefaultTimeout.
-	Timeout time.Duration
-
 	// ExcludePatterns specifies directory names to skip during file discovery.
 	// These are combined with DefaultSkipPatterns.
 	ExcludePatterns []string
+
+	// ExtractDomainHints enables extraction of domain classification metadata.
+	// When true, imports, function calls, and variable names are extracted.
+	// Default: true (opt-out via WithDomainHints(false)).
+	ExtractDomainHints bool
 
 	// MaxFileSize is the maximum file size in bytes to process.
 	// Files larger than this are skipped.
@@ -31,6 +28,14 @@ type ScanOptions struct {
 	// Registry is the framework registry to use for detection.
 	// If nil, uses framework.DefaultRegistry().
 	Registry *framework.Registry
+
+	// Timeout is the maximum duration for the entire scan operation.
+	// Zero or negative values use DefaultTimeout.
+	Timeout time.Duration
+
+	// Workers specifies the number of concurrent file parsers.
+	// Zero or negative values use runtime.GOMAXPROCS(0).
+	Workers int
 }
 
 // ScanOption is a functional option for configuring Scanner.
@@ -53,6 +58,16 @@ func WithTimeout(d time.Duration) ScanOption {
 		if d >= 0 {
 			o.Timeout = d
 		}
+	}
+}
+
+// WithDomainHints enables or disables domain hints extraction.
+// Domain hints include imports, function calls, and variable names
+// useful for AI-based domain classification.
+// Default: true (enabled).
+func WithDomainHints(enabled bool) ScanOption {
+	return func(o *ScanOptions) {
+		o.ExtractDomainHints = enabled
 	}
 }
 
@@ -85,14 +100,25 @@ func WithRegistry(registry *framework.Registry) ScanOption {
 }
 
 func applyDefaults(opts *ScanOptions) {
-	if opts.Timeout <= 0 {
-		opts.Timeout = DefaultTimeout
-	}
+	// ExtractDomainHints defaults to true when opts is zero-initialized.
+	// Since bool zero value is false, we need special handling.
+	// Users must explicitly call WithDomainHints(false) to disable.
+	// This is handled by initializing to true in newDefaultOptions().
 	if opts.MaxFileSize <= 0 {
 		opts.MaxFileSize = DefaultMaxFileSize
 	}
 	if opts.Registry == nil {
 		opts.Registry = framework.DefaultRegistry()
+	}
+	if opts.Timeout <= 0 {
+		opts.Timeout = DefaultTimeout
+	}
+}
+
+// newDefaultOptions returns ScanOptions with default values.
+func newDefaultOptions() ScanOptions {
+	return ScanOptions{
+		ExtractDomainHints: true,
 	}
 }
 
