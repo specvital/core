@@ -1222,6 +1222,79 @@ func TestCreateOrder(t *testing.T) {
 		}
 	})
 
+	t.Run("should extract domain hints from TypeScript test files", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		testContent := []byte(`
+import { test, expect } from '@playwright/test';
+import { LoginPage } from './pages/login';
+
+test.describe('authentication flow', () => {
+  const mockCredentials = { email: 'test@example.com', password: 'secret' };
+
+  test('should login successfully', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await authService.login(mockCredentials);
+    await expect(page).toHaveURL('/dashboard');
+  });
+});
+`)
+		testFile := filepath.Join(tmpDir, "auth.spec.ts")
+		if err := os.WriteFile(testFile, testContent, 0644); err != nil {
+			t.Fatalf("failed to write test file: %v", err)
+		}
+
+		src, err := source.NewLocalSource(tmpDir)
+		if err != nil {
+			t.Fatalf("failed to create source: %v", err)
+		}
+		defer src.Close()
+
+		result, err := parser.Scan(context.Background(), src)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(result.Inventory.Files) != 1 {
+			t.Fatalf("expected 1 file, got %d", len(result.Inventory.Files))
+		}
+
+		file := result.Inventory.Files[0]
+		if file.DomainHints == nil {
+			t.Fatal("expected DomainHints, got nil")
+		}
+
+		// Check imports
+		importSet := make(map[string]bool)
+		for _, imp := range file.DomainHints.Imports {
+			importSet[imp] = true
+		}
+		if !importSet["@playwright/test"] {
+			t.Errorf("expected @playwright/test import, got %v", file.DomainHints.Imports)
+		}
+		if !importSet["./pages/login"] {
+			t.Errorf("expected ./pages/login import, got %v", file.DomainHints.Imports)
+		}
+
+		// Check variables
+		varSet := make(map[string]bool)
+		for _, v := range file.DomainHints.Variables {
+			varSet[v] = true
+		}
+		if !varSet["mockCredentials"] {
+			t.Errorf("expected mockCredentials variable, got %v", file.DomainHints.Variables)
+		}
+
+		// Check calls (excluding test framework)
+		callSet := make(map[string]bool)
+		for _, c := range file.DomainHints.Calls {
+			callSet[c] = true
+		}
+		if !callSet["authService.login"] {
+			t.Errorf("expected authService.login call, got %v", file.DomainHints.Calls)
+		}
+	})
+
 	t.Run("should respect WithDomainHints(false) option", func(t *testing.T) {
 		tmpDir := t.TempDir()
 

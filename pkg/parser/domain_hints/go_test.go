@@ -169,7 +169,9 @@ func TestGetExtractor(t *testing.T) {
 		wantNil bool
 	}{
 		{domain.LanguageGo, false},
-		{domain.LanguageJavaScript, true},
+		{domain.LanguageJavaScript, false},
+		{domain.LanguageTypeScript, false},
+		{domain.LanguageTSX, false},
 		{domain.LanguagePython, true},
 	}
 

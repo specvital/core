@@ -19,6 +19,8 @@ func GetExtractor(lang domain.Language) Extractor {
 	switch lang {
 	case domain.LanguageGo:
 		return &GoExtractor{}
+	case domain.LanguageJavaScript, domain.LanguageTypeScript, domain.LanguageTSX:
+		return &JavaScriptExtractor{lang: lang}
 	default:
 		return nil
 	}
