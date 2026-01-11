@@ -56,6 +56,7 @@ result, err := parser.Scan(ctx, rootPath,
     parser.WithTimeout(2*time.Minute),        // Scan timeout (default: 5 minutes)
     parser.WithExclude([]string{"fixtures"}), // Additional skip directories
     parser.WithScanPatterns([]string{"**/*.test.ts"}), // Glob patterns
+    parser.WithDomainHints(false),            // Disable domain hints extraction (default: true)
 )
 ```
 
@@ -116,7 +117,40 @@ type Test struct {
     Location Location   // Source location
     Status   TestStatus // "", "skipped", "only", "pending", "fixme"
 }
+
+type DomainHints struct {
+    Imports []string // Import paths (e.g., "@nestjs/jwt", "github.com/stretchr/testify")
+    Calls   []string // Function calls normalized to 2 segments (e.g., "authService.validateToken")
+}
 ```
+
+### Domain Hints
+
+Domain hints are metadata extracted from test files for AI-based domain classification.
+Enabled by default, can be disabled with `parser.WithDomainHints(false)`.
+
+**Supported Languages** (12): Go, JavaScript, TypeScript, Python, Java, Kotlin, C#, Ruby, PHP, Rust, Swift, C++
+
+**Example Output**:
+
+```json
+{
+  "path": "test/auth.test.ts",
+  "framework": "jest",
+  "language": "typescript",
+  "domainHints": {
+    "imports": ["../services/auth", "@nestjs/jwt", "../repositories/user"],
+    "calls": ["authService.validateToken"]
+  },
+  "suites": [...]
+}
+```
+
+**Use Cases**:
+
+- AI-based test domain classification (Authentication, Payment, etc.)
+- Import-based dependency analysis
+- Function coverage analysis
 
 ## Crypto
 
