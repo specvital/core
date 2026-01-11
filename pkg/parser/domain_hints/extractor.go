@@ -27,6 +27,8 @@ func GetExtractor(lang domain.Language) Extractor {
 		return &JavaExtractor{}
 	case domain.LanguageKotlin:
 		return &KotlinExtractor{}
+	case domain.LanguageCSharp:
+		return &CSharpExtractor{}
 	default:
 		return nil
 	}

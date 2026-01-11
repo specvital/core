@@ -2,6 +2,7 @@
 package dotnetast
 
 import (
+	"bytes"
 	"strings"
 
 	sitter "github.com/smacker/go-tree-sitter"
@@ -9,28 +10,32 @@ import (
 
 // C# AST node types.
 const (
-	NodeClassDeclaration      = "class_declaration"
-	NodeMethodDeclaration     = "method_declaration"
-	NodeAttributeList         = "attribute_list"
-	NodeAttribute             = "attribute"
-	NodeAttributeArgumentList = "attribute_argument_list"
-	NodeAttributeArgument     = "attribute_argument"
-	NodeIdentifier            = "identifier"
-	NodeDeclarationList       = "declaration_list"
-	NodeStringLiteral         = "string_literal"
-	NodeVerbatimStringLiteral = "verbatim_string_literal"
-	NodeStringLiteralContent  = "string_literal_content"
-	NodeInterpolatedString    = "interpolated_string_expression"
-	NodeNamespaceDeclaration  = "namespace_declaration"
-	NodeFileScopedNamespace   = "file_scoped_namespace_declaration"
-	NodeUsingDirective        = "using_directive"
-	NodeQualifiedName         = "qualified_name"
-	NodeModifier              = "modifier"
-	NodeGenericName           = "generic_name"
-	NodeAssignmentExpression  = "assignment_expression"
-	NodePreprocIf             = "preproc_if"
-	NodePreprocElse           = "preproc_else"
-	NodePreprocElif           = "preproc_elif"
+	NodeClassDeclaration       = "class_declaration"
+	NodeMethodDeclaration      = "method_declaration"
+	NodeAttributeList          = "attribute_list"
+	NodeAttribute              = "attribute"
+	NodeAttributeArgumentList  = "attribute_argument_list"
+	NodeAttributeArgument      = "attribute_argument"
+	NodeIdentifier             = "identifier"
+	NodeDeclarationList        = "declaration_list"
+	NodeStringLiteral          = "string_literal"
+	NodeVerbatimStringLiteral  = "verbatim_string_literal"
+	NodeStringLiteralContent   = "string_literal_content"
+	NodeInterpolatedString     = "interpolated_string_expression"
+	NodeNamespaceDeclaration   = "namespace_declaration"
+	NodeFileScopedNamespace    = "file_scoped_namespace_declaration"
+	NodeUsingDirective         = "using_directive"
+	NodeQualifiedName          = "qualified_name"
+	NodeModifier               = "modifier"
+	NodeGenericName            = "generic_name"
+	NodeAssignmentExpression   = "assignment_expression"
+	NodePreprocIf              = "preproc_if"
+	NodePreprocElse            = "preproc_else"
+	NodePreprocElif            = "preproc_elif"
+	NodeMemberAccessExpression = "member_access_expression"
+	NodeInvocationExpression   = "invocation_expression"
+	NodeThisExpression         = "this_expression"
+	NodeEquals                 = "="
 )
 
 // GetClassName extracts the class name from a class_declaration node.
@@ -283,4 +288,14 @@ func collectDeclarations(node *sitter.Node, result *[]*sitter.Node) {
 			collectDeclarations(child, result)
 		}
 	}
+}
+
+// SanitizeSource removes NULL bytes from source code that would cause tree-sitter parsing failures.
+// Some files (e.g., OSS-Fuzz test data) contain NULL bytes in string literals which cause
+// tree-sitter to produce ERROR nodes instead of valid AST.
+func SanitizeSource(source []byte) []byte {
+	if !bytes.Contains(source, []byte{0}) {
+		return source
+	}
+	return bytes.ReplaceAll(source, []byte{0}, []byte{' '})
 }
