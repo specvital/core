@@ -33,6 +33,12 @@ func GetExtractor(lang domain.Language) Extractor {
 		return &RubyExtractor{}
 	case domain.LanguagePHP:
 		return &PHPExtractor{}
+	case domain.LanguageRust:
+		return &RustExtractor{}
+	case domain.LanguageSwift:
+		return &SwiftExtractor{}
+	case domain.LanguageCpp:
+		return &CppExtractor{}
 	default:
 		return nil
 	}
